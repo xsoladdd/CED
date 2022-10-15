@@ -1,4 +1,4 @@
-<h1 align=center>Americano - Authentication Server</h1>
+<h1 align=center>Server</h1>
 
 ## Getting Started
 

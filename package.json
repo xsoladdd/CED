@@ -1,7 +1,7 @@
 {
-  "name": "project-local",
+  "name": "ced",
   "version": "1.0.0",
-  "description": "To represent local merchandise and content creators",
+  "description": "School System",
   "main": "index.js",
   "license": "MIT",
   "private": true,
@@ -15,12 +15,7 @@
     "husky": "^7.0.4"
   },
   "scripts": {
-    "prepare": "husky install",
-    "init-commitizen": "commitizen init cz-conventional-changelog --yarn --dev --exact",
-    "run:americano": "cd ./packages/americano && yarn dev",
-    "run:affogato": "cd ./packages/affogato && yarn dev",
-    "run:espresso": "cd ./packages/espresso && yarn dev",
-    "run:ms": "concurrently \"yarn run:americano\" \"yarn run:affogato\"  \"yarn run:espresso\""
+    "prepare": "husky install"
   },
   "devDependencies": {
     "commitizen": "^4.2.4",

@@ -1,11 +1,11 @@
 {
-  "name": "latte",
+  "name": "client",
   "version": "1.0.0",
   "main": "index.js",
   "license": "UNLICENSED",
   "private": true,
   "engines": {
-    "node": ">=16 <17"
+    "node": ">=16"
   },
   "scripts": {
     "dev": "next",

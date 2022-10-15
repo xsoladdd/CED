@@ -1,9 +1,8 @@
 {
-  "name": "americano",
+  "name": "server",
   "version": "1.0.0",
-  "description": "authentication server",
+  "description": "server",
   "main": "dist/server.js",
-  "author": "ghost_collectives",
   "license": "UNLICENSED",
   "engines": {
     "node": ">=16 <17"
