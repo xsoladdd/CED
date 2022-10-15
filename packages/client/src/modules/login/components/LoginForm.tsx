@@ -134,7 +134,7 @@ const LoginForm: React.FC = ({}) => {
 
   return (
     <>
-      <div className="w-1/2 py-10 flex px-8 flex-col gap-3 ">
+      <div className="w-full py-10 flex px-8 flex-col gap-3 ">
         <div>
           <Text variant="h2" className="text-primary-focus">
             Welcome Back!

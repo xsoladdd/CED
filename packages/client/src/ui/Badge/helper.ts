@@ -1,7 +1,5 @@
 import { colorVariant, sizeVariant } from "../../helper/vars/constants";
 import { IcolorVariantTypes, IsizeVariantTypes } from "../../helper/vars/types";
-import { toEnum } from "../../utils/stories/toEnum";
-
 export const getBadgeSize = (size: IsizeVariantTypes): string => {
   switch (size) {
     case "xs":
@@ -34,9 +32,4 @@ export const getBadgeColor = (color: IcolorVariantTypes | "ghost"): string => {
     default:
       return "badge-ghost";
   }
-};
-
-export const badgeArgsTypes = {
-  color: toEnum([...colorVariant, "ghost"]),
-  size: toEnum(sizeVariant),
 };

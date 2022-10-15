@@ -1,10 +1,7 @@
-import { colorVariant, sizeVariant } from "../../../helper/vars/constants";
 import {
   IcolorVariantTypes,
   IsizeVariantTypes,
 } from "../../../helper/vars/types";
-import { toBoolean } from "../../../utils/stories/toBoolean";
-import { toEnum } from "../../../utils/stories/toEnum";
 export const getInputSize = (size: IsizeVariantTypes): string => {
   switch (size) {
     case "xs":
@@ -37,10 +34,4 @@ export const getInputColor = (color: IcolorVariantTypes | "ghost"): string => {
     default:
       return "input-ghost";
   }
-};
-
-export const inputArgsTypes = {
-  color: toEnum([...colorVariant, "ghost"]),
-  isBordered: toBoolean(),
-  size: toEnum(sizeVariant),
 };

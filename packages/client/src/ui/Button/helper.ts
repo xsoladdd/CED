@@ -1,19 +1,4 @@
-import {
-  colorVariant as colorVariantEnum,
-  sizeVariant,
-} from "../../helper/vars/constants";
 import { IcolorVariantTypes, IsizeVariantTypes } from "../../helper/vars/types";
-import { toBoolean } from "../../utils/stories/toBoolean";
-import { toEnum } from "../../utils/stories/toEnum";
-
-export const buttonArgsTypes = {
-  disabled: toBoolean(),
-  outlined: toBoolean(),
-  size: toEnum(sizeVariant),
-  color: toEnum([...colorVariantEnum, "ghost"]),
-  isLoading: toBoolean(),
-  isLink: toBoolean(),
-};
 
 export const getButtonColor = (color: IcolorVariantTypes | "ghost"): string => {
   switch (color) {

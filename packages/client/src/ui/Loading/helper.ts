@@ -1,6 +1,4 @@
-import { sizeVariant } from '../../helper/vars/constants';
-import { IsizeVariantTypes } from '../../helper/vars/types';
-import { toEnum } from '../../utils/stories/toEnum';
+import { IsizeVariantTypes } from "../../helper/vars/types";
 
 export const getLoaderSizeClass = (size: IsizeVariantTypes): string => {
   switch (size) {
@@ -13,8 +11,4 @@ export const getLoaderSizeClass = (size: IsizeVariantTypes): string => {
     default:
       return `h-10 w-10`;
   }
-};
-
-export const loaderArgsType = {
-  size: toEnum(sizeVariant),
 };

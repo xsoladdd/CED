@@ -1,5 +1,4 @@
 import { Mutable } from "../../helper/vars/types";
-import { toEnum } from "../../utils/stories/toEnum";
 import { TtextVariant } from "./types";
 
 export const textVariantRO = [
@@ -12,10 +11,6 @@ export const textVariantRO = [
   `error`,
 ] as const;
 export const textVariant = textVariantRO as Mutable<typeof textVariantRO>;
-
-export const textArgsTypes = {
-  variant: toEnum(textVariant),
-};
 
 export const getTextVariantClass = (variant: TtextVariant): string => {
   const twHeadingClass = "font-semibold text-base-content";

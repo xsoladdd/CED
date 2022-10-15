@@ -1,14 +1,4 @@
-import { mainColorVariant, sizeVariant } from "../../helper/vars/constants";
 import { ImainColorVariant, IsizeVariantTypes } from "../../helper/vars/types";
-import { toBoolean } from "../../utils/stories/toBoolean";
-import { toEnum } from "../../utils/stories/toEnum";
-
-export const switchArgsTypes = {
-  status: toBoolean(),
-  disabled: toBoolean(),
-  size: toEnum(sizeVariant),
-  color: toEnum([...mainColorVariant, "normal"]),
-};
 
 export const getToggleColor = (color: ImainColorVariant | "normal"): string => {
   switch (color) {

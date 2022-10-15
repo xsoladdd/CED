@@ -1,10 +1,7 @@
-import { colorVariant, sizeVariant } from "../../../helper/vars/constants";
 import {
   IcolorVariantTypes,
   IsizeVariantTypes,
 } from "../../../helper/vars/types";
-import { toBoolean } from "../../../utils/stories/toBoolean";
-import { toEnum } from "../../../utils/stories/toEnum";
 
 export const getSelectSize = (size: IsizeVariantTypes): string => {
   switch (size) {
@@ -38,10 +35,4 @@ export const getSelectColor = (color: IcolorVariantTypes | "ghost"): string => {
     default:
       return "select-ghost";
   }
-};
-
-export const selectArgsTypes = {
-  color: toEnum([...colorVariant, "ghost"]),
-  isBordered: toBoolean(),
-  size: toEnum(sizeVariant),
 };

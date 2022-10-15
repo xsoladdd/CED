@@ -2,4 +2,4 @@ node_modules/
 
 *.spec.tsx
 *.spec.tsx.snap
-src/graphql/generated.tsx
+# src/graphql/generated.tsx

@@ -12,12 +12,9 @@
     "build": "next build",
     "start": "next start",
     "type-check": "tsc",
-    "dev:sb": "start-storybook -p 6006",
-    "build:sb": "build-storybook",
     "lint": "eslint src",
     "lint:fix": "npm run lint --fix ",
     "precommit": "yarn lint:fix && yarn lint && yarn build",
-    "gen": "graphql-codegen --config codegen.yml",
     "cz": "cd ../../ && cz && cd ./packages/latte"
   },
   "dependencies": {
@@ -31,7 +28,6 @@
     "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "formik": "^2.2.9",
-    "graphql": "^16.5.0",
     "next": "12",
     "next-themes": "^0.0.15",
     "react": "^18.1.0",
@@ -47,12 +43,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
-    "@graphql-codegen/cli": "2.6.2",
-    "@graphql-codegen/fragment-matcher": "3.2.1",
-    "@graphql-codegen/introspection": "2.1.1",
-    "@graphql-codegen/typescript": "2.4.11",
-    "@graphql-codegen/typescript-operations": "2.4.0",
-    "@graphql-codegen/typescript-react-apollo": "3.2.14",
     "@storybook/addon-actions": "^6.5.9",
     "@storybook/addon-essentials": "^6.5.9",
     "@storybook/addon-links": "^6.5.9",
@@ -76,7 +66,6 @@
     "eslint-plugin-storybook": "^0.5.12",
     "eslint-plugin-unused-imports": "^2.0.0",
     "postcss": "^8.4.5",
-    "storybook-addon-next": "^1.6.6",
     "tailwind-tales-addon": "^1.0.0-alpha.0",
     "tailwindcss": "^3.0.24",
     "typescript": "^4.5.5"

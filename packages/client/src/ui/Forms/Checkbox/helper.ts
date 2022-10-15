@@ -1,14 +1,7 @@
-import { colorVariant, sizeVariant } from "../../../helper/vars/constants";
 import {
   ImainColorVariant,
   IsizeVariantTypes,
 } from "../../../helper/vars/types";
-import { toEnum } from "../../../utils/stories/toEnum";
-
-export const checkBoxArgsTypes = {
-  color: toEnum(colorVariant),
-  size: toEnum(sizeVariant),
-};
 export const getCheckboxColor = (
   color: ImainColorVariant | "ghost"
 ): string => {
