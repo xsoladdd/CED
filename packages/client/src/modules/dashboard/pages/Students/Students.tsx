@@ -1,15 +1,10 @@
 import React from "react";
-import { FiArrowLeft, FiArrowRight, FiCreditCard } from "react-icons/fi";
-import {
-  FaEdit,
-  FaRegAddressCard,
-  FaTrash,
-  FaUserGraduate,
-} from "react-icons/fa";
+import { FaEdit, FaRegAddressCard, FaTrash } from "react-icons/fa";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import Card, { CardFooter, CardHeader } from "../../../../components/Card";
 import Status from "../../../../components/Status";
-import { column, mock_data } from "./helper";
 import Tooltip from "../../../../components/Tooltip";
+import { column, mock_data } from "./helper";
 
 const Students: React.FC = ({}) => {
   const filterCard = (
