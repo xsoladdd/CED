@@ -12,6 +12,8 @@ const AuditTrail: React.FC = ({}) => {
         <li className="">
           <FiHome />
         </li>
+
+        <h1>hr</h1>
         <span>/ </span>
         <li className="">
           <FiHome />
