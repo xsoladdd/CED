@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment } from "react";
 import { joinClass } from "../../utils/joinClass";
-import Text from "../Text";
+import Text from "../../components/Text";
 import { getModalSize } from "./helper";
 import { IModalProps } from "./types";
 

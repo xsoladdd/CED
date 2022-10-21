@@ -2,7 +2,7 @@ import { Menu, Transition } from "@headlessui/react";
 import React, { Fragment } from "react";
 import { FiAirplay } from "react-icons/fi";
 import useDashboardRouter from "../../../../hooks/useDashboardRouter";
-import DiceBearAvatar from "../../../../ui/DiceBearAvatar";
+import DiceBearAvatar from "../../../../components/DiceBearAvatar";
 import routes from "../../routes";
 import LogoutMenu from "./LogoutMenu";
 import MenuItemWrapper from "./MenuItemWrapper";

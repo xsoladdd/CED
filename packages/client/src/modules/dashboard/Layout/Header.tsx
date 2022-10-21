@@ -1,7 +1,7 @@
 import React from "react";
 import { DEFAULT_ROUTE } from "../../../helper/global";
 import useDashboardRouter from "../../../hooks/useDashboardRouter";
-import Text from "../../../ui/Text";
+import Text from "../../../components/Text";
 import HeaderMenu from "./HeaderMenu";
 
 const Header: React.FC = ({}) => {

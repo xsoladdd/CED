@@ -1,5 +1,5 @@
 import React from "react";
-import Text from "../../../ui/Text";
+import Text from "../../../components/Text";
 interface IErrorBoxProps {
   error?: string;
 }

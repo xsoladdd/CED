@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import Text from "../../../ui/Text";
+import Text from "../../../components/Text";
 
 const IconArea: React.FC = ({}) => {
   return (

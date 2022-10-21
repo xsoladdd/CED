@@ -45,7 +45,13 @@ const Breadcrumbs: React.FC = ({}) => {
           border-l-primary py-4 px-6 min-h-[50px] overflow-hidden`
         )}
       >
-        <ul className="flex gap-2 ">{breadcrumbLinks}</ul>
+        <ul className="flex gap-2 ">
+          {/* <li className="flex gap-2 ">
+            <FiHome />
+            <span>/ </span>
+          </li> */}
+          {breadcrumbLinks}
+        </ul>
       </div>
     </>
   );

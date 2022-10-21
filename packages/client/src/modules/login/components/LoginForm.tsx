@@ -1,6 +1,5 @@
 import { Formik } from "formik";
 import React, { useState } from "react";
-import Button from "../../../ui/Button";
 import { Checkbox, Input, Label } from "../../../ui/Forms";
 import { loginShema } from "../helper";
 import ErrorBox from "./ErrorBox";
@@ -8,7 +7,7 @@ import axios from "axios";
 import { IReturn } from "../../../interfaces/types";
 import { useRouter } from "next/router";
 import { AUTH_SERVER_URI } from "../../../helper/global";
-import Text from "../../../ui/Text";
+import Text from "../../../components/Text";
 
 const LoginForm: React.FC = ({}) => {
   const [rememberMe, setRememberMe] = useState(false);
@@ -18,7 +17,7 @@ const LoginForm: React.FC = ({}) => {
   const form = (
     <Formik
       initialValues={{
-        email: ``,
+        employeeId: ``,
         password: ``,
       }}
       validateOnBlur={false}
@@ -47,7 +46,7 @@ const LoginForm: React.FC = ({}) => {
         }
         if (data.data?.JWT || data.data?.user?.id) {
           setErrors({
-            email: undefined,
+            employeeId: undefined,
             password: undefined,
           });
           setServerError(undefined);
@@ -78,21 +77,21 @@ const LoginForm: React.FC = ({}) => {
             onSubmit={handleSubmit}
           >
             <div className="flex flex-col gap-1">
-              <Label htmlFor="email" text="Email :" />
+              <Label htmlFor="employeeId" text="Emplyee ID " />
               <Input
-                name="email"
+                name="employeeId"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={``}
                 autoComplete="off"
-                value={values.email}
+                value={values.employeeId}
                 isBordered
-                placeholder="ie: #####@gmail.com"
-                id="email"
+                placeholder="Emplyee ID"
+                id="employeeId"
               />
             </div>
             <div className="flex flex-col gap-1">
-              <Label htmlFor="password" text="Password :" />
+              <Label htmlFor="password" text="Password " />
 
               <Input
                 type="password"
@@ -114,17 +113,19 @@ const LoginForm: React.FC = ({}) => {
               id="remember-me"
               onChange={() => setRememberMe(!rememberMe)}
             />
-            <ErrorBox error={errors.email || errors.password || serverError} />
+            <ErrorBox
+              error={errors.employeeId || errors.password || serverError}
+            />
             <div className="text-center pt-2">
-              <Button
+              <button
                 type="submit"
-                className="w-full"
+                className="btn btn-sm w-full"
                 color="primary"
-                size="sm"
-                isLoading={isSubmitting}
+                // isLoading={}
+                disabled={isSubmitting}
               >
                 Sign in
-              </Button>
+              </button>
             </div>
           </form>
         </>

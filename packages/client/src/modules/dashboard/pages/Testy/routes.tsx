@@ -10,7 +10,7 @@ const testyRoutes: Array<IRoute> = [
     component: Testy,
     name: `Testy`,
     path: `testy`,
-    group: "website",
+    group: "main",
     logo: (props) => <FiSend {...props} />,
   },
 ];

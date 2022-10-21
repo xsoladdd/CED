@@ -9,12 +9,7 @@ Undefined group means store
 Group
 */
 
-type IRouteGroupCategories =
-  | "store"
-  | "website"
-  | "admin"
-  | "menuBar1"
-  | "menuBar2";
+type IRouteGroupCategories = "main" | "menuBar1" | "menuBar2";
 export interface IRoute {
   component: ComponentType;
   name: string;

@@ -1,6 +1,6 @@
 import React from "react";
 import { joinClass } from "../../utils/joinClass";
-import Loading from "../Loading";
+import Loading from "../../components/Loading";
 import { ITableProps } from "./types";
 
 const Table: React.FC<ITableProps> = ({

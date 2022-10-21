@@ -1,5 +1,4 @@
 import React from "react";
-import NewAccount from "../../../components/NewUserModal";
 import Breadcrumbs from "./Breadcrumbs";
 import Header from "./Header";
 import Sidebar from "./Sidebar/Sidebar";
@@ -8,12 +7,9 @@ interface LayoutProps {
   children?: React.ReactNode;
 }
 
-const isNew = true;
-
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <>
-      {isNew && <NewAccount />}
       <div className=" max-h-screen overflow-hidden">
         <div className=" w-full flex flex-col h-screen">
           <Header />

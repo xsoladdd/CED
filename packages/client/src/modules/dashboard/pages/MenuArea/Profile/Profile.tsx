@@ -1,6 +1,5 @@
 import React from "react";
-import Card from "../../../../../ui/Card/Card";
-import Button from "../../../../../ui/Button";
+import Card from "../../../../../components/Card/Card";
 
 const Dashboard: React.FC = ({}) => {
   return (
@@ -48,7 +47,7 @@ const Dashboard: React.FC = ({}) => {
         <div className=" px-6 pt-4 flex justify-between">
           <div className=""> </div>
           <div className="">
-            <Button size="md">Hello World</Button>
+            <button className="btn btn-sm"> Hello World</button>
           </div>
         </div>
       </Card>
