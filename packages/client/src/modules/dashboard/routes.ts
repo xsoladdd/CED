@@ -12,7 +12,6 @@ const routes: Array<IRoute> = [
   ...dashboardRoutes,
   ...enrolledListRoute,
   ...studentsRoutes,
-  // ...archiveRoutes,
   ...employeesRoutes,
   ...auditTrailRoutes,
   ...settingsRoutes,

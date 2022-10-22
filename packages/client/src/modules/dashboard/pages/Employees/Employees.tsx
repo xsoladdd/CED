@@ -1,7 +1,7 @@
 import React from "react";
-import { FaRegAddressCard, FaEdit, FaTrash } from "react-icons/fa";
-import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import Card, { CardHeader, CardFooter } from "../../../../components/Card";
+import { FaSyncAlt, FaUserAltSlash } from "react-icons/fa";
+import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
+import Card, { CardFooter, CardHeader } from "../../../../components/Card";
 import Status from "../../../../components/Status";
 import Tooltip from "../../../../components/Tooltip";
 import useDashboardRouter from "../../../../hooks/useDashboardRouter";
@@ -17,26 +17,61 @@ const Employees: React.FC = ({}) => {
       footer={
         <CardFooter
           left={
-            <button
-              className="btn btn-sm btn-info"
-              onClick={() =>
-                pushRoute({
-                  title: "Add new student",
-                  route: "employees:add",
-                })
-              }
-            >
-              Add employee
-            </button>
+            <div className="flex gap-2">
+              <button
+                className="btn btn-sm btn-info"
+                onClick={() =>
+                  pushRoute({
+                    title: "Add new student",
+                    route: "employees:add",
+                  })
+                }
+              >
+                Add employee
+              </button>
+
+              <button className="btn btn-sm btn-error" disabled={true}>
+                Deactivate
+              </button>
+            </div>
           }
           right={
-            <button className="btn btn-sm btn-error" disabled={true}>
-              Deactivate
-            </button>
+            <div className="flex gap-2">
+              <button className="btn btn-sm btn-link" type={"reset"}>
+                Reset
+              </button>
+              <button className="btn btn-sm btn-success" type={"submit"}>
+                Filter
+              </button>
+            </div>
           }
         />
       }
-    ></Card>
+    >
+      <div className="flex gap-2">
+        <div className="">
+          <label className="input-group input-group-sm">
+            <span>
+              <FiSearch />
+            </span>
+            <input
+              type="search"
+              placeholder="Search for ID, Name and Email"
+              className="input input-bordered input-sm min-w-[300px]"
+            />
+          </label>
+        </div>
+        <div className=" w-fit">
+          <div className="form-control max-w-xs bg">
+            <select className="select select-bordered min-w-[250px] select-sm">
+              <option selected>Select Status</option>
+              <option>Activated Accounts</option>
+              <option>Deactivated Accounts</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </Card>
   );
 
   const tableCard = (
@@ -59,28 +94,21 @@ const Employees: React.FC = ({}) => {
                   </td>
                   <td>{id}</td>
                   <td>{name}</td>
-                  {/* <td>{birthday}</td> */}
                   <td>{mobile_number}</td>
                   <td>{email}</td>
-                  {/* <td>{sectionYear}</td> */}
                   <td>
-                    <Status color={status ? "green" : "red"} />
+                    <Status color={status ? "green" : "grey"} />
                   </td>
                   <td>
                     <div className="flex gap-2 place-content-center">
-                      <Tooltip text="Green/Pink card" direction="top">
-                        <button className="btn btn-xs btn-info ">
-                          <FaRegAddressCard size="12" />
+                      <Tooltip text="Reset Password" direction="top">
+                        <button className="btn btn-xs btn-success ">
+                          <FaSyncAlt size="12" />
                         </button>
                       </Tooltip>
-                      <Tooltip text="View/Edit student" direction="top">
-                        <button className="btn btn-xs btn-warning ">
-                          <FaEdit size="12" />
-                        </button>
-                      </Tooltip>
-                      <Tooltip text="Drop Student" direction="top">
+                      <Tooltip text="Deactivate Account" direction="top">
                         <button className="btn btn-xs btn-error ">
-                          <FaTrash size="12" />
+                          <FaUserAltSlash size="12" />
                         </button>
                       </Tooltip>
                     </div>

@@ -14,3 +14,9 @@ Seeders
     - Global Vars
         SY = 2022-2023
 
+    - Roles
+        Backdoor
+        Super Admin
+        Registrar
+
+

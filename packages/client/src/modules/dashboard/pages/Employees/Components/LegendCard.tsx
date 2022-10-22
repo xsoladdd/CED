@@ -18,7 +18,7 @@ const LegendCard: React.FC = ({}) => {
           </li>
 
           <li className="text-xs flex gap-2">
-            <Status color="red" />
+            <Status color="grey" />
             <span>Deactivated</span>
           </li>
         </ul>

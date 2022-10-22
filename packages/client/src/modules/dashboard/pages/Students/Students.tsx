@@ -1,6 +1,6 @@
 import React from "react";
 import { FaEdit } from "react-icons/fa";
-import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
 import Card, { CardFooter, CardHeader } from "../../../../components/Card";
 import Status from "../../../../components/Status";
 import Tooltip from "../../../../components/Tooltip";
@@ -29,7 +29,20 @@ const Students: React.FC = ({}) => {
           }
         />
       }
-    ></Card>
+    >
+      <div className="flex gap-2">
+        <label className="input-group input-group-sm">
+          <span>
+            <FiSearch />
+          </span>
+          <input
+            type="search"
+            placeholder="Search for LRN, Name and Email"
+            className="input input-bordered input-sm min-w-[400px]"
+          />
+        </label>
+      </div>
+    </Card>
   );
 
   const tableCard = (

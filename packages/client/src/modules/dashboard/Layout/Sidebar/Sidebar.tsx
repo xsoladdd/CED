@@ -5,7 +5,6 @@ import SidebarNavItem from "./SidebarNavItem";
 import SidebarNavListWrapper from "./SidebarNavListWrapper";
 
 const Sidebar: React.FC = () => {
-  console.log(routes);
   return (
     <>
       <div className="bg-white h-screen pt-[65px]">

@@ -1,14 +1,10 @@
 import { Menu, Transition } from "@headlessui/react";
 import React, { Fragment } from "react";
-import { FiAirplay } from "react-icons/fi";
-import useDashboardRouter from "../../../../hooks/useDashboardRouter";
 import DiceBearAvatar from "../../../../components/DiceBearAvatar";
-import routes from "../../routes";
 import LogoutMenu from "./LogoutMenu";
-import MenuItemWrapper from "./MenuItemWrapper";
 
 const HeaderMenu: React.FC = ({}) => {
-  const { pushRoute } = useDashboardRouter();
+  // const { pushRoute } = useDashboardRouter();
 
   return (
     <Menu as="div" className="relative inline-block text-left  h-[38px]">
@@ -26,8 +22,8 @@ const HeaderMenu: React.FC = ({}) => {
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items className="absolute right-0 mt-0 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="px-1 py-1 ">
-            {routes
+          {/* <div className="px-1 py-1 "> */}
+          {/* {routes
               .filter(({ group }) => group === "menuBar1")
               .map(({ logo: Logo, name, path }, idx) => (
                 <MenuItemWrapper
@@ -46,29 +42,9 @@ const HeaderMenu: React.FC = ({}) => {
                     )
                   }
                 />
-              ))}
-          </div>
+              ))} */}
+          {/* </div> */}
           <div className="px-1 py-1 ">
-            {routes
-              .filter(({ group }) => group === "menuBar2")
-              .map(({ logo: Logo, name, path }, idx) => (
-                <MenuItemWrapper
-                  key={idx}
-                  icon={(props) =>
-                    Logo ? <Logo {...props} /> : <FiAirplay {...props} />
-                  }
-                  title={name}
-                  onClick={() =>
-                    pushRoute(
-                      {
-                        title: name,
-                        route: path,
-                      },
-                      true
-                    )
-                  }
-                />
-              ))}
             <LogoutMenu />
           </div>
         </Menu.Items>

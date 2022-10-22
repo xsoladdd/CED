@@ -1,15 +1,19 @@
 import React from "react";
 import { FaEdit, FaRegAddressCard, FaTrash } from "react-icons/fa";
-import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
 import Card, { CardFooter, CardHeader } from "../../../../components/Card";
 import Status from "../../../../components/Status";
 import Tooltip from "../../../../components/Tooltip";
+import WarningModal from "../../../../components/WarningModal";
 import useDashboardRouter from "../../../../hooks/useDashboardRouter";
+import useToggle from "../../../../hooks/useToggle";
 import LegendCard from "./Components/LegendCard";
 import { column, mock_data } from "./helper";
 
 const EnrolledList: React.FC = ({}) => {
   const { pushRoute } = useDashboardRouter();
+  const { status: toggleStatus, toggle } = useToggle(false);
+
   const filterCard = (
     <Card
       className="w-5/6"
@@ -17,26 +21,75 @@ const EnrolledList: React.FC = ({}) => {
       footer={
         <CardFooter
           left={
-            <button
-              className="btn btn-sm btn-primary"
-              onClick={() =>
-                pushRoute({
-                  title: "Add new student",
-                  route: "enrolledList:add",
-                })
-              }
-            >
-              Enroll student
-            </button>
-          }
-          right={
-            <button className="btn btn-sm btn-error" disabled={true}>
-              Deactivate
-            </button>
+            <div className="flex gap-2">
+              <button
+                className="btn btn-sm btn-primary"
+                onClick={() =>
+                  pushRoute({
+                    title: "Add new student",
+                    route: "enrolledList:add",
+                  })
+                }
+              >
+                Enroll student
+              </button>
+              <button className="btn btn-sm btn-error" disabled={true}>
+                Drop Students
+              </button>
+            </div>
           }
         />
       }
-    ></Card>
+    >
+      <div className="flex gap-2">
+        <label className="input-group input-group-sm">
+          <span>
+            <FiSearch />
+          </span>
+          <input
+            type="search"
+            placeholder="Search for ID, Name and Email"
+            className="input input-bordered input-sm min-w-[400px]"
+          />
+        </label>
+      </div>
+    </Card>
+  );
+
+  const actionButtons = ({ LRN }: { LRN: string | number }) => (
+    <div className="flex gap-2 place-content-center">
+      <Tooltip text="Green/Pink card" direction="top">
+        <button
+          className="btn btn-xs btn-info "
+          onClick={() =>
+            pushRoute({
+              title: `Student Registration - ${LRN}`,
+              route: "enrolledList:regCard",
+            })
+          }
+        >
+          <FaRegAddressCard size="12" />
+        </button>
+      </Tooltip>
+      <Tooltip text="View/Edit student" direction="top">
+        <button
+          className="btn btn-xs btn-warning"
+          onClick={() =>
+            pushRoute({
+              title: `Student Info - ${LRN}`,
+              route: "enrolledList:studentDetails",
+            })
+          }
+        >
+          <FaEdit size="12" />
+        </button>
+      </Tooltip>
+      <Tooltip text="Drop Student" direction="top">
+        <button className="btn btn-xs btn-error " onClick={() => toggle()}>
+          <FaTrash size="12" />
+        </button>
+      </Tooltip>
+    </div>
   );
 
   const tableCard = (
@@ -66,11 +119,7 @@ const EnrolledList: React.FC = ({}) => {
               ) => (
                 <tr key={idx}>
                   <td>
-                    <input
-                      type="checkbox"
-                      checked
-                      className="checkbox checkbox-xs"
-                    />
+                    <input type="checkbox" className="checkbox checkbox-xs" />
                   </td>
                   <td>{StudentID}</td>
                   <td>{name}</td>
@@ -81,25 +130,7 @@ const EnrolledList: React.FC = ({}) => {
                   <td>
                     <Status color={status} />
                   </td>
-                  <td>
-                    <div className="flex gap-2 place-content-center">
-                      <Tooltip text="Green/Pink card" direction="top">
-                        <button className="btn btn-xs btn-info ">
-                          <FaRegAddressCard size="12" />
-                        </button>
-                      </Tooltip>
-                      <Tooltip text="View/Edit student" direction="top">
-                        <button className="btn btn-xs btn-warning ">
-                          <FaEdit size="12" />
-                        </button>
-                      </Tooltip>
-                      <Tooltip text="Drop Student" direction="top">
-                        <button className="btn btn-xs btn-error ">
-                          <FaTrash size="12" />
-                        </button>
-                      </Tooltip>
-                    </div>
-                  </td>
+                  <td>{actionButtons({ LRN: "123412341234" })}</td>
                 </tr>
               )
             )}
@@ -123,6 +154,13 @@ const EnrolledList: React.FC = ({}) => {
 
   return (
     <>
+      <WarningModal
+        status={toggleStatus}
+        handleClose={() => toggle()}
+        handleProceed={() => toggle()}
+      >
+        Are you sure that you want to delete?
+      </WarningModal>
       <div className="flex flex-col gap-5">
         <div className="flex gap-5 ">
           {filterCard}

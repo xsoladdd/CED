@@ -22,7 +22,6 @@ export const userSlice: StoreSlice<IuserSlice> = (set) => ({
     data: {},
     setData: (userData) =>
       set(({ user }: IuserSlice): IuserSlice => {
-        console.log(user);
         return {
           user: {
             ...user,

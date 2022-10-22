@@ -1,6 +1,4 @@
-import { Disclosure } from "@headlessui/react";
 import React from "react";
-import { FiChevronDown } from "react-icons/fi";
 import { joinClass } from "../../utils/joinClass";
 
 interface ICardProps {
@@ -16,8 +14,6 @@ const Card: React.FC<ICardProps> = ({
   children,
   className,
   footer,
-  toggle = false,
-  toggleStatus = true,
   header,
   bordered = true,
 }) => {
@@ -29,34 +25,10 @@ const Card: React.FC<ICardProps> = ({
         className
       )}
     >
-      <Disclosure defaultOpen={toggleStatus}>
-        {({ open }: { open: boolean }) => (
-          <>
-            <div className={joinClass(`px-6 flex justify-between`)}>
-              <div className="">{header}</div>
-              <div className="flex place-items-center">
-                {toggle && (
-                  <>
-                    <Disclosure.Button>
-                      <FiChevronDown
-                        size={"25"}
-                        className={joinClass(
-                          open ? "rotate-180 transform" : ""
-                        )}
-                      />
-                    </Disclosure.Button>
-                  </>
-                )}
-              </div>
-            </div>
-            <Disclosure.Panel>
-              <div className=" px-6 py-4 min-h-[50px]">{children}</div>
+      <div className={joinClass(`px-6 flex justify-between`)}>{header}</div>
+      <div className=" px-6 py-4 min-h-[50px]">{children}</div>
 
-              <div className=" px-6 pt-2 w-full">{footer}</div>
-            </Disclosure.Panel>
-          </>
-        )}
-      </Disclosure>
+      <div className=" px-6 pt-2 w-full">{footer}</div>
     </div>
   );
 };

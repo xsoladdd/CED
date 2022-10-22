@@ -30,7 +30,7 @@ const AuditTrail: React.FC = ({}) => {
           />
         }
       >
-        <div className="flex place-items-end gap-5">
+        <div className="flex place-items-end gap-2">
           <div className="">
             <label className="input-group input-group-sm">
               <span>

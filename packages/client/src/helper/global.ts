@@ -1,6 +1,6 @@
 import { IBreadcrumbsItem } from "../store/useStore/slices/router/types";
 
-export const DICEBEAR_URL = `https://avatars.dicebear.com/api/bottts/api`;
+export const DICEBEAR_URL = `https://avatars.dicebear.com/api/adventurer-neutral/api`;
 
 // ENV
 export const IS_PROD = process.env.NODE_ENV === `production`;

@@ -5,7 +5,6 @@ import Status from "../../../../../components/Status";
 const LegendCard: React.FC = ({}) => {
   return (
     <>
-      {" "}
       <Card
         className="w-1/6 "
         bordered={false}

@@ -24,7 +24,7 @@ const Header: React.FC = ({}) => {
             </Text>
           </button>
           <div className="flex place-items-center gap-5">
-            <span>SY:2022-2023</span>
+            <span>SY: 2022-2023</span>
             <HeaderMenu />
           </div>
         </div>

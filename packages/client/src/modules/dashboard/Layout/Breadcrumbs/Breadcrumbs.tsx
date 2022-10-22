@@ -1,5 +1,6 @@
 import React from "react";
 import { FiHome } from "react-icons/fi";
+import useDashboardRouter from "../../../../hooks/useDashboardRouter";
 import useStore from "../../../../store/useStore";
 import { joinClass } from "../../../../utils/joinClass";
 
@@ -7,6 +8,7 @@ const Breadcrumbs: React.FC = ({}) => {
   const {
     router: { breadcrumbs, setActiveRoute, setBreadcrumbs },
   } = useStore();
+  const { pushRoute } = useDashboardRouter();
 
   const breadcrumbLinks = breadcrumbs.map(({ title, route }, idx) => (
     <li
@@ -42,7 +44,18 @@ const Breadcrumbs: React.FC = ({}) => {
         )}
       >
         <ul className="flex gap-2 ">
-          <FiHome className=" mt-[1.5px]" />
+          <FiHome
+            className=" mt-[1.5px] cursor-pointer"
+            onClick={() =>
+              pushRoute(
+                {
+                  title: `Dashboard`,
+                  route: "dashboard",
+                },
+                true
+              )
+            }
+          />
           <li className="flex gap-2 place-items-center ">
             <span>/ </span>
           </li>
