@@ -20,10 +20,13 @@ const Header: React.FC = ({}) => {
             }
           >
             <Text variant="h4" className="cursor-pointer">
-              Logo
+              {/* Logo */}
             </Text>
           </button>
-          <HeaderMenu />
+          <div className="flex place-items-center gap-5">
+            <span>SY:2022-2023</span>
+            <HeaderMenu />
+          </div>
         </div>
       </div>
     </>

@@ -1,16 +1,14 @@
+import axios from "axios";
 import { Formik } from "formik";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { Checkbox, Input, Label } from "../../../ui/Forms";
+import Text from "../../../components/Text";
+import { AUTH_SERVER_URI } from "../../../helper/global";
+import { IReturn } from "../../../interfaces/types";
 import { loginShema } from "../helper";
 import ErrorBox from "./ErrorBox";
-import axios from "axios";
-import { IReturn } from "../../../interfaces/types";
-import { useRouter } from "next/router";
-import { AUTH_SERVER_URI } from "../../../helper/global";
-import Text from "../../../components/Text";
 
 const LoginForm: React.FC = ({}) => {
-  const [rememberMe, setRememberMe] = useState(false);
   const [serverError, setServerError] = useState<string | undefined>(undefined);
   const { push } = useRouter();
 
@@ -77,42 +75,40 @@ const LoginForm: React.FC = ({}) => {
             onSubmit={handleSubmit}
           >
             <div className="flex flex-col gap-1">
-              <Label htmlFor="employeeId" text="Emplyee ID " />
-              <Input
+              <label
+                htmlFor="employeeId"
+                //  text="Emplyee ID "
+              />
+              <input
                 name="employeeId"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={``}
                 autoComplete="off"
                 value={values.employeeId}
-                isBordered
+                // isBordered
                 placeholder="Emplyee ID"
                 id="employeeId"
               />
             </div>
             <div className="flex flex-col gap-1">
-              <Label htmlFor="password" text="Password " />
+              <label
+                htmlFor="password"
+                // text="Password "
+              />
 
-              <Input
+              <input
                 type="password"
                 name="password"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                isBordered
+                // isBordered
                 value={values.password}
                 className={``}
                 id="password"
                 placeholder="********"
               />
             </div>
-            <Checkbox
-              label="Remember Password?"
-              color="primary"
-              size="sm"
-              checked={rememberMe}
-              id="remember-me"
-              onChange={() => setRememberMe(!rememberMe)}
-            />
             <ErrorBox
               error={errors.employeeId || errors.password || serverError}
             />

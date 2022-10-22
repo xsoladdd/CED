@@ -8,13 +8,20 @@
   font-family: "IBM Plex Sans", sans-serif;
   font-family: "Inter", sans-serif;
 }
+
 .input,
 .textarea,
 .card,
+.stats,
 .table,
-.th,
 .btn {
   @apply rounded-none;
 }
 
+.input,
+.textarea,
+.select,
+.btn {
+  @apply focus:outline-0;
+}
 /* Custom CSS */

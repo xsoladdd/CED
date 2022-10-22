@@ -1,5 +1,5 @@
 import React from "react";
-import { FiArrowRight } from "react-icons/fi";
+import { FiHome } from "react-icons/fi";
 import useStore from "../../../../store/useStore";
 import { joinClass } from "../../../../utils/joinClass";
 
@@ -10,7 +10,7 @@ const Breadcrumbs: React.FC = ({}) => {
 
   const breadcrumbLinks = breadcrumbs.map(({ title, route }, idx) => (
     <li
-      className={joinClass(`gap-2 flex place-content-center uppercase`)}
+      className={joinClass(`gap-2 flex place-content-center uppercase `)}
       key={idx}
       onClick={() => {
         if (idx + 1 !== breadcrumbs.length) {
@@ -21,19 +21,15 @@ const Breadcrumbs: React.FC = ({}) => {
     >
       <span
         className={joinClass(
-          ` my-auto`,
+          ` my-auto text-xs`,
           idx + 1 !== breadcrumbs.length
-            ? `text-blue-500 font-semibold underline cursor-pointer text-xs`
-            : `font-semibold cursor-default text-[16px]`
+            ? `text-blue-600 font-semibold underline cursor-pointer `
+            : `font-semibold cursor-default `
         )}
       >
         {title}
       </span>
-      {breadcrumbs.length - 1 !== idx && (
-        <span className="flex">
-          <FiArrowRight className="inline-block my-auto" size="15" />{" "}
-        </span>
-      )}
+      {breadcrumbs.length - 1 !== idx && <span className="flex">/</span>}
     </li>
   ));
 
@@ -46,10 +42,10 @@ const Breadcrumbs: React.FC = ({}) => {
         )}
       >
         <ul className="flex gap-2 ">
-          {/* <li className="flex gap-2 ">
-            <FiHome />
+          <FiHome className=" mt-[1.5px]" />
+          <li className="flex gap-2 place-items-center ">
             <span>/ </span>
-          </li> */}
+          </li>
           {breadcrumbLinks}
         </ul>
       </div>

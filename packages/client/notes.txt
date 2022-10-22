@@ -1,0 +1,16 @@
+Seeders
+    - Audit Trail Types
+        Managed Student
+        Managed Employee
+        Logged in
+        View Archive
+        Others
+
+    - Student Year level
+        K
+        P
+        1-12
+
+    - Global Vars
+        SY = 2022-2023
+

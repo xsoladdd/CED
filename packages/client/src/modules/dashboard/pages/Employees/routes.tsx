@@ -5,6 +5,9 @@ import { IRoute } from "../../Layout/types";
 const Employees = dynamic(() => import(`.`), {
   suspense: true,
 });
+const AddEmployee = dynamic(() => import(`./Components/AddEmployee`), {
+  suspense: true,
+});
 
 const employeesRoutes: Array<IRoute> = [
   {
@@ -14,6 +17,12 @@ const employeesRoutes: Array<IRoute> = [
     group: `main`,
     activePath: "employees",
     logo: (props) => <FiDatabase {...props} />,
+  },
+  {
+    component: AddEmployee,
+    name: `Add Employee`,
+    path: `employees:add`,
+    activePath: "employees",
   },
 ];
 

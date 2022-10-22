@@ -4,15 +4,17 @@ export const mock_data: Array<{
   birthday: string;
   email: string;
   contactNumber: string;
-  status: "grey" | "green" | "blue";
+  sectionYear: string;
+  status: "green" | "grey";
 }> = [
   {
-    StudentID: 13142315231423,
+    StudentID: 1,
     name: "Aldon Foreman",
     birthday: "8/7/2022",
     email: "aforeman0@paginegialle.it",
     contactNumber: "682942137-3",
-    status: "grey",
+    sectionYear: "3rd year - Parol",
+    status: "green",
   },
   {
     StudentID: 2,
@@ -20,7 +22,8 @@ export const mock_data: Array<{
     birthday: "12/24/2021",
     email: "mhabgood1@cdc.gov",
     contactNumber: "871240373-3",
-    status: "grey",
+    sectionYear: "3rd year - Parol",
+    status: "green",
   },
   {
     StudentID: 3,
@@ -28,6 +31,7 @@ export const mock_data: Array<{
     birthday: "11/15/2021",
     email: "jhaddock2@kickstarter.com",
     contactNumber: "066584338-0",
+    sectionYear: "3rd year - Parol",
     status: "green",
   },
   {
@@ -36,6 +40,7 @@ export const mock_data: Array<{
     birthday: "1/13/2022",
     email: "flaffoleylane3@blogtalkradio.com",
     contactNumber: "086791068-2",
+    sectionYear: "3rd year - Parol",
     status: "grey",
   },
   {
@@ -44,7 +49,8 @@ export const mock_data: Array<{
     birthday: "1/3/2022",
     email: "sefford4@elpais.com",
     contactNumber: "125564508-3",
-    status: "blue",
+    sectionYear: "3rd year - Parol",
+    status: "grey",
   },
   {
     StudentID: 6,
@@ -52,7 +58,8 @@ export const mock_data: Array<{
     birthday: "4/20/2022",
     email: "lmeekin5@amazon.co.uk",
     contactNumber: "642951908-2",
-    status: "blue",
+    sectionYear: "3rd year - Parol",
+    status: "grey",
   },
   {
     StudentID: 7,
@@ -60,7 +67,8 @@ export const mock_data: Array<{
     birthday: "11/19/2021",
     email: "otrenbey6@ning.com",
     contactNumber: "915917309-2",
-    status: "grey",
+    sectionYear: "3rd year - Parol",
+    status: "green",
   },
   {
     StudentID: 8,
@@ -68,7 +76,8 @@ export const mock_data: Array<{
     birthday: "1/7/2022",
     email: "korgill7@about.me",
     contactNumber: "555690585-1",
-    status: "grey",
+    sectionYear: "3rd year - Parol",
+    status: "green",
   },
   {
     StudentID: 9,
@@ -76,6 +85,7 @@ export const mock_data: Array<{
     birthday: "11/22/2021",
     email: "shardway8@pagesperso-orange.fr",
     contactNumber: "944545165-1",
+    sectionYear: "3rd year - Parol",
     status: "grey",
   },
   {
@@ -84,16 +94,19 @@ export const mock_data: Array<{
     birthday: "7/24/2022",
     email: "rrottenbury9@dyndns.org",
     contactNumber: "815311860-9",
-    status: "blue",
+    sectionYear: "3rd year - Parol",
+    status: "grey",
   },
 ];
 
 export const column = [
-  "LRN",
+  "",
+  "StudentID",
   "Full Name",
   "Birthday",
-  "Mobile Number",
   "Email",
+  "Contact Number",
+  "Section Year",
   "Status",
   "Actions",
 ];

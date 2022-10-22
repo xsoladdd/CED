@@ -9,7 +9,7 @@ const AuditTrail = dynamic(() => import(`.`), {
 const auditTrailRoutes: Array<IRoute> = [
   {
     component: AuditTrail,
-    name: `auditTrail`,
+    name: `Audit Trail`,
     path: `auditTrail`,
     group: `main`,
     activePath: "auditTrail",

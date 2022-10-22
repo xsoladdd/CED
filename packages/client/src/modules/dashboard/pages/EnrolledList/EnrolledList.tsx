@@ -1,5 +1,5 @@
 import React from "react";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaRegAddressCard, FaTrash } from "react-icons/fa";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import Card, { CardFooter, CardHeader } from "../../../../components/Card";
 import Status from "../../../../components/Status";
@@ -8,9 +8,8 @@ import useDashboardRouter from "../../../../hooks/useDashboardRouter";
 import LegendCard from "./Components/LegendCard";
 import { column, mock_data } from "./helper";
 
-const Students: React.FC = ({}) => {
+const EnrolledList: React.FC = ({}) => {
   const { pushRoute } = useDashboardRouter();
-
   const filterCard = (
     <Card
       className="w-5/6"
@@ -19,12 +18,20 @@ const Students: React.FC = ({}) => {
         <CardFooter
           left={
             <button
-              className="btn btn-sm btn-info"
+              className="btn btn-sm btn-primary"
               onClick={() =>
-                pushRoute({ title: "Add new student", route: "students:add" })
+                pushRoute({
+                  title: "Add new student",
+                  route: "enrolledList:add",
+                })
               }
             >
-              Add student
+              Enroll student
+            </button>
+          }
+          right={
+            <button className="btn btn-sm btn-error" disabled={true}>
+              Deactivate
             </button>
           }
         />
@@ -46,23 +53,49 @@ const Students: React.FC = ({}) => {
           <tbody className="text-center">
             {mock_data.map(
               (
-                { StudentID, birthday, contactNumber, email, name, status },
+                {
+                  StudentID,
+                  birthday,
+                  contactNumber,
+                  email,
+                  name,
+                  sectionYear,
+                  status,
+                },
                 idx
               ) => (
                 <tr key={idx}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked
+                      className="checkbox checkbox-xs"
+                    />
+                  </td>
                   <td>{StudentID}</td>
                   <td>{name}</td>
                   <td>{birthday}</td>
-                  <td>{contactNumber}</td>
                   <td>{email}</td>
+                  <td>{contactNumber}</td>
+                  <td>{sectionYear}</td>
                   <td>
                     <Status color={status} />
                   </td>
                   <td>
                     <div className="flex gap-2 place-content-center">
-                      <Tooltip text="View/Edit student" direction="top">
+                      <Tooltip text="Green/Pink card" direction="top">
                         <button className="btn btn-xs btn-info ">
+                          <FaRegAddressCard size="12" />
+                        </button>
+                      </Tooltip>
+                      <Tooltip text="View/Edit student" direction="top">
+                        <button className="btn btn-xs btn-warning ">
                           <FaEdit size="12" />
+                        </button>
+                      </Tooltip>
+                      <Tooltip text="Drop Student" direction="top">
+                        <button className="btn btn-xs btn-error ">
+                          <FaTrash size="12" />
                         </button>
                       </Tooltip>
                     </div>
@@ -100,4 +133,4 @@ const Students: React.FC = ({}) => {
     </>
   );
 };
-export default Students;
+export default EnrolledList;

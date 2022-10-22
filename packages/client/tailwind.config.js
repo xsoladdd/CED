@@ -19,16 +19,16 @@ module.exports = {
 
           "base-100": "white",
 
-          error: "#EC5F6B",
+          error: "#ef4444",
           "error-content": "#ffffff",
 
-          info: "#227FF1",
+          info: "#3b82f6",
           "info-content": "#ffffff",
 
-          success: "#33cc54",
+          success: "#10b981",
           "success-content": "#ffffff",
 
-          warning: "#e0c45c",
+          warning: "#eab308",
           "warning-content": "#ffffff",
         },
       },

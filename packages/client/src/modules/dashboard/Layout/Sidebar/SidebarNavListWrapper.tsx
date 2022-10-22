@@ -10,7 +10,7 @@ const SidebarNavListWrapper: React.FC<{ title: string }> = ({
       <div className="flex flex-col">
         <p
           className={joinClass(
-            ` text-xs text-[.80rem] font-semibold uppercase p-2 text-gray-600`
+            ` text-base text-[.80rem] font-bold uppercase p-2 text-gray-900 text-center pb-[20px]`
           )}
         >
           {title}

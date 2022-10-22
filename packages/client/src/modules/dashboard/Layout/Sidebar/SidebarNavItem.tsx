@@ -29,7 +29,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   return (
     <li
       className={joinClass(
-        `px-3 py-[3px] flex place-items-center gap-4 cursor-pointer duration-150 `
+        `px-3 py-[3px] flex place-items-center gap-4  duration-150 cursor-pointer w-fit`
       )}
       onClick={handleClick}
     >
