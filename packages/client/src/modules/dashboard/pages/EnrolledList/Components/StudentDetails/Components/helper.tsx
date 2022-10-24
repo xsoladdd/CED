@@ -1,7 +1,7 @@
 import RequiredIndicator from "../../../../../../../components/Required/RequiredIndicator";
 import Text from "../../../../../../../components/Text";
 import { joinClass } from "../../../../../../../utils/joinClass";
-import { IgenerateInput } from "./BasicInfoCard/type";
+import { IgenerateInput } from "../type";
 
 export const generateInput = ({
   disabled,
@@ -18,7 +18,7 @@ export const generateInput = ({
   selectValues = [],
   className,
 }: IgenerateInput) => (
-  <div className={joinClass(`form-control max-w-xs`, className)}>
+  <div className={joinClass(`form-control max-w-sm`, className)}>
     <label className="label">
       <span className="label-text ">
         {!disabled && required ? <RequiredIndicator /> : " "}
@@ -30,7 +30,7 @@ export const generateInput = ({
         type={type}
         placeholder={placeholer}
         className={joinClass(
-          `input input-bordered w-full max-w-xs input-sm`,
+          `input input-bordered  input-sm w-full`,
           error && touched ? `input-error` : ""
         )}
         value={value}
@@ -43,7 +43,7 @@ export const generateInput = ({
     {inputType === "select" && (
       <select
         className={joinClass(
-          `select select-bordered select-sm max-w-xs`,
+          `select select-bordered select-sm w-full`,
           error && touched ? `select-error` : ""
         )}
         value={value}

@@ -33,10 +33,22 @@ export interface IStudentAddressInfo {
   no: string;
   zipcode: string;
 }
+
+export interface IStudentAcademicInfo {
+  school: string;
+  schoolYear: string;
+  academicLevel:
+    | "Pre-Elementary"
+    | "Elementary"
+    | "Junior High"
+    | "Senior High";
+}
+
 export interface IselectedStudentState {
   basicInfo: IStudentBasicInfo;
   guardianInfo: IStudentGuardianInfo;
   addressInfo: IStudentAddressInfo;
+  academicInfo: Array<IStudentAcademicInfo>;
 }
 
 export interface IStudentSlice {
@@ -45,6 +57,10 @@ export interface IStudentSlice {
     setSelectedStudent: (params: IselectedStudentState) => void;
     setSelectedBasicInfo: (params: IStudentBasicInfo) => void;
     setSelectedGuardianInfo: (params: IStudentGuardianInfo) => void;
+    setSelectedAddressInfo: (params: IStudentAddressInfo) => void;
+    setSelectedAcademicRecordInfo: (
+      params: Array<IStudentAcademicInfo>
+    ) => void;
     resetSelectedStudent: () => void;
   };
 }

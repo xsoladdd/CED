@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaEdit, FaRegAddressCard, FaTrash } from "react-icons/fa";
 import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
 import Card, { CardFooter, CardHeader } from "../../../../components/Card";
@@ -7,6 +7,7 @@ import Tooltip from "../../../../components/Tooltip";
 import WarningModal from "../../../../components/WarningModal";
 import useDashboardRouter from "../../../../hooks/useDashboardRouter";
 import useToggle from "../../../../hooks/useToggle";
+import useStore from "../../../../store/useStore";
 import LegendCard from "./Components/LegendCard";
 import { column, mock_data } from "./helper";
 
@@ -55,18 +56,33 @@ const EnrolledList: React.FC = ({}) => {
       </div>
     </Card>
   );
+  const {
+    student: {
+      setSelectedAddressInfo,
+      resetSelectedStudent,
+      setSelectedBasicInfo,
+      // setSelectedGuardianInfo,
+    },
+  } = useStore();
+
+  useEffect(() => {
+    resetSelectedStudent();
+
+    return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const actionButtons = ({ LRN }: { LRN: string | number }) => (
     <div className="flex gap-2 place-content-center">
       <Tooltip text="Green/Pink card" direction="top">
         <button
           className="btn btn-xs btn-info "
-          onClick={() =>
+          onClick={() => {
             pushRoute({
               title: `Student Registration - ${LRN}`,
               route: "enrolledList:regCard",
-            })
-          }
+            });
+          }}
         >
           <FaRegAddressCard size="12" />
         </button>
@@ -74,12 +90,33 @@ const EnrolledList: React.FC = ({}) => {
       <Tooltip text="View/Edit student" direction="top">
         <button
           className="btn btn-xs btn-warning"
-          onClick={() =>
+          onClick={() => {
+            setSelectedBasicInfo({
+              birthday: "12-24-1997",
+              email: "aforeman0@paginegialle.it",
+              gender: "M",
+              middleName: "Efford",
+              firstName: "John",
+              lastName: "Doe",
+              LRN: "20140000123432",
+              mobileNumber: "09334213245",
+            });
+            // qwer Dummy data
+            setSelectedAddressInfo({
+              barangay: "Molino VII",
+              city: "Bacoor City",
+              no: "4102",
+              province: "Cavite",
+              region: "Region IV-A (CALABARZON)",
+              street: "4102",
+              subdiv: "San Lorenzo Ruiz ",
+              zipcode: "4102",
+            });
             pushRoute({
               title: `Student Info - ${LRN}`,
               route: "enrolledList:studentDetails",
-            })
-          }
+            });
+          }}
         >
           <FaEdit size="12" />
         </button>

@@ -24,18 +24,48 @@ const AddressCard: React.FC = ({}) => {
   const [cityData, setCity] = useState<Array<ICity>>([]);
   const [barangayData, setBarangay] = useState<Array<IBarangay>>([]);
 
-  useEffect(() => {
-    regions().then((response: Array<IregionType>) => {
-      setRegion(response);
-    });
-  }, []);
-
   const {
     student: {
       selectedStudent: { addressInfo },
-      // ,
+      setSelectedAddressInfo,
     },
   } = useStore();
+  useEffect(() => {
+    regions().then((regionList: Array<IregionType>) => {
+      setRegion(regionList);
+      // get region code
+      if (!addressInfo.region) return;
+      const regionCode = regionList.filter(
+        ({ region_name }) => region_name === addressInfo.region
+      );
+      // Block if region name doesnt exist
+      if (regionCode.length === 0) return;
+      provinces(regionCode[0].region_code).then(
+        (provinceList: Array<Iprovince>) => {
+          setProvince(provinceList);
+          const provinceCode = provinceList.filter(
+            ({ province_name }) => province_name === addressInfo.province
+          );
+          // Block if province name doesnt exist
+          if (provinceCode.length === 0) return;
+          cities(provinceCode[0].province_code).then(
+            (cityList: Array<ICity>) => {
+              setCity(cityList);
+              const cityCode = cityList.filter(
+                ({ city_name }) => city_name === addressInfo.city
+              );
+              if (cityCode.length === 0) return;
+              barangays(cityCode[0].city_code).then(
+                (response: Array<IBarangay>) => {
+                  setBarangay(response);
+                }
+              );
+            }
+          );
+        }
+      );
+    });
+  }, [addressInfo]);
 
   const formik = useFormik({
     initialValues: addressInfo,
@@ -43,8 +73,7 @@ const AddressCard: React.FC = ({}) => {
     enableReinitialize: true,
     onSubmit: (values) => {
       // qwer Fix Submitting with API
-      // setSelectedBasicInfo(values);
-      console.log(values);
+      setSelectedAddressInfo(values);
       toggle();
     },
   });
@@ -80,7 +109,7 @@ const AddressCard: React.FC = ({}) => {
       )}
     </div>
   );
-
+  console.log();
   return (
     <>
       <WarningModal
@@ -96,6 +125,55 @@ const AddressCard: React.FC = ({}) => {
       </WarningModal>
       <form className="w-full" onSubmit={formik.handleSubmit}>
         <Card className="w-full" header={header}>
+          <div className="flex gap-3">
+            {generateInput({
+              disabled: !isEditOn,
+              id: "no",
+              label: "House number :",
+              onChange: formik.handleChange,
+              value: formik.values.no,
+              error: formik.errors.no,
+              touched: formik.touched.no,
+              placeholer: "",
+              className: "w-1/4",
+            })}
+
+            {generateInput({
+              disabled: !isEditOn,
+              id: "street",
+              label: "Street :",
+              onChange: formik.handleChange,
+              value: formik.values.street,
+              error: formik.errors.street,
+              touched: formik.touched.street,
+              placeholer: "",
+              className: "w-1/4",
+            })}
+            {generateInput({
+              disabled: !isEditOn,
+              required: true,
+              id: "subdiv",
+              label: "Subdivision :",
+              onChange: formik.handleChange,
+              value: formik.values.subdiv,
+              error: formik.errors.subdiv,
+              touched: formik.touched.subdiv,
+              placeholer: "",
+              className: "w-1/4",
+            })}
+            {generateInput({
+              disabled: !isEditOn,
+              required: true,
+              id: "zipcode",
+              label: "Zip code :",
+              onChange: formik.handleChange,
+              value: formik.values.zipcode,
+              error: formik.errors.zipcode,
+              touched: formik.touched.zipcode,
+              placeholer: "",
+              className: "w-1/4",
+            })}
+          </div>
           <div className="flex gap-3">
             {generateInput({
               disabled: !isEditOn,
@@ -200,55 +278,6 @@ const AddressCard: React.FC = ({}) => {
                 id: brgy_code,
               })),
               className: "w-1/4",
-            })}
-          </div>
-          <div className="flex gap-3">
-            {generateInput({
-              disabled: !isEditOn,
-              id: "no",
-              label: "House number :",
-              onChange: formik.handleChange,
-              value: formik.values.no,
-              error: formik.errors.no,
-              touched: formik.touched.no,
-              placeholer: "",
-              className: "w-1/3",
-            })}
-
-            {generateInput({
-              disabled: !isEditOn,
-              id: "street",
-              label: "Street :",
-              onChange: formik.handleChange,
-              value: formik.values.street,
-              error: formik.errors.street,
-              touched: formik.touched.street,
-              placeholer: "",
-              className: "w-1/3",
-            })}
-            {generateInput({
-              disabled: !isEditOn,
-              required: true,
-              id: "subdiv",
-              label: "Subdivision :",
-              onChange: formik.handleChange,
-              value: formik.values.subdiv,
-              error: formik.errors.subdiv,
-              touched: formik.touched.subdiv,
-              placeholer: "",
-              className: "w-1/3",
-            })}
-            {generateInput({
-              disabled: !isEditOn,
-              required: true,
-              id: "zipcode",
-              label: "Zip code :",
-              onChange: formik.handleChange,
-              value: formik.values.zipcode,
-              error: formik.errors.zipcode,
-              touched: formik.touched.zipcode,
-              placeholer: "",
-              className: "w-1/3",
             })}
           </div>
         </Card>

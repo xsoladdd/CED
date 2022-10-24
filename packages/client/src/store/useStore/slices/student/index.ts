@@ -1,47 +1,13 @@
 import { resetSelectedStudent } from "./actions/resetSelectedStudent";
+import { setSelectedAddressInfo } from "./actions/setSelectedAddressInfo";
 import { setSelectedBasicInfo } from "./actions/setSelectedBasicInfo";
 import { setSelectedGuardianInfo } from "./actions/setSelectedGuardianInfo";
+import { setSelectedAcademicRecordInfo } from "./actions/setSelectedAcademicRecordInfo";
 import { defaultState } from "./intialState";
 import { IStudentSlice } from "./types";
 
 export const studentSlice: StoreSlice<IStudentSlice> = (set) => ({
   student: {
-    // selectedStudent: {
-    //   basicInfo: {
-    //     firstName: "john",
-    //     middleName: "",
-    //     lastName: "doe",
-    //     mobileNumber: "09331423122",
-    //     email: "johndoe@gmail.com",
-    //     birthday: "12/24/1993",
-    //     gender: "M",
-    //     LRN: "0934231234231",
-    //   },
-    //   guardianInfo: {
-    //     father: {
-    //       email: "",
-    //       firstName: "",
-    //       lastName: "",
-    //       middleName: "",
-    //       mobileNumber: "",
-    //     },
-    //     mother: {
-    //       email: "",
-    //       firstName: "",
-    //       lastName: "",
-    //       middleName: "",
-    //       mobileNumber: "",
-    //     },
-    //     guardian: {
-    //       email: "",
-    //       firstName: "",
-    //       lastName: "",
-    //       middleName: "",
-    //       mobileNumber: "",
-    //     },
-    //   },
-    // },
-    // qwer  Uncomment if production
     selectedStudent: defaultState,
     setSelectedStudent: (selectedStudent) =>
       set(
@@ -52,8 +18,10 @@ export const studentSlice: StoreSlice<IStudentSlice> = (set) => ({
           },
         })
       ),
-    setSelectedGuardianInfo: setSelectedGuardianInfo(set),
     resetSelectedStudent: resetSelectedStudent(set),
+    setSelectedGuardianInfo: setSelectedGuardianInfo(set),
+    setSelectedAcademicRecordInfo: setSelectedAcademicRecordInfo(set),
+    setSelectedAddressInfo: setSelectedAddressInfo(set),
     setSelectedBasicInfo: setSelectedBasicInfo(set),
   },
 });

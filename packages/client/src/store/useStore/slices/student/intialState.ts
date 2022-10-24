@@ -45,4 +45,26 @@ export const defaultState: IselectedStudentState = {
     subdiv: "",
     zipcode: "",
   },
+  academicInfo: [
+    {
+      academicLevel: "Pre-Elementary",
+      school: "School z",
+      schoolYear: "2014-2015",
+    },
+    {
+      academicLevel: "Elementary",
+      school: "School x",
+      schoolYear: "2014-2015",
+    },
+    {
+      academicLevel: "Senior High",
+      school: "School c",
+      schoolYear: "2014-2015",
+    },
+    {
+      academicLevel: "Junior High",
+      school: "School v",
+      schoolYear: "2014-2015",
+    },
+  ],
 };

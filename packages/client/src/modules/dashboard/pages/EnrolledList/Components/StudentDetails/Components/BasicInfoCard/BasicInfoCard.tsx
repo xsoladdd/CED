@@ -114,7 +114,7 @@ const BasicInfoCard: React.FC = ({}) => {
               className: "w-1/3",
             })}
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3   ">
             {generateInput({
               disabled: !isEditOn,
               required: true,
@@ -157,7 +157,7 @@ const BasicInfoCard: React.FC = ({}) => {
               className: "w-1/3",
             })}
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 ">
             {generateInput({
               type: "email",
               disabled: !isEditOn,
@@ -169,7 +169,7 @@ const BasicInfoCard: React.FC = ({}) => {
               error: formik.errors.email,
               touched: formik.touched.email,
               placeholer: "Email",
-              className: "w-1/2",
+              className: "w-1/3 ",
             })}
             {generateInput({
               disabled: !isEditOn,
@@ -181,8 +181,9 @@ const BasicInfoCard: React.FC = ({}) => {
               error: formik.errors.mobileNumber,
               touched: formik.touched.mobileNumber,
               placeholer: "Mobile Number",
-              className: "w-1/2",
+              className: "w-1/3 ",
             })}
+            <h1 className="w-1/3"></h1>
           </div>
         </Card>
       </form>
