@@ -12,5 +12,6 @@ export interface IgenerateInput {
   id: string;
   disabled: boolean;
   inputType?: "select" | "input";
-  selectValues?: Array<{ value: string | number; text: string }>;
+  selectValues?: Array<{ value: string | number; text: string; id?: string }>;
+  className?: string;
 }

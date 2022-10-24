@@ -19,4 +19,8 @@ Seeders
         Super Admin
         Registrar
 
+    - ParentType
+        G - Guardian
+        F - Father
+        M - Mother
 

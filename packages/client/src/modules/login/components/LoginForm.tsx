@@ -75,27 +75,20 @@ const LoginForm: React.FC = ({}) => {
             onSubmit={handleSubmit}
           >
             <div className="flex flex-col gap-1">
-              <label
-                htmlFor="employeeId"
-                //  text="Emplyee ID "
-              />
+              <label htmlFor="employeeId">Emplyee ID</label>
               <input
                 name="employeeId"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={``}
+                className="input input-sm input-bordered"
                 autoComplete="off"
                 value={values.employeeId}
-                // isBordered
                 placeholder="Emplyee ID"
                 id="employeeId"
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label
-                htmlFor="password"
-                // text="Password "
-              />
+              <label htmlFor="password">Password</label>
 
               <input
                 type="password"
@@ -104,7 +97,7 @@ const LoginForm: React.FC = ({}) => {
                 onBlur={handleBlur}
                 // isBordered
                 value={values.password}
-                className={``}
+                className="input input-sm input-bordered"
                 id="password"
                 placeholder="********"
               />
@@ -115,9 +108,8 @@ const LoginForm: React.FC = ({}) => {
             <div className="text-center pt-2">
               <button
                 type="submit"
-                className="btn btn-sm w-full"
+                className="btn btn-sm w-full btn-info"
                 color="primary"
-                // isLoading={}
                 disabled={isSubmitting}
               >
                 Sign in

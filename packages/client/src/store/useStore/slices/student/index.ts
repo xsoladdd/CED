@@ -1,38 +1,48 @@
-import {
-  IselectedStudentState,
-  IStudentBasicInfo,
-  IStudentSlice,
-} from "./types";
-
-const defaultState: IselectedStudentState = {
-  basicInfo: {
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    mobileNumber: "",
-    email: "",
-    birthday: "",
-    gender: "M",
-    LRN: "",
-  },
-};
+import { resetSelectedStudent } from "./actions/resetSelectedStudent";
+import { setSelectedBasicInfo } from "./actions/setSelectedBasicInfo";
+import { setSelectedGuardianInfo } from "./actions/setSelectedGuardianInfo";
+import { defaultState } from "./intialState";
+import { IStudentSlice } from "./types";
 
 export const studentSlice: StoreSlice<IStudentSlice> = (set) => ({
   student: {
-    selectedStudent: {
-      basicInfo: {
-        firstName: "john",
-        middleName: "",
-        lastName: "doe",
-        mobileNumber: "09331423122",
-        email: "johndoe@gmail.com",
-        birthday: "12/24/1993",
-        gender: "M",
-        LRN: "0934231234231",
-      },
-    },
+    // selectedStudent: {
+    //   basicInfo: {
+    //     firstName: "john",
+    //     middleName: "",
+    //     lastName: "doe",
+    //     mobileNumber: "09331423122",
+    //     email: "johndoe@gmail.com",
+    //     birthday: "12/24/1993",
+    //     gender: "M",
+    //     LRN: "0934231234231",
+    //   },
+    //   guardianInfo: {
+    //     father: {
+    //       email: "",
+    //       firstName: "",
+    //       lastName: "",
+    //       middleName: "",
+    //       mobileNumber: "",
+    //     },
+    //     mother: {
+    //       email: "",
+    //       firstName: "",
+    //       lastName: "",
+    //       middleName: "",
+    //       mobileNumber: "",
+    //     },
+    //     guardian: {
+    //       email: "",
+    //       firstName: "",
+    //       lastName: "",
+    //       middleName: "",
+    //       mobileNumber: "",
+    //     },
+    //   },
+    // },
     // qwer  Uncomment if production
-    // selectedStudent: defaultState,
+    selectedStudent: defaultState,
     setSelectedStudent: (selectedStudent) =>
       set(
         ({ student }: IStudentSlice): IStudentSlice => ({
@@ -42,23 +52,8 @@ export const studentSlice: StoreSlice<IStudentSlice> = (set) => ({
           },
         })
       ),
-    resetSelectedStudent: () =>
-      set(
-        (old: IStudentSlice): IStudentSlice => ({
-          student: {
-            ...old.student,
-            selectedStudent: defaultState,
-          },
-        })
-      ),
-    setSelectedBasicInfo: (basicInfo: IStudentBasicInfo) =>
-      set(
-        (old: IStudentSlice): IStudentSlice => ({
-          student: {
-            ...old.student,
-            selectedStudent: { ...old.student.selectedStudent, basicInfo },
-          },
-        })
-      ),
+    setSelectedGuardianInfo: setSelectedGuardianInfo(set),
+    resetSelectedStudent: resetSelectedStudent(set),
+    setSelectedBasicInfo: setSelectedBasicInfo(set),
   },
 });

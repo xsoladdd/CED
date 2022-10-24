@@ -25,4 +25,12 @@
 .btn {
   @apply focus:outline-0;
 }
+
+select {
+  @apply select select-sm select-bordered;
+}
+
+input {
+  @apply input input-sm input-bordered;
+}
 /* Custom CSS */
