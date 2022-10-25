@@ -6,7 +6,7 @@ import { IgenerateInput } from "../type";
 export const generateInput = ({
   disabled,
   id,
-  label,
+  label = "",
   onChange,
   value,
   placeholer,

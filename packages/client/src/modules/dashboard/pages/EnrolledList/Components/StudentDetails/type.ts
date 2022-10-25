@@ -1,7 +1,7 @@
 import { ChangeEvent } from "react";
 
 export interface IgenerateInput {
-  label: string;
+  label?: string;
   required?: boolean;
   placeholer?: string;
   type?: React.HTMLInputTypeAttribute;

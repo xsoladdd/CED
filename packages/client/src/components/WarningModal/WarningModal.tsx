@@ -17,6 +17,10 @@ const WarningModal: React.FC<IModalProps> = ({
       colorClass = "btn-info";
       break;
 
+    case "green":
+      colorClass = "btn-success";
+      break;
+
     case "red":
       colorClass = "btn-error";
       break;
@@ -43,7 +47,7 @@ const WarningModal: React.FC<IModalProps> = ({
               Cancel
             </button>
             <button
-              className={joinClass(`btn btn-error btn-sm`, colorClass)}
+              className={joinClass(`btn btn-sm`, colorClass)}
               onClick={() => {
                 if (handleProceed) handleProceed();
               }}

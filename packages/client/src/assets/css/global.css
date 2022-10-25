@@ -15,6 +15,7 @@
 .stats,
 .table,
 .select,
+.alert,
 .btn {
   @apply rounded-none;
 }
@@ -30,7 +31,7 @@ select {
   @apply select select-sm select-bordered;
 }
 
-input {
+input [type="text"] {
   @apply input input-sm input-bordered;
 }
 /* Custom CSS */
