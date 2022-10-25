@@ -1,12 +1,12 @@
 export interface IStudentBasicInfo {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  mobileNumber: string;
+  LRN: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
   email: string;
+  mobile_number: string;
   birthday: string;
   gender: "M" | "F";
-  LRN: string;
 }
 
 interface IPersonProfile {
@@ -51,8 +51,34 @@ export interface IselectedStudentState {
   academicInfo: Array<IStudentAcademicInfo>;
 }
 
+export interface IstudentData extends IStudentBasicInfo {
+  status: "E" | "A" | "NE"; // Enrolled, Alumni and Not Enrolled
+  id: string;
+}
+
+export interface IenrolledStudent {
+  SID: string;
+  section: string;
+  grade_level: string;
+  status: "E" | "NE";
+  id: string;
+  student: IStudentBasicInfo;
+}
+
+export type selectedType =
+  | "student-record"
+  | "enrollment-record"
+  | "reg-card"
+  | undefined;
 export interface IStudentSlice {
   student: {
+    studentList: Array<IstudentData>;
+    enrolledStudentList: Array<IenrolledStudent>;
+    selectedRecord: {
+      id: string | undefined;
+      type: selectedType;
+    };
+    setSelectedRecord: (id: string, type: selectedType) => void;
     selectedStudent: IselectedStudentState;
     setSelectedStudent: (params: IselectedStudentState) => void;
     setSelectedBasicInfo: (params: IStudentBasicInfo) => void;

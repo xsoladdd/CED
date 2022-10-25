@@ -13,6 +13,7 @@ const DiceBearAvatar: React.FC<IDiceBearAvatarProps> = ({
       width={250}
       height={250}
       alt="Dice Bear Avatar"
+      className="w-[300px]"
       unoptimized={!optimize}
     />
   );

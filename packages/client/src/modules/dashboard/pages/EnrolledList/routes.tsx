@@ -10,9 +10,12 @@ const RegCard = dynamic(() => import(`./Components/RegCard`), {
   suspense: true,
 });
 
-const StudentDetails = dynamic(() => import(`./Components/StudentDetails`), {
-  suspense: true,
-});
+const StudentDetails = dynamic(
+  () => import(`../Shared/Components/StudentDetails`),
+  {
+    suspense: true,
+  }
+);
 
 const EnrollStudent = dynamic(() => import(`./Components/EnrollStudent`), {
   suspense: true,

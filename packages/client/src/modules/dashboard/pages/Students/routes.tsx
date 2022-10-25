@@ -8,6 +8,12 @@ const Students = dynamic(() => import(`.`), {
 const AddStudents = dynamic(() => import(`./Components/AddStudent`), {
   suspense: true,
 });
+const StudentDetails = dynamic(
+  () => import(`../Shared/Components/StudentDetails`),
+  {
+    suspense: true,
+  }
+);
 
 const studentsRoute: Array<IRoute> = [
   {
@@ -23,7 +29,12 @@ const studentsRoute: Array<IRoute> = [
     name: `students`,
     path: `students:add`,
     activePath: "students",
-    logo: (props) => <FiUser {...props} />,
+  },
+  {
+    component: StudentDetails,
+    name: `students`,
+    path: `students:view`,
+    activePath: "students",
   },
 ];
 

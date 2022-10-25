@@ -1,5 +1,5 @@
 import { SetState } from "zustand";
-import { defaultState } from "../intialState";
+import { defaultSelectedStudent } from "../intialState";
 import { IStudentSlice } from "../types";
 
 export const resetSelectedStudent = (set: SetState<IStudentSlice>) => () =>
@@ -7,7 +7,11 @@ export const resetSelectedStudent = (set: SetState<IStudentSlice>) => () =>
     (old: IStudentSlice): IStudentSlice => ({
       student: {
         ...old.student,
-        selectedStudent: defaultState,
+        selectedStudent: defaultSelectedStudent,
+        selectedRecord: {
+          id: undefined,
+          type: undefined,
+        },
       },
     })
   );

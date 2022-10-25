@@ -10,6 +10,7 @@
 }
 
 .input,
+.input-group,
 .textarea,
 .card,
 .stats,
@@ -20,6 +21,10 @@
   @apply rounded-none;
 }
 
+.input[type="search"],
+.search-identifier {
+  border-radius: 0 !important;
+}
 .input,
 .textarea,
 .select,
@@ -27,11 +32,19 @@
   @apply focus:outline-0;
 }
 
+form {
+  @apply w-full;
+}
 select {
   @apply select select-sm select-bordered;
 }
 
-input [type="text"] {
+input[type="text"] {
   @apply input input-sm input-bordered;
 }
+
+table > thead > tr > th:first-child {
+  @apply rounded-none;
+}
+
 /* Custom CSS */

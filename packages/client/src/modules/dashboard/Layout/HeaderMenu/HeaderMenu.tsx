@@ -8,7 +8,7 @@ const HeaderMenu: React.FC = ({}) => {
 
   return (
     <Menu as="div" className="relative inline-block text-left  h-[38px]">
-      <Menu.Button className="rounded-full h-[38px] w-[38px] overflow-hidden border-[2px] border-primary-focus">
+      <Menu.Button className="rounded-full h-[38px] w-[38px] overflow-hidden border-[2px] border-primary-focus relative">
         <DiceBearAvatar id="20140023" />
       </Menu.Button>
 

@@ -51,7 +51,7 @@ const Employees: React.FC = ({}) => {
       <div className="flex gap-2">
         <div className="">
           <label className="input-group input-group-sm">
-            <span>
+            <span className="search-identifier">
               <FiSearch />
             </span>
             <input
@@ -106,7 +106,7 @@ const Employees: React.FC = ({}) => {
                           <FaSyncAlt size="12" />
                         </button>
                       </Tooltip>
-                      <Tooltip text="Deactivate Account" direction="top">
+                      <Tooltip text="Deactivate Account" direction="left">
                         <button className="btn btn-xs btn-error ">
                           <FaUserAltSlash size="12" />
                         </button>

@@ -5,8 +5,8 @@ import Card, { CardHeader } from "../components/Card";
 import Text from "../components/Text";
 import WarningModal from "../components/WarningModal";
 import useToggle from "../hooks/useToggle";
-import { academicRecordInfoSchema } from "../modules/dashboard/pages/EnrolledList/Components/StudentDetails/Components/AcademicRecordCard/helper";
-import { generateInput } from "../modules/dashboard/pages/EnrolledList/Components/StudentDetails/Components/helper";
+import { academicRecordInfoSchema } from "../modules/dashboard/pages/Shared/Components/StudentDetails/Components/AcademicRecordCard/helper";
+import { generateInput } from "../modules/dashboard/pages/Shared/Components/StudentDetails/Components/helper";
 import useStore from "../store/useStore";
 
 const AcademicRecordCard: React.FC = ({}) => {

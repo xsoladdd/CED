@@ -1,5 +1,6 @@
 import { GetState, SetState } from "zustand";
 import { fishSlice } from "./fish";
+import { globalSlice } from "./global";
 import { routerSlice } from "./router";
 import { studentSlice } from "./student";
 import { userSlice } from "./user";
@@ -9,4 +10,5 @@ export const generateStore = (set: SetState<any>, get: GetState<any>) => ({
   ...routerSlice(set, get),
   ...userSlice(set, get),
   ...studentSlice(set, get),
+  ...globalSlice(set, get),
 });

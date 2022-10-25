@@ -1,15 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaEdit } from "react-icons/fa";
 import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
 import Card, { CardFooter, CardHeader } from "../../../../components/Card";
 import Status from "../../../../components/Status";
 import Tooltip from "../../../../components/Tooltip";
 import useDashboardRouter from "../../../../hooks/useDashboardRouter";
+import useStore from "../../../../store/useStore";
 import LegendCard from "./Components/LegendCard";
-import { column, mock_data } from "./helper";
+import { column } from "./helper";
 
 const Students: React.FC = ({}) => {
   const { pushRoute } = useDashboardRouter();
+
+  const {
+    student: { studentList, setSelectedRecord, resetSelectedStudent },
+  } = useStore();
+
+  useEffect(() => {
+    resetSelectedStudent();
+    return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filterCard = (
     <Card
@@ -32,7 +43,7 @@ const Students: React.FC = ({}) => {
     >
       <div className="flex gap-2">
         <label className="input-group input-group-sm">
-          <span>
+          <span className="search-identifier">
             <FiSearch />
           </span>
           <input
@@ -57,27 +68,50 @@ const Students: React.FC = ({}) => {
             </tr>
           </thead>
           <tbody className="text-center">
-            {mock_data.map(
+            {studentList.map(
               (
-                { StudentID, birthday, contactNumber, email, name, status },
+                {
+                  LRN,
+                  birthday,
+                  email,
+                  first_name,
+                  id,
+                  last_name,
+                  middle_name,
+                  mobile_number,
+                  status,
+                },
                 idx
               ) => (
                 <tr key={idx}>
-                  <td>{StudentID}</td>
-                  <td>{name}</td>
+                  <td>{LRN}</td>
+                  <td>{`${first_name} ${middle_name} ${last_name}`}</td>
                   <td>{birthday}</td>
-                  <td>{contactNumber}</td>
+                  <td>{mobile_number}</td>
                   <td>{email}</td>
                   <td>
-                    <Status color={status} />
+                    {status === "A" && <Status color={"blue"} />}
+                    {status === "E" && <Status color={"green"} />}
+                    {status === "NE" && <Status color={"grey"} />}
                   </td>
                   <td>
                     <div className="flex gap-2 place-content-center">
-                      <Tooltip text="View/Edit student" direction="top">
-                        <button className="btn btn-xs btn-info ">
-                          <FaEdit size="12" />
-                        </button>
-                      </Tooltip>
+                      {id && (
+                        <Tooltip text="View/Edit student" direction="top">
+                          <button
+                            className="btn btn-xs btn-success"
+                            onClick={() => {
+                              setSelectedRecord(id, "student-record");
+                              pushRoute({
+                                title: `Student Info - ${LRN}`,
+                                route: "students:view",
+                              });
+                            }}
+                          >
+                            <FaEdit size="12" />
+                          </button>
+                        </Tooltip>
+                      )}
                     </div>
                   </td>
                 </tr>

@@ -3,9 +3,12 @@ import { DEFAULT_ROUTE } from "../../../helper/global";
 import useDashboardRouter from "../../../hooks/useDashboardRouter";
 import Text from "../../../components/Text";
 import HeaderMenu from "./HeaderMenu";
-
+import useStore from "../../../store/useStore";
 const Header: React.FC = ({}) => {
   const { pushRoute } = useDashboardRouter();
+  const {
+    globalVars: { active_school_year },
+  } = useStore();
 
   return (
     <>
@@ -24,7 +27,7 @@ const Header: React.FC = ({}) => {
             </Text>
           </button>
           <div className="flex place-items-center gap-5">
-            <span>SY: 2022-2023</span>
+            <span>SY: {active_school_year}</span>
             <HeaderMenu />
           </div>
         </div>
