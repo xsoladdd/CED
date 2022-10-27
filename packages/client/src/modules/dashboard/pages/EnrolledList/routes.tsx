@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { FiUser } from "react-icons/fi";
+import { FiList } from "react-icons/fi";
 import { IRoute } from "../../Layout/types";
 
 const EnrolledList = dynamic(() => import(`.`), {
@@ -28,28 +28,25 @@ const enrolledListRoute: Array<IRoute> = [
     path: `enrolledList`,
     group: `main`,
     activePath: "enrolledList",
-    logo: (props) => <FiUser {...props} />,
+    logo: (props) => <FiList {...props} />,
   },
   {
     component: EnrollStudent,
     name: `Enroll Student`,
     path: `enrolledList:add`,
     activePath: "enrolledList",
-    logo: (props) => <FiUser {...props} />,
   },
   {
     component: RegCard,
     name: `Registration Card`,
     path: `enrolledList:regCard`,
     activePath: "enrolledList",
-    logo: (props) => <FiUser {...props} />,
   },
   {
     component: StudentDetails,
     name: `Student Details`,
     path: `enrolledList:studentDetails`,
     activePath: "enrolledList",
-    logo: (props) => <FiUser {...props} />,
   },
 ];
 

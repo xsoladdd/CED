@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { FiHardDrive } from "react-icons/fi";
+import { FiMonitor } from "react-icons/fi";
 import { IRoute } from "../../Layout/types";
 
 const Dashboard = dynamic(() => import(`.`), {
@@ -13,7 +13,7 @@ const dashboardRoutes: Array<IRoute> = [
     path: `dashboard`,
     group: `main`,
     activePath: "dashboard",
-    logo: (props) => <FiHardDrive {...props} />,
+    logo: (props) => <FiMonitor {...props} />,
   },
 ];
 

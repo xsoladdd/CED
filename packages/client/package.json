@@ -21,6 +21,7 @@
     "@apollo/client": "^3.6.2",
     "@headlessui/react": "^1.6.1",
     "@heroicons/react": "^1.0.6",
+    "@react-pdf/renderer": "^3.0.0",
     "@tailwindcss/typography": "^0.5.2",
     "axios": "^0.27.2",
     "cssnano": "^5.1.7",
