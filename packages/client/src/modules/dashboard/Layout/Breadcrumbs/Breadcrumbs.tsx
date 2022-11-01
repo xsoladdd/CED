@@ -39,8 +39,8 @@ const Breadcrumbs: React.FC = ({}) => {
     <>
       <div
         className={joinClass(
-          `card bg-base-100  border-x-[5px]  divide-l-2 flex gap-2 shadow-lg border-r-white
-          border-l-primary py-4 px-6 min-h-[50px] overflow-hidden`
+          `card bg-base-100  border-x-[5px]  divide-l-2 flex gap-2 shadow-lg border-white
+           py-4 px-6 min-h-[50px] overflow-hidden`
         )}
       >
         <ul className="flex gap-2 ">

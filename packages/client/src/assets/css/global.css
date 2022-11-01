@@ -35,9 +35,6 @@
 form {
   @apply w-full;
 }
-select {
-  @apply select select-sm select-bordered;
-}
 
 input[type="text"] {
   @apply input input-sm input-bordered;

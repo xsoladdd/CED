@@ -1,15 +1,17 @@
+import Datepicker from "../../../../../../../components/Datepicker";
 import RequiredIndicator from "../../../../../../../components/Required/RequiredIndicator";
 import Text from "../../../../../../../components/Text";
 import { joinClass } from "../../../../../../../utils/joinClass";
 import { IgenerateInput } from "../type";
 
 export const generateInput = ({
-  disabled,
+  disabled = false,
   id,
   label = "",
-  onChange,
+  onChange = () => {},
+  onDateChange = () => {},
   value,
-  placeholer,
+  placeholder,
   required,
   type,
   inputType = "input",
@@ -28,7 +30,7 @@ export const generateInput = ({
     {inputType === "input" && (
       <input
         type={type}
-        placeholder={placeholer}
+        placeholder={placeholder}
         className={joinClass(
           `input input-bordered  input-sm w-full`,
           error && touched ? `input-error` : ""
@@ -53,7 +55,7 @@ export const generateInput = ({
         disabled={disabled}
       >
         <option value="" disabled>
-          {placeholer ? placeholer : "Pick one"}
+          {placeholder ? placeholder : "Pick one"}
         </option>
         {selectValues.map(({ text, value: optValue, id: optionId }, idx) => (
           <option value={optValue} key={idx} id={optionId}>
@@ -61,6 +63,19 @@ export const generateInput = ({
           </option>
         ))}
       </select>
+    )}
+    {inputType === "date" && (
+      <Datepicker
+        placeholder={placeholder}
+        className={joinClass(
+          `input input-bordered  input-sm w-full`,
+          error && touched ? `input-error` : ""
+        )}
+        value={value}
+        onChange={(date) => onDateChange(date)}
+        id={id}
+        disabled={disabled}
+      />
     )}
     {error && touched && (
       <Text variant="error" className="pt-2">

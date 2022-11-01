@@ -8,6 +8,8 @@ export const textVariantRO = [
   `h3`,
   `h4`,
   `h5`,
+  `h6`,
+  `h7`,
   `error`,
 ] as const;
 export const textVariant = textVariantRO as Mutable<typeof textVariantRO>;
@@ -25,6 +27,10 @@ export const getTextVariantClass = (variant: TtextVariant): string => {
       return `${twHeadingClass} text-xl `;
     case "h5":
       return `${twHeadingClass} text-lg `;
+    case "h6":
+      return `${twHeadingClass} text-base `;
+    case "h7":
+      return `${twHeadingClass} text-sm `;
     case "error":
       return `text-error text-xs italic font-light`;
     default:

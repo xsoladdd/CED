@@ -9,13 +9,16 @@ import useDashboardRouter from "../../../../hooks/useDashboardRouter";
 import useToggle from "../../../../hooks/useToggle";
 import useStore from "../../../../store/useStore";
 import LegendCard from "./Components/LegendCard";
-import { column } from "./helper";
+import RegCardModal from "./Components/RegCardModal";
+import { column, generateSectionYear } from "./helper";
 
 const EnrolledList: React.FC = ({}) => {
   const { pushRoute } = useDashboardRouter();
   const { status: toggleStatus, toggle } = useToggle(false);
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
+  const { status: regFormModalStatus, toggle: toggleRegFormModalStatus } =
+    useToggle(false);
 
   const {
     student: {
@@ -34,6 +37,7 @@ const EnrolledList: React.FC = ({}) => {
   }, []);
 
   const sectionArray = year_level.filter(({ value }) => value === selectedYear);
+
   const filterCard = (
     <Card
       className="w-full"
@@ -110,9 +114,7 @@ const EnrolledList: React.FC = ({}) => {
               }}
               value={selectedYear}
             >
-              <option selected value="">
-                Select Year
-              </option>
+              <option value="">Select Year</option>
               {year_level.map(({ title, value }, idx) => (
                 <option key={idx} value={value}>
                   {title}
@@ -129,9 +131,7 @@ const EnrolledList: React.FC = ({}) => {
               value={selectedSection}
               onChange={(e) => setSelectedSection(e.target.value)}
             >
-              <option selected value="">
-                Select Section
-              </option>
+              <option value="">Select Section</option>
               {sectionArray.length !== 0 &&
                 sectionArray[0].sections?.map(({ title, value }, idx) => (
                   <option key={idx} value={value}>
@@ -147,15 +147,12 @@ const EnrolledList: React.FC = ({}) => {
 
   const actionButtons = ({ id }: { id: string }) => (
     <div className="flex gap-2 place-content-center">
-      <Tooltip text="Green/Pink card" direction="top">
+      <Tooltip text="Registration card" direction="top">
         <button
           className="btn btn-xs btn-info "
           onClick={() => {
             setSelectedRecord(id, "reg-card");
-            pushRoute({
-              title: `Student Registration  `,
-              route: "enrolledList:regCard",
-            });
+            toggleRegFormModalStatus();
           }}
         >
           <FaRegAddressCard size="12" />
@@ -182,26 +179,6 @@ const EnrolledList: React.FC = ({}) => {
       </Tooltip>
     </div>
   );
-
-  const generateSectionYear = (
-    yearCode: string,
-    sectionCode: string
-  ): { year: string; section: string } => {
-    const getYearLevelArr = year_level.filter(
-      ({ value }) => value.toLocaleLowerCase() === yearCode.toLocaleLowerCase()
-    );
-    if (getYearLevelArr.length === 0) {
-      return { section: "", year: "" };
-    }
-    const yearLevel = getYearLevelArr[0];
-    const getSectionArr = yearLevel.sections?.filter(
-      ({ value }) => value === sectionCode
-    );
-    if (!getSectionArr || getSectionArr?.length === 0) {
-      return { year: yearLevel.title, section: "" };
-    }
-    return { year: yearLevel.title, section: getSectionArr[0].value };
-  };
 
   const tableCard = (
     <Card className="w-full">
@@ -235,7 +212,8 @@ const EnrolledList: React.FC = ({}) => {
               ) => {
                 const { section: sectionString, year } = generateSectionYear(
                   grade_level,
-                  section
+                  section,
+                  year_level
                 );
                 return (
                   <tr key={idx}>
@@ -276,6 +254,11 @@ const EnrolledList: React.FC = ({}) => {
 
   return (
     <>
+      <RegCardModal
+        status={regFormModalStatus}
+        handleClose={() => toggleRegFormModalStatus()}
+        handleProceed={() => toggleRegFormModalStatus()}
+      />
       <WarningModal
         status={toggleStatus}
         handleClose={() => toggle()}

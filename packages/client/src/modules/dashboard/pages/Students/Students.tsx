@@ -29,14 +29,19 @@ const Students: React.FC = ({}) => {
       footer={
         <CardFooter
           left={
-            <button
-              className="btn btn-sm btn-info"
-              onClick={() =>
-                pushRoute({ title: "Add new student", route: "students:add" })
-              }
-            >
-              Add student
-            </button>
+            <>
+              <button
+                className="btn btn-sm btn-info"
+                onClick={() =>
+                  pushRoute({
+                    title: "Add new student",
+                    route: "students:add-stepper",
+                  })
+                }
+              >
+                Add student
+              </button>
+            </>
           }
         />
       }

@@ -83,7 +83,7 @@ const GuardianCard: React.FC = ({}) => {
             value: formik.values.father.firstName,
             error: formik.errors.father?.firstName,
             touched: formik.touched.father?.firstName,
-            placeholer: "First Name",
+            placeholder: "First Name",
             className: "w-1/3",
           })}
 
@@ -95,7 +95,7 @@ const GuardianCard: React.FC = ({}) => {
             value: formik.values.father.middleName,
             error: formik.errors.father?.middleName,
             touched: formik.touched.father?.middleName,
-            placeholer: "Middle Name",
+            placeholder: "Middle Name",
             className: "w-1/3",
           })}
 
@@ -108,7 +108,7 @@ const GuardianCard: React.FC = ({}) => {
             value: formik.values.father.lastName,
             error: formik.errors.father?.lastName,
             touched: formik.touched.father?.lastName,
-            placeholer: "Last Name",
+            placeholder: "Last Name",
             className: "w-1/3",
           })}
         </div>
@@ -122,7 +122,7 @@ const GuardianCard: React.FC = ({}) => {
             value: formik.values.father.email,
             error: formik.errors.father?.email,
             touched: formik.touched.father?.email,
-            placeholer: "Email address",
+            placeholder: "Email address",
             className: "w-1/2",
           })}
 
@@ -135,7 +135,7 @@ const GuardianCard: React.FC = ({}) => {
             value: formik.values.father.mobileNumber,
             error: formik.errors.father?.mobileNumber,
             touched: formik.touched.father?.mobileNumber,
-            placeholer: "Mobile Number",
+            placeholder: "Mobile Number",
             className: "w-1/2",
           })}
         </div>
@@ -158,7 +158,7 @@ const GuardianCard: React.FC = ({}) => {
           value: formik.values.mother.firstName,
           error: formik.errors.mother?.firstName,
           touched: formik.touched.mother?.firstName,
-          placeholer: "First Name",
+          placeholder: "First Name",
           className: "w-1/3",
         })}
 
@@ -170,7 +170,7 @@ const GuardianCard: React.FC = ({}) => {
           value: formik.values.mother.middleName,
           error: formik.errors.mother?.middleName,
           touched: formik.touched.mother?.middleName,
-          placeholer: "Middle Name",
+          placeholder: "Middle Name",
           className: "w-1/3",
         })}
 
@@ -183,7 +183,7 @@ const GuardianCard: React.FC = ({}) => {
           value: formik.values.mother.lastName,
           error: formik.errors.mother?.lastName,
           touched: formik.touched.mother?.lastName,
-          placeholer: "Last Name",
+          placeholder: "Last Name",
           className: "w-1/3",
         })}
       </div>
@@ -197,7 +197,7 @@ const GuardianCard: React.FC = ({}) => {
           value: formik.values.mother.email,
           error: formik.errors.mother?.email,
           touched: formik.touched.mother?.email,
-          placeholer: "Email address",
+          placeholder: "Email address",
           className: "w-1/2",
         })}
 
@@ -210,7 +210,7 @@ const GuardianCard: React.FC = ({}) => {
           value: formik.values.mother.mobileNumber,
           error: formik.errors.mother?.mobileNumber,
           touched: formik.touched.mother?.mobileNumber,
-          placeholer: "Mobile Number",
+          placeholder: "Mobile Number",
           className: "w-1/2",
         })}
       </div>
@@ -232,7 +232,7 @@ const GuardianCard: React.FC = ({}) => {
           value: formik.values.guardian.firstName,
           error: formik.errors.guardian?.firstName,
           touched: formik.touched.guardian?.firstName,
-          placeholer: "First Name",
+          placeholder: "First Name",
           className: "w-1/3",
         })}
 
@@ -244,7 +244,7 @@ const GuardianCard: React.FC = ({}) => {
           value: formik.values.guardian.middleName,
           error: formik.errors.guardian?.middleName,
           touched: formik.touched.guardian?.middleName,
-          placeholer: "Middle Name",
+          placeholder: "Middle Name",
           className: "w-1/3",
         })}
 
@@ -257,7 +257,7 @@ const GuardianCard: React.FC = ({}) => {
           value: formik.values.guardian.lastName,
           error: formik.errors.guardian?.lastName,
           touched: formik.touched.guardian?.lastName,
-          placeholer: "Last Name",
+          placeholder: "Last Name",
           className: "w-1/3",
         })}
       </div>
@@ -272,7 +272,7 @@ const GuardianCard: React.FC = ({}) => {
           value: formik.values.guardian.email,
           error: formik.errors.guardian?.email,
           touched: formik.touched.guardian?.email,
-          placeholer: "Email address",
+          placeholder: "Email address",
           className: "w-1/2",
         })}
 
@@ -285,7 +285,7 @@ const GuardianCard: React.FC = ({}) => {
           value: formik.values.guardian.mobileNumber,
           error: formik.errors.guardian?.mobileNumber,
           touched: formik.touched.guardian?.mobileNumber,
-          placeholer: "Mobile Number",
+          placeholder: "Mobile Number",
           className: "w-1/2",
         })}
       </div>

@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { useFormik } from "formik";
 import React from "react";
 import { FiEdit, FiSave, FiX } from "react-icons/fi";
@@ -86,7 +87,7 @@ const BasicInfoCard: React.FC = ({}) => {
               value: formik.values.first_name,
               error: formik.errors.first_name,
               touched: formik.touched.first_name,
-              placeholer: "First name",
+              placeholder: "First name",
               required: true,
               className: "w-1/3",
             })}
@@ -98,7 +99,7 @@ const BasicInfoCard: React.FC = ({}) => {
               value: formik.values.middle_name,
               error: formik.errors.middle_name,
               touched: formik.touched.middle_name,
-              placeholer: "Middle name",
+              placeholder: "Middle name",
               className: "w-1/3",
             })}
             {generateInput({
@@ -110,7 +111,7 @@ const BasicInfoCard: React.FC = ({}) => {
               value: formik.values.last_name,
               error: formik.errors.last_name,
               touched: formik.touched.last_name,
-              placeholer: "Middle name",
+              placeholder: "Middle name",
               className: "w-1/3",
             })}
           </div>
@@ -124,7 +125,7 @@ const BasicInfoCard: React.FC = ({}) => {
               error: formik.errors.LRN,
               touched: formik.touched.LRN,
               value: formik.values.LRN,
-              placeholer: "LRN",
+              placeholder: "LRN",
               className: "w-1/3",
             })}
             {generateInput({
@@ -136,7 +137,7 @@ const BasicInfoCard: React.FC = ({}) => {
               value: formik.values.gender,
               error: formik.errors.gender,
               touched: formik.touched.gender,
-              placeholer: "Gender",
+              placeholder: "Gender",
               inputType: "select",
               selectValues: [
                 { text: "Male", value: "M" },
@@ -144,16 +145,24 @@ const BasicInfoCard: React.FC = ({}) => {
               ],
               className: "w-1/3",
             })}
+
             {generateInput({
-              disabled: !isEditOn,
               required: true,
-              id: "birthday",
+              id: "basicInfo.birthday",
               label: "Birthday :",
-              onChange: formik.handleChange,
+              inputType: "date",
+              onChange: (date) => {
+                if (date instanceof Date) {
+                  formik.setFieldValue(
+                    "basicInfo.birthday",
+                    format(date, "MMMM dd yyyy")
+                  );
+                }
+              },
               value: formik.values.birthday,
               error: formik.errors.birthday,
-              touched: formik.touched.birthday,
-              placeholer: "Birthday",
+              touched: !!formik.touched.birthday,
+              placeholder: "Birthday",
               className: "w-1/3",
             })}
           </div>
@@ -168,7 +177,7 @@ const BasicInfoCard: React.FC = ({}) => {
               value: formik.values.email,
               error: formik.errors.email,
               touched: formik.touched.email,
-              placeholer: "Email",
+              placeholder: "Email",
               className: "w-1/3 ",
             })}
             {generateInput({
@@ -180,7 +189,7 @@ const BasicInfoCard: React.FC = ({}) => {
               value: formik.values.mobile_number,
               error: formik.errors.mobile_number,
               touched: formik.touched.mobile_number,
-              placeholer: "Mobile Number",
+              placeholder: "Mobile Number",
               className: "w-1/3 ",
             })}
             <h1 className="w-1/3"></h1>

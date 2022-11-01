@@ -15,12 +15,12 @@ const Card: React.FC<ICardProps> = ({
   className,
   footer,
   header,
-  bordered = true,
+  bordered = false,
 }) => {
   return (
     <div
       className={joinClass(
-        `card bg-base-100 border-x-[5px] selection:divide-l-2 flex gap-2 shadow-lg border-r-white py-4 min-h-fit`,
+        `card bg-base-100 border-x-[5px] selection:divide-l-2 flex gap-2 shadow-lg border-r-white py-4 min-h-fit `,
         bordered ? `border-l-primary` : `border-l-transparent`,
         className
       )}

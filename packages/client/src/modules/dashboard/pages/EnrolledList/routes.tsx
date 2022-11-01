@@ -6,10 +6,6 @@ const EnrolledList = dynamic(() => import(`.`), {
   suspense: true,
 });
 
-const RegCard = dynamic(() => import(`./Components/RegCard`), {
-  suspense: true,
-});
-
 const StudentDetails = dynamic(
   () => import(`../Shared/Components/StudentDetails`),
   {
@@ -34,12 +30,6 @@ const enrolledListRoute: Array<IRoute> = [
     component: EnrollStudent,
     name: `Enroll Student`,
     path: `enrolledList:add`,
-    activePath: "enrolledList",
-  },
-  {
-    component: RegCard,
-    name: `Registration Card`,
-    path: `enrolledList:regCard`,
     activePath: "enrolledList",
   },
   {

@@ -46,8 +46,8 @@ export interface IStudentAcademicInfo {
 
 export interface IselectedStudentState {
   basicInfo: IStudentBasicInfo;
-  guardianInfo: IStudentGuardianInfo;
   addressInfo: IStudentAddressInfo;
+  guardianInfo: IStudentGuardianInfo;
   academicInfo: Array<IStudentAcademicInfo>;
 }
 

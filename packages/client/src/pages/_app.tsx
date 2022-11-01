@@ -2,6 +2,8 @@ import React from "react";
 import { ThemeProvider } from "next-themes";
 import type { AppProps } from "next/app";
 import Head from "next/head";
+import "react-date-range/dist/styles.css"; // main style file
+import "react-date-range/dist/theme/default.css"; // theme css file
 import "../assets/css/global.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -15,6 +17,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ThemeProvider>
         <Component {...pageProps} />
       </ThemeProvider>
+      <script src="./TW-ELEMENTS-PATH/dist/js/index.min.js"></script>
     </>
   );
 }

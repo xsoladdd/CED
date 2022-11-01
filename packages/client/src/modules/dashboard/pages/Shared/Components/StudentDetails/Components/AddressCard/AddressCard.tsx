@@ -109,7 +109,6 @@ const AddressCard: React.FC = ({}) => {
       )}
     </div>
   );
-  console.log();
   return (
     <>
       <WarningModal
@@ -134,7 +133,7 @@ const AddressCard: React.FC = ({}) => {
               value: formik.values.no,
               error: formik.errors.no,
               touched: formik.touched.no,
-              placeholer: "",
+              placeholder: "",
               className: "w-1/4",
             })}
 
@@ -146,7 +145,7 @@ const AddressCard: React.FC = ({}) => {
               value: formik.values.street,
               error: formik.errors.street,
               touched: formik.touched.street,
-              placeholer: "",
+              placeholder: "",
               className: "w-1/4",
             })}
             {generateInput({
@@ -158,7 +157,7 @@ const AddressCard: React.FC = ({}) => {
               value: formik.values.subdiv,
               error: formik.errors.subdiv,
               touched: formik.touched.subdiv,
-              placeholer: "",
+              placeholder: "",
               className: "w-1/4",
             })}
             {generateInput({
@@ -170,7 +169,7 @@ const AddressCard: React.FC = ({}) => {
               value: formik.values.zipcode,
               error: formik.errors.zipcode,
               touched: formik.touched.zipcode,
-              placeholer: "",
+              placeholder: "",
               className: "w-1/4",
             })}
           </div>
@@ -195,7 +194,7 @@ const AddressCard: React.FC = ({}) => {
               error: formik.errors.region,
               touched: formik.touched.region,
               inputType: "select",
-              placeholer: "Select Region",
+              placeholder: "Select Region",
               selectValues: regionData.map(({ region_name, region_code }) => ({
                 text: region_name,
                 value: region_name,

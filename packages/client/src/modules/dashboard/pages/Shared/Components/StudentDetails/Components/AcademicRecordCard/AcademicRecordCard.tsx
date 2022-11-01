@@ -137,7 +137,7 @@ const AcademicRecordCard: React.FC = ({}) => {
           error: formik.errors[idx]?.school,
           touched: formik.touched[idx]?.school,
           value: formik.values[idx]?.school,
-          placeholer: "School",
+          placeholder: "School",
           className: "w-3/5",
         })}
         {generateInput({
@@ -149,7 +149,7 @@ const AcademicRecordCard: React.FC = ({}) => {
           error: formik.errors[idx]?.schoolYear,
           touched: formik.touched[idx]?.schoolYear,
           value: formik.values[idx]?.schoolYear,
-          placeholer: "ex: 2014-2015",
+          placeholder: "ex: 2014-2015",
           className: "w-1/5",
         })}
         {generateInput({
