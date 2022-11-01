@@ -1,4 +1,3 @@
-import { format } from "date-fns";
 import { useFormik } from "formik";
 import React from "react";
 import { FiEdit, FiSave, FiX } from "react-icons/fi";
@@ -77,7 +76,7 @@ const BasicInfoCard: React.FC = ({}) => {
         {`Changes won't be save. are you sure you want to cancel?`}
       </WarningModal>
       <form className="w-full" onSubmit={formik.handleSubmit}>
-        <Card className="w-full" header={header}>
+        <Card className="w-full overflow-visible" header={header}>
           <div className="flex gap-3">
             {generateInput({
               disabled: !isEditOn,
@@ -147,16 +146,14 @@ const BasicInfoCard: React.FC = ({}) => {
             })}
 
             {generateInput({
+              disabled: !isEditOn,
               required: true,
-              id: "basicInfo.birthday",
+              id: " birthday",
               label: "Birthday :",
               inputType: "date",
-              onChange: (date) => {
+              onDateChange: (date) => {
                 if (date instanceof Date) {
-                  formik.setFieldValue(
-                    "basicInfo.birthday",
-                    format(date, "MMMM dd yyyy")
-                  );
+                  formik.setFieldValue("birthday", date);
                 }
               },
               value: formik.values.birthday,

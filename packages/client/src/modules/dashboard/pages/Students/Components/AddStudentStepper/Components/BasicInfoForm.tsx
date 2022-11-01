@@ -74,10 +74,10 @@ const BasicInfoForm: React.FC<{ formik: FormikProps<IselectedStudentState> }> =
             id: "basicInfo.birthday",
             label: "Birthday :",
             inputType: "date",
-            onChange: (date) => {
-              // if (date instanceof Date) {
-              formik.setFieldValue("basicInfo.birthday", date);
-              // }
+            onDateChange: (date) => {
+              if (date instanceof Date) {
+                formik.setFieldValue("basicInfo.birthday", date);
+              }
             },
             value: formik.values.basicInfo.birthday,
             error: formik.errors.basicInfo?.birthday,

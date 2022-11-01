@@ -5,9 +5,6 @@ import { IRoute } from "../../Layout/types";
 const Students = dynamic(() => import(`.`), {
   suspense: true,
 });
-const AddStudents = dynamic(() => import(`./Components/AddStudent`), {
-  suspense: true,
-});
 const AddStudentsStepper = dynamic(
   () => import(`./Components/AddStudentStepper`),
   {
@@ -29,12 +26,6 @@ const studentsRoute: Array<IRoute> = [
     group: `main`,
     activePath: "students",
     logo: (props) => <FiUser {...props} />,
-  },
-  {
-    component: AddStudents,
-    name: `students`,
-    path: `students:add`,
-    activePath: "students",
   },
 
   {

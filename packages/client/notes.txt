@@ -28,3 +28,10 @@ TODO
     - Fix Address Information Saving on store.
 
 
+
+
+
+
+DATE FORMAT
+    saving format 2021-10-21 ("yyyy-MM-dd")
+    viewing format January 01 2021 ("MMMM dd yyyy")

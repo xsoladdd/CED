@@ -6,9 +6,9 @@ export interface IgenerateInput {
   required?: boolean;
   placeholder?: string;
   type?: React.HTMLInputTypeAttribute;
-  value: string;
+  value: string | Date;
   onChange?: (e: ChangeEvent<any>) => void;
-  onDateChange?: (date: string | null) => void;
+  onDateChange?: (date: Date | null) => void;
   error?: string | boolean | FormikErrors<Date>;
   touched?: boolean;
   id: string;

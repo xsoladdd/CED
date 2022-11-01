@@ -35,7 +35,7 @@ export const generateInput = ({
           `input input-bordered  input-sm w-full`,
           error && touched ? `input-error` : ""
         )}
-        value={value}
+        value={value.toString()}
         onChange={onChange}
         id={id}
         name={id}
@@ -48,7 +48,7 @@ export const generateInput = ({
           `select select-bordered select-sm w-full`,
           error && touched ? `select-error` : ""
         )}
-        value={value}
+        value={value.toString()}
         onChange={onChange}
         id={id}
         name={id}
@@ -71,7 +71,7 @@ export const generateInput = ({
           `input input-bordered  input-sm w-full`,
           error && touched ? `input-error` : ""
         )}
-        value={value}
+        value={typeof value !== "string" ? value : new Date(value)}
         onChange={(date) => onDateChange(date)}
         id={id}
         disabled={disabled}

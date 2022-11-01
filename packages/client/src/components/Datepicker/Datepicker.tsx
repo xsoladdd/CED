@@ -1,14 +1,14 @@
 import React from "react";
 import { Calendar } from "react-date-range";
 import useToggle from "../../hooks/useToggle";
-import { formatDate } from "../../utils/formatDate";
+import { formatDateReadable } from "../../utils/formatDateReadable";
 import { joinClass } from "../../utils/joinClass";
 
 interface IDatepickerProps {
   required?: boolean;
   placeholder?: string;
-  value: string;
-  onChange: (date: string | null) => void;
+  value: Date;
+  onChange: (date: Date) => void;
   error?: string | boolean;
   touched?: boolean;
   id: string;
@@ -20,6 +20,7 @@ const Datepicker: React.FC<IDatepickerProps> = ({
   onChange,
   value,
   placeholder,
+  disabled,
   className,
   error,
   touched,
@@ -37,22 +38,21 @@ const Datepicker: React.FC<IDatepickerProps> = ({
             className
           )}
           readOnly
-          value={formatDate(new Date(value))}
+          value={formatDateReadable(value)}
           placeholder={placeholder}
           onClick={() => toggle()}
+          disabled={disabled}
         />
-        {/* <div className=""> */}
         {status && (
           <Calendar
             date={typeof value !== "string" ? value : undefined}
             onChange={(date) => {
-              onChange(formatDate(date));
+              onChange(date);
               toggle();
             }}
             className="border-[1px] absolute top-[30px] left-0  z-20"
           />
         )}
-        {/* </div> */}
       </div>
     </>
   );
