@@ -79,7 +79,10 @@ const AddressCard: React.FC = ({}) => {
   });
   const header = (
     <div className="w-full flex justify-between ">
-      <CardHeader title={`Address Information ${isEditOn ? " - Edit" : " "}`} />
+      <CardHeader
+        title={`Address Information`}
+        subTitle={isEditOn ? "Edit" : ""}
+      />
       {isEditOn ? (
         <div className="flex gap-2">
           <button className="btn btn-xs btn-success" type="submit">

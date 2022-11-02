@@ -34,7 +34,8 @@ const GuardianCard: React.FC = ({}) => {
   const header = (
     <div className="w-full flex justify-between ">
       <CardHeader
-        title={`Parent/Guardian Information ${isEditOn ? " - Edit" : " "}`}
+        title={`Parent/Guardian Information`}
+        subTitle={isEditOn ? "Edit" : ""}
       />
       {!isEditOn ? (
         <div className="flex gap-2">

@@ -11,13 +11,15 @@ import AddressInfoForm from "./Components/AddressInfoForm";
 import BasicInfoForm from "./Components/BasicInfoForm";
 import { defaultValue, schemaArray } from "./Components/helper";
 import ParentGuardianForm from "./Components/ParentGuardianForm";
+import RequirementsForm from "./Components/RequirementsForm";
+import ReviewForms from "./Components/ReviewForms";
 
 const AddStudentStepper: React.FC = ({}) => {
   const [formIndex, setFormIndex] = useState(0);
   const maxPageIndex = schemaArray.length - 1;
   const formik = useFormik<IselectedStudentState>({
     initialValues: { ...defaultValue },
-    validationSchema: schemaArray[formIndex],
+    // validationSchema: schemaArray[formIndex],
     onSubmit: (values) => {
       // qwer Fix Submitting with API
       if (formIndex !== maxPageIndex) {
@@ -67,7 +69,9 @@ const AddStudentStepper: React.FC = ({}) => {
     <BasicInfoForm formik={formik} key={0} />,
     <AddressInfoForm formik={formik} key={1} />,
     <ParentGuardianForm formik={formik} key={2} />,
-    <AcademicBackgroundForm formik={formik} key={3} />,
+    <RequirementsForm formik={formik} key={3} />,
+    <AcademicBackgroundForm formik={formik} key={4} />,
+    <ReviewForms formik={formik} key={5} />,
   ];
 
   const stepper = (
@@ -83,9 +87,12 @@ const AddStudentStepper: React.FC = ({}) => {
           Parent/Guardian{" "}
         </li>
         <li className={joinClass("step", formIndex >= 3 ? "step-primary" : "")}>
-          Academic Background
+          Requirements
         </li>
         <li className={joinClass("step", formIndex >= 4 ? "step-primary" : "")}>
+          Academic Background
+        </li>
+        <li className={joinClass("step", formIndex >= 5 ? "step-primary" : "")}>
           Finalize
         </li>
       </ul>

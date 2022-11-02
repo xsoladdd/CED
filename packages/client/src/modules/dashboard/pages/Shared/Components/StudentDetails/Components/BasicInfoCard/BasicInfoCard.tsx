@@ -31,7 +31,10 @@ const BasicInfoCard: React.FC = ({}) => {
   });
   const header = (
     <div className="w-full flex justify-between ">
-      <CardHeader title={`Basic Information ${isEditOn ? " - Edit" : " "}`} />
+      <CardHeader
+        title={`Basic Information`}
+        subTitle={isEditOn ? "Edit" : ""}
+      />
       {isEditOn ? (
         <div className="flex gap-2">
           <button className="btn btn-xs btn-success" type="submit">

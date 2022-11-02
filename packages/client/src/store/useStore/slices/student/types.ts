@@ -34,6 +34,17 @@ export interface IStudentAddressInfo {
   zipcode: string;
 }
 
+export interface IStudentRequirementsInfo {
+  has_form_137: boolean;
+  has_psa: boolean;
+  has_parent_marriage_contract: boolean;
+  has_report_card: boolean;
+  has_report_of_rating: boolean;
+  has_good_moral: boolean;
+  has_school_government_recognition: boolean;
+  has_baptismal: boolean;
+}
+
 export interface IStudentAcademicInfo {
   school: string;
   schoolYear: string;
@@ -48,6 +59,7 @@ export interface IselectedStudentState {
   basicInfo: IStudentBasicInfo;
   addressInfo: IStudentAddressInfo;
   guardianInfo: IStudentGuardianInfo;
+  requirementInfo: IStudentRequirementsInfo;
   academicInfo: Array<IStudentAcademicInfo>;
 }
 
@@ -84,6 +96,7 @@ export interface IStudentSlice {
     setSelectedBasicInfo: (params: IStudentBasicInfo) => void;
     setSelectedGuardianInfo: (params: IStudentGuardianInfo) => void;
     setSelectedAddressInfo: (params: IStudentAddressInfo) => void;
+    setSelectedRequirementsInfo: (params: IStudentRequirementsInfo) => void;
     setSelectedAcademicRecordInfo: (
       params: Array<IStudentAcademicInfo>
     ) => void;

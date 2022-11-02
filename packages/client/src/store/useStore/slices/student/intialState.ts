@@ -44,6 +44,16 @@ export const defaultSelectedStudent: IselectedStudentState = {
     subdiv: "",
     zipcode: "",
   },
+  requirementInfo: {
+    has_form_137: false,
+    has_baptismal: false,
+    has_good_moral: true,
+    has_parent_marriage_contract: false,
+    has_psa: false,
+    has_report_card: true,
+    has_report_of_rating: true,
+    has_school_government_recognition: false,
+  },
   academicInfo: [
     // {
     //   academicLevel: "Pre-Elementary",

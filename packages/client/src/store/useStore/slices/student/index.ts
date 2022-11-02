@@ -4,6 +4,7 @@ import { setSelectedAddressInfo } from "./actions/setSelectedAddressInfo";
 import { setSelectedBasicInfo } from "./actions/setSelectedBasicInfo";
 import { setSelectedGuardianInfo } from "./actions/setSelectedGuardianInfo";
 import { setSelectedRecord } from "./actions/setSelectedRecord";
+import { setSelectedRequirementsInfo } from "./actions/setSelectedRequirementsInfo";
 import {
   defaultEnrolledStudentList,
   defaultSelectedStudent,
@@ -30,6 +31,7 @@ export const studentSlice: StoreSlice<IStudentSlice> = (set) => ({
           },
         })
       ),
+    setSelectedRequirementsInfo: setSelectedRequirementsInfo(set),
     resetSelectedStudent: resetSelectedStudent(set),
     setSelectedGuardianInfo: setSelectedGuardianInfo(set),
     setSelectedAcademicRecordInfo: setSelectedAcademicRecordInfo(set),

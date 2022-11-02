@@ -44,9 +44,7 @@ const AcademicRecordCard: React.FC = ({}) => {
   });
   const header = (
     <div className="w-full flex justify-between ">
-      <CardHeader
-        title={`Academic Information ${isEditOn ? " - Edit" : " "}`}
-      />
+      <CardHeader title={`Academic Record`} subTitle={isEditOn ? "Edit" : ""} />
       {isEditOn ? (
         <div className="flex gap-2">
           <button

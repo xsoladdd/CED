@@ -60,6 +60,16 @@ export const defaultValue: IselectedStudentState = {
     { academicLevel: "Pre-Elementary", school: "", schoolYear: "" },
     { academicLevel: "Pre-Elementary", school: "", schoolYear: "" },
   ],
+  requirementInfo: {
+    has_form_137: false,
+    has_baptismal: false,
+    has_good_moral: false,
+    has_parent_marriage_contract: false,
+    has_psa: false,
+    has_report_card: false,
+    has_report_of_rating: false,
+    has_school_government_recognition: false,
+  },
 };
 
 export const addingAcademicRecordInfoSchema = Yup.array(
@@ -110,6 +120,7 @@ export const schemaArray = [
   basicInfoSchemaWrapper,
   addressInfoSchemaWrapper,
   guardianInfoSchemaWrapper,
+  null,
   academicInfoSchemaWrapper,
-  undefined,
+  null,
 ];
