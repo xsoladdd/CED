@@ -19,7 +19,7 @@ const AddStudentStepper: React.FC = ({}) => {
   const maxPageIndex = schemaArray.length - 1;
   const formik = useFormik<IselectedStudentState>({
     initialValues: { ...defaultValue },
-    // validationSchema: schemaArray[formIndex],
+    validationSchema: schemaArray[formIndex],
     onSubmit: (values) => {
       // qwer Fix Submitting with API
       if (formIndex !== maxPageIndex) {
@@ -29,6 +29,7 @@ const AddStudentStepper: React.FC = ({}) => {
       }
     },
   });
+
   const cardHeader = (
     <CardHeader
       title="new student Form"

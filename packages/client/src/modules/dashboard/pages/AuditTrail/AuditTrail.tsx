@@ -1,9 +1,15 @@
 import React from "react";
 import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
 import Card, { CardFooter, CardHeader } from "../../../../components/Card";
+import useStore from "../../../../store/useStore";
 import { column, mock_data } from "./helper";
 
 const AuditTrail: React.FC = ({}) => {
+  const {
+    globalVars: { audit_trail_type },
+  } = useStore();
+
+  console.log(audit_trail_type);
   const filterCard = (
     <form
       action=""
@@ -47,12 +53,12 @@ const AuditTrail: React.FC = ({}) => {
           <div className=" w-fit">
             <div className="form-control max-w-xs bg">
               <select className="select select-bordered min-w-[250px] select-sm">
-                <option selected>Select Action Type</option>
-                <option>Managed Student</option>
-                <option>Managed Employee</option>
-                <option>Logged in</option>
-                <option>Viewed Archive</option>
-                <option>Others</option>
+                <option>Select Action Type</option>
+                {audit_trail_type.map(({ title, value }, idx) => (
+                  <option value={value} key={idx}>
+                    {title}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

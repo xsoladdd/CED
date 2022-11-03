@@ -7,7 +7,7 @@ import { joinClass } from "../../utils/joinClass";
 interface IDatepickerProps {
   required?: boolean;
   placeholder?: string;
-  value: Date;
+  value?: Date;
   onChange: (date: Date) => void;
   error?: string | boolean;
   touched?: boolean;

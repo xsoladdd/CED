@@ -1,8 +1,8 @@
 import React from "react";
+import { FiLogOut } from "react-icons/fi";
+import Text from "../../../components/Text";
 import { DEFAULT_ROUTE } from "../../../helper/global";
 import useDashboardRouter from "../../../hooks/useDashboardRouter";
-import Text from "../../../components/Text";
-import HeaderMenu from "./HeaderMenu";
 import useStore from "../../../store/useStore";
 const Header: React.FC = ({}) => {
   const { pushRoute } = useDashboardRouter();
@@ -22,13 +22,13 @@ const Header: React.FC = ({}) => {
               })
             }
           >
-            <Text variant="h4" className="cursor-pointer">
-              {/* Logo */}
-            </Text>
+            <Text variant="h4" className="cursor-pointer"></Text>
           </button>
           <div className="flex place-items-center gap-5">
             <span>SY: {active_school_year}</span>
-            <HeaderMenu />
+            <button className="btn btn-sm btn-primary">
+              <FiLogOut />
+            </button>
           </div>
         </div>
       </div>

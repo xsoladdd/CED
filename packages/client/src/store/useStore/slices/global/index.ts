@@ -117,11 +117,17 @@ export const globalSlice: StoreSlice<IglobalSlice> = (_set) => ({
         ],
       },
     ],
+    roles: [
+      { title: "System Administrator", value: "SA" },
+      { title: "Registrar Account", value: "RT" },
+      // { title: "BA", value: "Backdoor Account" },
+    ],
+    audit_trail_type: [
+      { title: "Managed Student", value: "managed_student" },
+      { title: "Logged", value: "logged_in" },
+      { title: "Viewed Archive", value: "viewed_archive" },
+      { title: "Managed Student", value: "managed_student" },
+      { title: "Others", value: "others" },
+    ],
   },
 });
-
-/*
- K
-        P
-        1-12
-*/

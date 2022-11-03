@@ -4,12 +4,29 @@ import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
 import Card, { CardFooter, CardHeader } from "../../../../components/Card";
 import Status from "../../../../components/Status";
 import Tooltip from "../../../../components/Tooltip";
+import WarningModal from "../../../../components/WarningModal";
 import useDashboardRouter from "../../../../hooks/useDashboardRouter";
+import useToggle from "../../../../hooks/useToggle";
+import useStore from "../../../../store/useStore";
 import LegendCard from "./Components/LegendCard";
-import { column, mock_data } from "./helper";
+import { column } from "./helper";
 
 const Employees: React.FC = ({}) => {
   const { pushRoute } = useDashboardRouter();
+
+  const { status: modalStatus, toggle: toggleModalStatus } = useToggle(false);
+
+  const {
+    employee: { employeeList },
+    globalVars: { roles },
+  } = useStore();
+
+  const generateRoleTitle = (role: "SA" | "RT" | "BD"): string => {
+    const roleInfo = roles.filter(({ value }) => value === role)[0];
+
+    return roleInfo?.title;
+  };
+
   const filterCard = (
     <Card
       className="w-5/6"
@@ -22,16 +39,12 @@ const Employees: React.FC = ({}) => {
                 className="btn btn-sm btn-info"
                 onClick={() =>
                   pushRoute({
-                    title: "Add new student",
+                    title: "Add new employee",
                     route: "employees:add",
                   })
                 }
               >
                 Add employee
-              </button>
-
-              <button className="btn btn-sm btn-error" disabled={true}>
-                Deactivate
               </button>
             </div>
           }
@@ -86,16 +99,22 @@ const Employees: React.FC = ({}) => {
             </tr>
           </thead>
           <tbody className="text-center">
-            {mock_data.map(
-              ({ email, id, mobile_number, name, status }, idx) => (
-                <tr key={idx}>
-                  <td>
-                    <input type="checkbox" className="checkbox checkbox-xs" />
-                  </td>
-                  <td>{id}</td>
-                  <td>{name}</td>
-                  <td>{mobile_number}</td>
-                  <td>{email}</td>
+            {employeeList.map(
+              ({
+                id,
+                first_name,
+                EID,
+                last_name,
+                middle_name,
+                status,
+                role,
+                partial_password,
+              }) => (
+                <tr key={id}>
+                  <td>{EID}</td>
+                  <td>{`${first_name} ${middle_name} ${last_name}`}</td>
+                  <td>{partial_password}</td>
+                  <td>{generateRoleTitle(role)}</td>
                   <td>
                     <Status color={status ? "green" : "grey"} />
                   </td>
@@ -107,7 +126,10 @@ const Employees: React.FC = ({}) => {
                         </button>
                       </Tooltip>
                       <Tooltip text="Deactivate Account" direction="left">
-                        <button className="btn btn-xs btn-error ">
+                        <button
+                          className="btn btn-xs btn-error "
+                          onClick={() => toggleModalStatus()}
+                        >
                           <FaUserAltSlash size="12" />
                         </button>
                       </Tooltip>
@@ -119,7 +141,6 @@ const Employees: React.FC = ({}) => {
           </tbody>
         </table>
       </div>
-
       <div className="w-full flex justify-end mt-[20px]">
         <div className="flex gap-3 place-items-center">
           <span>
@@ -136,6 +157,16 @@ const Employees: React.FC = ({}) => {
 
   return (
     <>
+      <WarningModal
+        status={modalStatus}
+        handleClose={() => toggleModalStatus()}
+        handleProceed={() => {
+          toggleModalStatus();
+          console.log("DEACT ACCOUNT");
+        }}
+      >
+        {`Changes won't be save. are you sure you want to cancel?`}
+      </WarningModal>
       <div className="flex flex-col gap-5">
         <div className="flex gap-5 ">
           {filterCard}

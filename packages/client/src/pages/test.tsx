@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 
-const Test: React.FC = ({}) => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+const test: React.FC = ({}) => {
+  const reg = /([A-Z])\w+/g;
+
+  const testVar = "ABC";
+
+  console.log(reg.test(testVar));
+
   return <></>;
 };
-export default Test;
+export default test;

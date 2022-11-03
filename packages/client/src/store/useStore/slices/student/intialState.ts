@@ -54,28 +54,7 @@ export const defaultSelectedStudent: IselectedStudentState = {
     has_report_of_rating: true,
     has_school_government_recognition: false,
   },
-  academicInfo: [
-    // {
-    //   academicLevel: "Pre-Elementary",
-    //   school: "School z",
-    //   schoolYear: "2014-2015",
-    // },
-    // {
-    //   academicLevel: "Elementary",
-    //   school: "School x",
-    //   schoolYear: "2014-2015",
-    // },
-    // {
-    //   academicLevel: "Senior High",
-    //   school: "School c",
-    //   schoolYear: "2014-2015",
-    // },
-    // {
-    //   academicLevel: "Junior High",
-    //   school: "School v",
-    //   schoolYear: "2014-2015",
-    // },
-  ],
+  academicInfo: [],
 };
 
 // Mock Data
