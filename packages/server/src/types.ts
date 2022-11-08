@@ -1,28 +1,9 @@
-import { Response, Request } from "express";
-import { Send } from "express-serve-static-core";
-
-type TStatus = 1 | 0;
-
-export interface IReturn<T> {
-  data?: T;
-  status: TStatus;
-  error_title?: string;
-  error_params?: any;
-}
-
-export interface TypedResponse<T> extends Response {
-  json: Send<T, this>;
-}
-
-export interface ICtx {
-  id: string;
-}
-export interface TypedRequestBody<T = any> extends Request {
-  body: T;
-  ctx?: ICtx;
-}
-
-export interface IError {
-  title: string;
-  params?: any;
+export interface Icontext {
+  // we'd define the properties a user should have
+  // in a separate user interface (e.g., email, id, url, etc.)
+  // user: UserInterface;
+  // token: string;
+  token?: string;
+  employee_id?: string;
+  id?: string;
 }

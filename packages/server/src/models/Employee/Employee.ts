@@ -1,5 +1,13 @@
-import { Column, Entity, Generated, PrimaryGeneratedColumn } from "typeorm";
+import { Field, ObjectType } from "type-graphql";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { BasicColumns } from "../../utils/BasicColumns";
+import { EmployeeProfile } from "./EmployeeProfile";
 
 /*
   ID UUID
@@ -11,24 +19,35 @@ import { BasicColumns } from "../../utils/BasicColumns";
   employee_profile_id UUID [ref: - employee_profile.ID]
 */
 
+@ObjectType()
 @Entity()
 export class Employee extends BasicColumns {
-  @PrimaryGeneratedColumn()
-  @Generated("uuid")
+  @Field()
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
+  @Field()
   @Column()
   role: string;
 
+  @Field()
   @Column({ default: 1 })
-  status: number;
+  status?: number;
 
+  @Field()
   @Column()
   employee_id: string;
 
+  @Field()
   @Column()
   password: string;
 
+  @Field({ nullable: true })
   @Column({ nullable: true })
   partial_password?: string;
+
+  @Field(() => EmployeeProfile, { nullable: true })
+  @OneToOne(() => EmployeeProfile, { nullable: true })
+  @JoinColumn()
+  profile?: EmployeeProfile;
 }

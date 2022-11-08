@@ -1,21 +1,9 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class init1667900945301 implements MigrationInterface {
-    name = 'init1667900945301'
+export class init1667925364891 implements MigrationInterface {
+    name = 'init1667925364891'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
-            CREATE TABLE "global_vars" (
-                "created_at" TIMESTAMP NOT NULL DEFAULT now(),
-                "updated_at" TIMESTAMP NOT NULL DEFAULT now(),
-                "deleted_date" TIMESTAMP,
-                "id" SERIAL NOT NULL,
-                "identifier" character varying NOT NULL,
-                "value" character varying NOT NULL,
-                "title" character varying NOT NULL,
-                CONSTRAINT "PK_7916609f03891ca1aa35b842382" PRIMARY KEY ("id")
-            )
-        `);
         await queryRunner.query(`
             CREATE TABLE "cat" (
                 "created_at" TIMESTAMP NOT NULL DEFAULT now(),
@@ -29,6 +17,18 @@ export class init1667900945301 implements MigrationInterface {
             )
         `);
         await queryRunner.query(`
+            CREATE TABLE "global_vars" (
+                "created_at" TIMESTAMP NOT NULL DEFAULT now(),
+                "updated_at" TIMESTAMP NOT NULL DEFAULT now(),
+                "deleted_date" TIMESTAMP,
+                "id" SERIAL NOT NULL,
+                "identifier" character varying NOT NULL,
+                "value" character varying NOT NULL,
+                "title" character varying NOT NULL,
+                CONSTRAINT "PK_7916609f03891ca1aa35b842382" PRIMARY KEY ("id")
+            )
+        `);
+        await queryRunner.query(`
             CREATE TABLE "sections" (
                 "created_at" TIMESTAMP NOT NULL DEFAULT now(),
                 "updated_at" TIMESTAMP NOT NULL DEFAULT now(),
@@ -39,15 +39,15 @@ export class init1667900945301 implements MigrationInterface {
             )
         `);
         await queryRunner.query(`
-            CREATE TABLE "audit_trail" (
+            CREATE TABLE "employee_profile" (
                 "created_at" TIMESTAMP NOT NULL DEFAULT now(),
                 "updated_at" TIMESTAMP NOT NULL DEFAULT now(),
                 "deleted_date" TIMESTAMP,
                 "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
-                "timestamp" character varying NOT NULL,
-                "description" text NOT NULL,
-                "action_type_id" character varying NOT NULL,
-                CONSTRAINT "PK_91aade8e45ada93f7dc98ca7ced" PRIMARY KEY ("id")
+                "first_name" character varying NOT NULL,
+                "middle_name" character varying,
+                "last_name" character varying NOT NULL,
+                CONSTRAINT "PK_ff6fbb46f0a78351950c41a5e66" PRIMARY KEY ("id")
             )
         `);
         await queryRunner.query(`
@@ -61,6 +61,8 @@ export class init1667900945301 implements MigrationInterface {
                 "employee_id" character varying NOT NULL,
                 "password" character varying NOT NULL,
                 "partial_password" character varying,
+                "profileId" uuid,
+                CONSTRAINT "REL_66c2c160eaeec1f28b9c145657" UNIQUE ("profileId"),
                 CONSTRAINT "PK_3c2bc72f03fd5abbbc5ac169498" PRIMARY KEY ("id")
             )
         `);
@@ -175,51 +177,20 @@ export class init1667900945301 implements MigrationInterface {
             )
         `);
         await queryRunner.query(`
-            ALTER TABLE "employee" DROP COLUMN "role"
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee" DROP COLUMN "status"
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee" DROP COLUMN "employee_id"
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee" DROP COLUMN "password"
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee" DROP COLUMN "partial_password"
+            CREATE TABLE "audit_trail" (
+                "created_at" TIMESTAMP NOT NULL DEFAULT now(),
+                "updated_at" TIMESTAMP NOT NULL DEFAULT now(),
+                "deleted_date" TIMESTAMP,
+                "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
+                "timestamp" character varying NOT NULL,
+                "description" text NOT NULL,
+                "action_type_id" character varying NOT NULL,
+                CONSTRAINT "PK_91aade8e45ada93f7dc98ca7ced" PRIMARY KEY ("id")
+            )
         `);
         await queryRunner.query(`
             ALTER TABLE "employee"
-            ADD "role" character varying NOT NULL
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee"
-            ADD "status" integer NOT NULL DEFAULT '1'
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee"
-            ADD "employee_id" character varying NOT NULL
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee"
-            ADD "password" character varying NOT NULL
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee"
-            ADD "partial_password" character varying
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee"
-            ADD "first_name" character varying NOT NULL
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee"
-            ADD "middle_name" character varying
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee"
-            ADD "last_name" character varying NOT NULL
+            ADD CONSTRAINT "FK_66c2c160eaeec1f28b9c1456571" FOREIGN KEY ("profileId") REFERENCES "employee_profile"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
         `);
         await queryRunner.query(`
             ALTER TABLE "student_parent_guardian"
@@ -267,48 +238,10 @@ export class init1667900945301 implements MigrationInterface {
             ALTER TABLE "student_parent_guardian" DROP CONSTRAINT "FK_e294f502636e980fe26a16ee833"
         `);
         await queryRunner.query(`
-            ALTER TABLE "employee" DROP COLUMN "last_name"
+            ALTER TABLE "employee" DROP CONSTRAINT "FK_66c2c160eaeec1f28b9c1456571"
         `);
         await queryRunner.query(`
-            ALTER TABLE "employee" DROP COLUMN "middle_name"
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee" DROP COLUMN "first_name"
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee" DROP COLUMN "partial_password"
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee" DROP COLUMN "password"
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee" DROP COLUMN "employee_id"
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee" DROP COLUMN "status"
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee" DROP COLUMN "role"
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee"
-            ADD "partial_password" character varying
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee"
-            ADD "password" character varying NOT NULL
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee"
-            ADD "employee_id" character varying NOT NULL
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee"
-            ADD "status" integer NOT NULL DEFAULT '1'
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "employee"
-            ADD "role" character varying NOT NULL
+            DROP TABLE "audit_trail"
         `);
         await queryRunner.query(`
             DROP TABLE "enrolled_records"
@@ -335,16 +268,16 @@ export class init1667900945301 implements MigrationInterface {
             DROP TABLE "employee"
         `);
         await queryRunner.query(`
-            DROP TABLE "audit_trail"
+            DROP TABLE "employee_profile"
         `);
         await queryRunner.query(`
             DROP TABLE "sections"
         `);
         await queryRunner.query(`
-            DROP TABLE "cat"
+            DROP TABLE "global_vars"
         `);
         await queryRunner.query(`
-            DROP TABLE "global_vars"
+            DROP TABLE "cat"
         `);
     }
 

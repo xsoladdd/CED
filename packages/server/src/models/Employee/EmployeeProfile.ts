@@ -1,4 +1,5 @@
-import { Column, Entity, Generated, PrimaryGeneratedColumn } from "typeorm";
+import { Field, ObjectType } from "type-graphql";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { BasicColumns } from "../../utils/BasicColumns";
 
 /*
@@ -10,18 +11,22 @@ import { BasicColumns } from "../../utils/BasicColumns";
 }
 */
 
+@ObjectType()
 @Entity()
-export class Employee extends BasicColumns {
-  @PrimaryGeneratedColumn()
-  @Generated("uuid")
-  id: string;
+export class EmployeeProfile extends BasicColumns {
+  @Field()
+  @PrimaryGeneratedColumn("uuid")
+  id?: string;
 
+  @Field()
   @Column()
   first_name: string;
 
+  @Field({ nullable: true })
   @Column({ nullable: true })
   middle_name?: string;
 
+  @Field()
   @Column()
   last_name: string;
 }

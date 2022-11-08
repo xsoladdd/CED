@@ -1,39 +1,60 @@
-import express, { json } from "express";
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@apollo/server/express4";
+import { json } from "body-parser";
+import cors from "cors";
+import express from "express";
+import { GraphQLFormattedError } from "graphql";
+import http from "http";
 import "reflect-metadata";
 import { conn } from "./config/db";
-import { SERVER_PORT } from "./global";
-import { privateRoutes, publicRoutes } from "./routes";
-import cors from "cors";
-import { redisClient } from "./config/redis";
+import { PORT } from "./global";
+import { generateSchema } from "./graphql/generateSchema";
+import { Icontext } from "./types";
+import JWT from "./utils/JWT";
 
 const main = async () => {
-  const app = express();
-  app.use(
-    cors({
-      allowedHeaders: "*",
-    })
-  );
   await conn.initialize().catch((err) => {
     console.error(err);
   });
-  redisClient.on("error", (err) => {
-    throw new Error(err);
+
+  const app = express();
+  const httpServer = http.createServer(app);
+  const schema = await generateSchema();
+  const server = new ApolloServer<Icontext>({
+    schema,
+    formatError: (
+      formattedError: GraphQLFormattedError
+      // error: unknown
+    ): GraphQLFormattedError => {
+      return formattedError;
+    },
   });
+  await server.start();
+  app.use(
+    "/graphql",
+    cors<cors.CorsRequest>(),
+    json(),
+    expressMiddleware(server, {
+      context: async ({ req }) => {
+        if (req.headers?.token) {
+          const token = req.headers?.token as string;
+          const { employee_id, id } = JWT.verfiyJWT(token).data;
+          const context: Icontext = {
+            token,
+            employee_id,
+            id,
+          };
+          return context;
+        }
+        return {};
+      },
+    })
+  );
 
-  await redisClient.connect();
-
-  app.use(json());
-  app.get("/", async (_, res) => {
-    res.status(200).send("Welcome.");
-  });
-
-  app.use("/api/", publicRoutes);
-  app.use("/api/", privateRoutes);
-
-  const port = SERVER_PORT || 4000;
-  app.listen(port, () => {
-    console.log(`Server started at http://localhost:${port}`);
-  });
+  await new Promise<void>((resolve) =>
+    httpServer.listen({ port: PORT }, resolve)
+  );
+  console.log(`🚀 Server ready at http://localhost:4000/graphql`);
 };
 
 main();

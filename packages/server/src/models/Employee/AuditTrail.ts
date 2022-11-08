@@ -1,4 +1,4 @@
-import { Column, Entity, Generated, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { BasicColumns } from "../../utils/BasicColumns";
 
 /*
@@ -12,8 +12,7 @@ import { BasicColumns } from "../../utils/BasicColumns";
 
 @Entity()
 export class AuditTrail extends BasicColumns {
-  @PrimaryGeneratedColumn()
-  @Generated("uuid")
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column()

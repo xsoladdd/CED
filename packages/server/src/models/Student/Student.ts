@@ -68,7 +68,7 @@ export class Student extends BasicColumns {
   )
   enrollment_records?: EnrolledRecords[];
 
-  @OneToOne(() => StudentAddress)
+  @OneToOne(() => StudentAddress, { nullable: true })
   @JoinColumn()
   address?: StudentAddress;
 
@@ -78,11 +78,11 @@ export class Student extends BasicColumns {
   )
   parent_guardians?: StudentParentGuardian[];
 
-  @OneToOne(() => StudentRequirements)
+  @OneToOne(() => StudentRequirements, { nullable: true })
   @JoinColumn()
   requirements?: StudentRequirements;
 
-  @OneToOne(() => StudentSchoolRecord)
+  @OneToOne(() => StudentSchoolRecord, { nullable: true })
   @JoinColumn()
   school_records?: StudentSchoolRecord;
 
