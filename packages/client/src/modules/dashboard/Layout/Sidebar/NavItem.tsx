@@ -1,25 +1,14 @@
 import React from "react";
 import useDashboardRouter from "../../../../hooks/useDashboardRouter";
 import { joinClass } from "../../../../utils/joinClass";
-import { IRoute } from "../types";
+import { INavItemProps } from "./types";
 
-interface SidebarNavItemProps extends Omit<IRoute, "component"> {
-  children?: React.ReactChildren;
-}
-
-const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
-  logo: Logo,
-  path,
-  name,
-}) => {
+const NavItem: React.FC<INavItemProps> = ({ logo: Logo, path, name }) => {
   const { pushRoute, breadcrumbs, activeRoute } = useDashboardRouter();
-
   const isActive = activeRoute === path;
-
   const activeParentRoute = breadcrumbs[0];
   const activeLink: boolean =
     breadcrumbs.length !== 0 ? activeParentRoute.route === path : isActive;
-
   const handleClick = () => {
     if (!isActive) {
       pushRoute({ title: name, route: path }, true);
@@ -29,7 +18,8 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   return (
     <li
       className={joinClass(
-        `px-3 py-[3px] flex place-items-center gap-4  duration-150 cursor-pointer w-fit`
+        `h-[40px] px-[20px] rounded-md overflow-hidden flex place-items-center gap-4 cursor-pointer hover:bg-base-200 `,
+        activeLink ? "bg-base-200" : ""
       )}
       onClick={handleClick}
     >
@@ -37,14 +27,14 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
         <Logo
           className={joinClass(
             " ease-in-out h-5 w-5 ",
-            activeLink ? `text-primary-focus` : `text-gray-400`
+            activeLink ? `text-primary-focus` : `text-base-content`
           )}
         />
       )}
       <span
         className={joinClass(
           "text-sm capitalize",
-          activeLink ? `text-primary-focus` : `text-gray-400`
+          activeLink ? `text-primary-focus` : `text-base-content`
         )}
       >
         {name}
@@ -52,4 +42,4 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
     </li>
   );
 };
-export default SidebarNavItem;
+export default NavItem;

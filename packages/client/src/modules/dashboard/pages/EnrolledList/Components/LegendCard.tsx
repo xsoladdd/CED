@@ -6,7 +6,7 @@ const LegendCard: React.FC = ({}) => {
   return (
     <>
       <Card
-        className="w-1/6 "
+        className="w-full xl:w-2/12"
         bordered={false}
         header={<CardHeader title="Legend" />}
       >

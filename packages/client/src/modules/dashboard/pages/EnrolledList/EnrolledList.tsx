@@ -40,7 +40,7 @@ const EnrolledList: React.FC = ({}) => {
 
   const filterCard = (
     <Card
-      className="w-full"
+      className="w-full xl:w-10/12"
       header={<CardHeader title="Filter" />}
       footer={
         <CardFooter
@@ -91,7 +91,7 @@ const EnrolledList: React.FC = ({}) => {
         />
       }
     >
-      <div className="flex gap-2">
+      <div className="flex flex-col xl:flex-row gap-2">
         <div className="">
           <label className="input-group input-group-sm">
             <span className="search-identifier">
@@ -123,7 +123,7 @@ const EnrolledList: React.FC = ({}) => {
             </select>
           </div>
         </div>
-        <div className=" w-fit">
+        <div className="w-fit">
           <div className="form-control max-w-xs bg">
             <select
               className="select select-bordered min-w-[250px] select-sm"
@@ -237,7 +237,6 @@ const EnrolledList: React.FC = ({}) => {
           </tbody>
         </table>
       </div>
-
       <div className="w-full flex justify-end mt-[20px]">
         <div className="flex gap-3 place-items-center">
           <span>
@@ -266,8 +265,8 @@ const EnrolledList: React.FC = ({}) => {
       >
         Are you sure that you want to delete?
       </WarningModal>
-      <div className="flex flex-col gap-5">
-        <div className="flex gap-5 ">
+      <div className="flex flex-col gap-[10px]">
+        <div className="flex gap-[10px] flex-col xl:flex-row">
           {filterCard}
           <LegendCard />
         </div>

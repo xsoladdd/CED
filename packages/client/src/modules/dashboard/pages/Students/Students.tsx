@@ -142,8 +142,8 @@ const Students: React.FC = ({}) => {
 
   return (
     <>
-      <div className="flex flex-col gap-5">
-        <div className="flex gap-5 ">
+      <div className="flex flex-col gap-[10px]">
+        <div className="flex gap-[10px] ">
           {filterCard}
           <LegendCard />
         </div>

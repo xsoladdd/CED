@@ -1,5 +1,5 @@
 import React from "react";
-import Breadcrumbs from "./Breadcrumbs";
+import Background from "./Background";
 import Header from "./Header";
 import Sidebar from "./Sidebar/Sidebar";
 
@@ -10,19 +10,13 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <>
+      <Background />
       <div className=" max-h-screen overflow-hidden">
-        <div className=" w-full flex flex-col h-screen">
-          <Header />
-          <div className="h-full flex ">
-            <Sidebar />
-            <div className=" w-full overflow-hidden bg-gray-200 min-h-full gap-5  h-screen pt-[65px]">
-              <div className="px-5 py-4 overflow-y-auto h-full">
-                <div className="py-5">
-                  <Breadcrumbs />
-                </div>
-                {children}
-              </div>
-            </div>
+        <div className=" w-full flex h-screen bg-transparent">
+          <Sidebar />
+          <div className="w-full gap-[10px] flex flex-col pl-[5px] pr-[10px] py-[10px]">
+            <Header />
+            {children}
           </div>
         </div>
       </div>
