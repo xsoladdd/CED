@@ -8,5 +8,5 @@ export class BasicColumns {
   updated_at?: Date;
 
   @DeleteDateColumn()
-  deletedDate?: Date;
+  deleted_date?: Date;
 }
