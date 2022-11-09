@@ -1,10 +1,5 @@
-import {
-  Column,
-  Entity,
-  Generated,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Field, ObjectType } from "type-graphql";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { BasicColumns } from "../../utils/BasicColumns";
 import { Student } from "./Student";
 
@@ -17,21 +12,26 @@ import { Student } from "./Student";
 
 */
 
+@ObjectType()
 @Entity()
 export class EnrolledRecords extends BasicColumns {
-  @PrimaryGeneratedColumn()
-  @Generated("uuid")
+  @Field()
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
+  @Field()
   @Column()
   SY: string;
 
+  @Field()
   @Column()
   grade_level_id: string;
 
+  @Field()
   @Column()
   section_id: string;
 
+  @Field(() => Student)
   @ManyToOne(() => Student, (student) => student.enrollment_records)
   student: Student;
 }

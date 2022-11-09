@@ -3,10 +3,12 @@ import {
   Column,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { BasicColumns } from "../../utils/BasicColumns";
+import { AuditTrail } from "./AuditTrail";
 import { EmployeeProfile } from "./EmployeeProfile";
 
 /*
@@ -50,4 +52,8 @@ export class Employee extends BasicColumns {
   @OneToOne(() => EmployeeProfile, { nullable: true })
   @JoinColumn()
   profile?: EmployeeProfile;
+
+  @Field(() => [AuditTrail])
+  @OneToMany(() => AuditTrail, (auditTrail) => auditTrail.employee)
+  audit?: AuditTrail[];
 }

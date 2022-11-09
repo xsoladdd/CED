@@ -1,3 +1,4 @@
+import { Field, ObjectType } from "type-graphql";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { BasicColumns } from "../../utils/BasicColumns";
 
@@ -14,33 +15,42 @@ import { BasicColumns } from "../../utils/BasicColumns";
   zip varchar(10)
 }
 */
-
+@ObjectType()
 @Entity()
 export class StudentAddress extends BasicColumns {
+  @Field()
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
+  @Field({ nullable: true })
   @Column({ nullable: true })
   no?: string;
 
+  @Field({ nullable: true })
   @Column({ nullable: true })
   street?: string;
 
+  @Field({ nullable: true })
   @Column({ nullable: true })
   subdiv?: string;
 
+  @Field()
   @Column()
   barangay: string;
 
+  @Field()
   @Column()
   city: string;
 
+  @Field()
   @Column()
   province: string;
 
+  @Field()
   @Column()
   region: string;
 
+  @Field()
   @Column()
   zip: string;
 }

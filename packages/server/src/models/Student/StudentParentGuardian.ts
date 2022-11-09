@@ -1,3 +1,4 @@
+import { Field, ObjectType } from "type-graphql";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { BasicColumns } from "../../utils/BasicColumns";
 import { Student } from "./Student";
@@ -16,29 +17,38 @@ import { Student } from "./Student";
  }
 */
 
+@ObjectType()
 @Entity()
 export class StudentParentGuardian extends BasicColumns {
+  @Field()
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
+  @Field()
   @Column()
   first_name: string;
 
-  @Column()
-  middle_name: string;
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  middle_name?: string;
 
+  @Field()
   @Column()
   last_name: string;
 
+  @Field()
   @Column({})
   contact_number: string;
 
+  @Field()
   @Column({})
   email: string;
 
+  @Field()
   @Column({})
   type: string;
 
+  @Field(() => Student)
   @ManyToOne(() => Student, (student) => student.parent_guardians)
   student: Student;
 }
