@@ -15,10 +15,11 @@
     "lint": "eslint src",
     "lint:fix": "npm run lint --fix ",
     "precommit": "yarn lint:fix && yarn lint && yarn build",
-    "cz": "cd ../../ && cz && cd ./packages/latte"
+    "cz": "cd ../../ && cz && cd ./packages/latte",
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
-    "@apollo/client": "^3.6.2",
+    "@apollo/client": "^3.7.1",
     "@headlessui/react": "^1.6.1",
     "@heroicons/react": "^1.0.6",
     "@react-pdf/renderer": "^3.0.0",
@@ -30,6 +31,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "file-saver": "^2.0.5",
     "formik": "^2.2.9",
+    "graphql": "^16.6.0",
     "lodash": "^4.17.21",
     "next": "12",
     "next-themes": "^0.0.15",
@@ -48,6 +50,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
+    "@graphql-codegen/cli": "2.13.11",
+    "@graphql-codegen/client-preset": "1.1.3",
     "@storybook/addon-actions": "^6.5.9",
     "@storybook/addon-essentials": "^6.5.9",
     "@storybook/addon-links": "^6.5.9",

@@ -1,0 +1,5 @@
+mutation employee_auth_mutation($input: LoginInput!) {
+  employee_auth(input: $input) {
+    token
+  }
+}

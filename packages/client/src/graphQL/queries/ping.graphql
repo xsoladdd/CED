@@ -1,0 +1,3 @@
+query ping {
+  meow_but_need_token
+}

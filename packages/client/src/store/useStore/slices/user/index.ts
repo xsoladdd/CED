@@ -1,32 +1,19 @@
-interface IuserSlice {
-  user: {
-    data: IUserData;
-    setData: (userData: IUserData) => void;
-    isNewUser: boolean;
-    setNewUserModalStatus: (toggle: boolean) => void;
-  };
-}
+import { IuserSlice } from "./types";
 
 export const userSlice: StoreSlice<IuserSlice> = (set) => ({
   user: {
-    isNewUser: false,
-    setNewUserModalStatus: (toggle) =>
-      set(
-        ({ user }: IuserSlice): IuserSlice => ({
-          user: {
-            ...user,
-            isNewUser: toggle,
-          },
-        })
-      ),
-    data: {},
+    data: {
+      employee_id: "",
+      profile: undefined,
+      role: "",
+      id: "",
+    },
     setData: (userData) =>
       set(({ user }: IuserSlice): IuserSlice => {
         return {
           user: {
             ...user,
-            isNewUser: !!userData.profile,
-            data: { ...userData },
+            data: userData,
           },
         };
       }),

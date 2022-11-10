@@ -1,0 +1,12 @@
+query employee_detail_query {
+  employee_detail {
+    employee_id
+    id
+    profile {
+      first_name
+      last_name
+      middle_name
+    }
+    role
+  }
+}

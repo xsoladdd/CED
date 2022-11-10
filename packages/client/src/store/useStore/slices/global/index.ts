@@ -1,6 +1,6 @@
 import { IglobalSlice } from "./types";
 
-export const globalSlice: StoreSlice<IglobalSlice> = (_set) => ({
+export const globalSlice: StoreSlice<IglobalSlice> = (set) => ({
   globalVars: {
     active_school_year: "2022-2023",
     year_level: [
@@ -129,5 +129,14 @@ export const globalSlice: StoreSlice<IglobalSlice> = (_set) => ({
       { title: "Managed Student", value: "managed_student" },
       { title: "Others", value: "others" },
     ],
+    setGlobalVars: ({ school_year }) =>
+      set(({ globalVars }: IglobalSlice): IglobalSlice => {
+        return {
+          globalVars: {
+            ...globalVars,
+            active_school_year: school_year.value,
+          },
+        };
+      }),
   },
 });

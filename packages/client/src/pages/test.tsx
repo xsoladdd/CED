@@ -1,11 +1,16 @@
+import { useQuery } from "@apollo/client";
 import React from "react";
+import { MeowQueryDocument } from "../graphQL/generated/graphql";
 
-const test: React.FC = () => {
+const Test: React.FC = () => {
+  const { data } = useQuery(MeowQueryDocument);
+
   return (
     <>
-      {/* <button className="xbtn">Hello World</button> */}
-      <button className="text-dark-contrast">Hey</button>
+      <button className="text-dark-contrast">
+        {JSON.stringify(data?.meow)}
+      </button>
     </>
   );
 };
-export default test;
+export default Test;

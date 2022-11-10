@@ -1,3 +1,5 @@
+import { GlobalVarsReturn } from "../../../../graphQL/generated/graphql";
+
 export interface ISection {
   value: string;
   title: string;
@@ -24,5 +26,6 @@ export interface IglobalSlice {
     year_level: Array<IyearLevel>;
     roles: Array<Iroles>;
     audit_trail_type: Array<IauditTrailType>;
+    setGlobalVars: (globalVars: GlobalVarsReturn) => void;
   };
 }

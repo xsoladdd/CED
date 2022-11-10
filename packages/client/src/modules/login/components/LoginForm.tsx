@@ -1,124 +1,92 @@
-import axios from "axios";
-import { Formik } from "formik";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { useMutation } from "@apollo/client";
+import { useFormik } from "formik";
+import React from "react";
 import Text from "../../../components/Text";
-import { AUTH_SERVER_URI } from "../../../helper/global";
-import { IReturn } from "../../../interfaces/types";
+import { Employee_Auth_MutationDocument } from "../../../graphQL/generated/graphql";
 import { loginShema } from "../helper";
 import ErrorBox from "./ErrorBox";
 
 const LoginForm: React.FC = ({}) => {
-  const [serverError, setServerError] = useState<string | undefined>(undefined);
-  const { push } = useRouter();
+  // const { push } = useRouter();
+
+  const [executeEmployeeAuthMutation] = useMutation(
+    Employee_Auth_MutationDocument
+  );
+
+  const formik = useFormik({
+    initialValues: {
+      EID: "",
+      password: "",
+    },
+    validationSchema: loginShema,
+    onSubmit: async (values, { setSubmitting, setErrors }) => {
+      setSubmitting(true);
+      await executeEmployeeAuthMutation({
+        variables: { input: values },
+        onError: (error) => {
+          if (error.message.includes("employee ID")) {
+            return setErrors({ EID: error.message });
+          }
+          if (error.message.includes("password")) {
+            return setErrors({ password: error.message });
+          }
+        },
+        onCompleted: (data) => {
+          console.log(data?.employee_auth.token);
+          localStorage.setItem("token", data?.employee_auth.token);
+        },
+      });
+      setSubmitting(false);
+    },
+  });
 
   const form = (
-    <Formik
-      initialValues={{
-        employeeId: ``,
-        password: ``,
-      }}
-      validateOnBlur={false}
-      validateOnChange={false}
-      validationSchema={loginShema}
-      onSubmit={async (values, { setSubmitting, setErrors }) => {
-        setSubmitting(true);
-        const {
-          data,
-        }: {
-          data: IReturn<{
-            JWT: string;
-            user: {
-              id: string;
-            };
-          }>;
-        } = await axios.post(`${AUTH_SERVER_URI}p/store-user/auth`, values);
-        if (data.status === 0 || data.error_params) {
-          await new Promise<void>((resolve) => {
-            setTimeout(() => {
-              setServerError(data.error_params?.message);
-              setSubmitting(false);
-              resolve();
-            }, 2000);
-          });
-        }
-        if (data.data?.JWT || data.data?.user?.id) {
-          setErrors({
-            employeeId: undefined,
-            password: undefined,
-          });
-          setServerError(undefined);
-          localStorage.setItem("token", data.data?.JWT);
-          localStorage.setItem("userId", data.data?.user.id);
-          push("/dashboard");
-          // Have little delay
-        }
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setSubmitting(false);
-            resolve();
-          }, 2000);
-        });
-      }}
-    >
-      {({
-        values,
-        errors,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        isSubmitting,
-      }) => (
-        <>
-          <form
-            className="h-full flex flex-col gap-3 py-3"
-            onSubmit={handleSubmit}
-          >
-            <div className="flex flex-col gap-1">
-              <label htmlFor="employeeId">Emplyee ID</label>
-              <input
-                name="employeeId"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="input input-sm input-bordered"
-                autoComplete="off"
-                value={values.employeeId}
-                placeholder="Emplyee ID"
-                id="employeeId"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label htmlFor="password">Password</label>
+    <>
+      <form
+        className="h-full flex flex-col gap-3 py-3"
+        onSubmit={formik.handleSubmit}
+      >
+        <div className="flex flex-col gap-1">
+          <label htmlFor="employeeId">Emplyee ID</label>
+          <input
+            name="EID"
+            id="EID"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="input input-sm input-bordered"
+            autoComplete="off"
+            value={formik.values.EID}
+            placeholder="Emplyee ID"
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label htmlFor="password">Password</label>
 
-              <input
-                type="password"
-                name="password"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                // isBordered
-                value={values.password}
-                className="input input-sm input-bordered"
-                id="password"
-                placeholder="********"
-              />
-            </div>
-            <ErrorBox
-              error={errors.employeeId || errors.password || serverError}
-            />
-            <div className="text-center pt-2">
-              <button
-                type="submit"
-                className="btn btn-sm w-full btn-info"
-                color="primary"
-                disabled={isSubmitting}
-              >
-                Sign in
-              </button>
-            </div>
-          </form>
-        </>
-      )}
-    </Formik>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            // isBordered
+            value={formik.values.password}
+            className="input input-sm input-bordered"
+            placeholder="********"
+          />
+        </div>
+        <ErrorBox error={formik.errors.EID || formik.errors.password} />
+        <div className="text-center pt-2">
+          <button
+            type="submit"
+            className="btn btn-sm w-full btn-info"
+            color="primary"
+            disabled={formik.isSubmitting}
+          >
+            Sign in
+          </button>
+        </div>
+      </form>
+    </>
   );
 
   return (

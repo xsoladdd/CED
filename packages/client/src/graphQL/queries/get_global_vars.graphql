@@ -1,0 +1,8 @@
+query get_global_vars_query {
+  get_globa_vars {
+    school_year {
+      title
+      value
+    }
+  }
+}
