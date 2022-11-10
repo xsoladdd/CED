@@ -43,11 +43,11 @@
     "dev": "nodemon --exec ts-node src/server.ts",
     "build": "tsc",
     "typeorm": "typeorm-ts-node-commonjs -d ./src/config/db.ts",
+    "seed": "ts-node ./node_modules/typeorm-extension/dist/cli/index.js -d ./src/config/db.ts seed",
     "migration:generate": "yarn typeorm  migration:generate -p ",
     "migration:drop": "yarn typeorm  schema:drop ",
-    "migration:reset": "yarn typeorm  schema:drop  && yarn typeorm migration:run",
+    "migration:reset": "yarn typeorm  schema:drop  && yarn typeorm migration:run && yarn seed",
     "migration:up": "yarn typeorm migration:run",
-    "migration:down": "yarn typeorm migration:revert",
-    "seed": "ts-node ./node_modules/typeorm-extension/dist/cli/index.js -d ./src/config/db.ts seed"
+    "migration:down": "yarn typeorm migration:revert"
   }
 }

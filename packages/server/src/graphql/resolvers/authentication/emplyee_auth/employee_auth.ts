@@ -23,7 +23,7 @@ export const employee_auth = async (
       where: { employee_id: EID, status: 1 },
     });
     if (!user) {
-      throw new GraphQLError("No user found", {
+      throw new GraphQLError("Invalid employee ID", {
         extensions: {
           code: errorType.VALIDATION_ERROR,
         },

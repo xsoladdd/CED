@@ -32,7 +32,7 @@ export class Employee extends BasicColumns {
   @Column()
   role: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ default: 1 })
   status?: number;
 
@@ -40,7 +40,6 @@ export class Employee extends BasicColumns {
   @Column()
   employee_id: string;
 
-  @Field()
   @Column()
   password: string;
 
@@ -53,7 +52,7 @@ export class Employee extends BasicColumns {
   @JoinColumn()
   profile?: EmployeeProfile;
 
-  @Field(() => [AuditTrail])
+  @Field(() => [AuditTrail], { nullable: true })
   @OneToMany(() => AuditTrail, (auditTrail) => auditTrail.employee)
   audit?: AuditTrail[];
 }

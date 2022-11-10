@@ -36,8 +36,8 @@ const main = async () => {
     json(),
     expressMiddleware(server, {
       context: async ({ req }) => {
-        if (req.headers?.token) {
-          const token = req.headers?.token as string;
+        if (req.headers?.authorization) {
+          const token = req.headers?.authorization as string;
           const { employee_id, id } = JWT.verfiyJWT(token).data;
           const context: Icontext = {
             token,
