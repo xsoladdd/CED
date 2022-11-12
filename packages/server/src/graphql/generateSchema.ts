@@ -3,7 +3,7 @@ import { customAuthChecker } from "./authChecker";
 
 export const generateSchema = async () => {
   const schema = await buildSchema({
-    resolvers: [__dirname + "/**/*.resolver.ts"],
+    resolvers: [__dirname + "/**/*.resolver.{ts,js}"],
     validate: false,
     authChecker: customAuthChecker,
   });
