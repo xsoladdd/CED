@@ -4,7 +4,7 @@ import { conn } from "../../../../config/db";
 import { Employee } from "../../../../models/Employee/Employee";
 import { errorType } from "../../../../utils/errorType";
 import JWT from "../../../../utils/JWT";
-import { LoginInput, loginInputSchema, LoginReturn } from "./Helper";
+import { LoginInput, loginInputSchema, LoginReturn } from "./helper";
 
 export const employee_auth = async (
   input: LoginInput

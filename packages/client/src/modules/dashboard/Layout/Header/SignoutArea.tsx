@@ -1,7 +1,9 @@
+import { useRouter } from "next/router";
 import React from "react";
 import useStore from "../../../../store/useStore";
 
 const SignoutArea: React.FC = () => {
+  const { push } = useRouter();
   const {
     globalVars: { active_school_year },
   } = useStore();
@@ -9,7 +11,15 @@ const SignoutArea: React.FC = () => {
     <>
       <div className="flex place-items-center gap-5">
         <span className="text-sm ">SY: {active_school_year}</span>
-        <button className="link text-sm">SIGN OUT</button>
+        <button
+          className="link text-sm"
+          onClick={() => {
+            localStorage.clear();
+            push("/");
+          }}
+        >
+          SIGN OUT
+        </button>
       </div>
     </>
   );

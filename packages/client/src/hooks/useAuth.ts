@@ -8,12 +8,14 @@ const useAuth = (priv = false) => {
   const [loading, setloading] = useState(true);
   const { push } = useRouter();
   const [pingQuery] = useLazyQuery(PingDocument);
-  // const check = () => {
-  //   const token = localStorage.getItem("token");
-  //   const userid = localStorage.getItem("userid");
-  //   if (token || userid) return push("/dashboard");
-  //   return setloading(false);
-  // };
+  const check = () => {
+    if (!priv) push("/dashboard");
+    const token = localStorage.getItem("token");
+    if (!token) {
+      push("/");
+    }
+    setloading(false);
+  };
 
   useEffectOnce(() => {
     setloading(true);
@@ -29,8 +31,7 @@ const useAuth = (priv = false) => {
         }
       },
       onCompleted: () => {
-        if (!priv) push("/dashboard");
-        setloading(false);
+        check();
       },
     });
   });

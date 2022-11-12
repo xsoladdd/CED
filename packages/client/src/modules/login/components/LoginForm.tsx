@@ -1,5 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { useFormik } from "formik";
+import { useRouter } from "next/router";
 import React from "react";
 import Text from "../../../components/Text";
 import { Employee_Auth_MutationDocument } from "../../../graphQL/generated/graphql";
@@ -7,7 +8,7 @@ import { loginShema } from "../helper";
 import ErrorBox from "./ErrorBox";
 
 const LoginForm: React.FC = ({}) => {
-  // const { push } = useRouter();
+  const { push } = useRouter();
 
   const [executeEmployeeAuthMutation] = useMutation(
     Employee_Auth_MutationDocument
@@ -34,6 +35,7 @@ const LoginForm: React.FC = ({}) => {
         onCompleted: (data) => {
           console.log(data?.employee_auth.token);
           localStorage.setItem("token", data?.employee_auth.token);
+          push("/dashboard");
         },
       });
       setSubmitting(false);
@@ -74,7 +76,13 @@ const LoginForm: React.FC = ({}) => {
             placeholder="********"
           />
         </div>
-        <ErrorBox error={formik.errors.EID || formik.errors.password} />
+        <ErrorBox
+          error={
+            formik.touched.EID && formik.touched.password
+              ? formik.errors.EID || formik.errors.password
+              : ""
+          }
+        />
         <div className="text-center pt-2">
           <button
             type="submit"
