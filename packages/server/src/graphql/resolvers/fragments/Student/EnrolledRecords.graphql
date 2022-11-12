@@ -1,0 +1,7 @@
+type EnrolledRecords {
+  id: String
+  SY: String!
+  grade_level_id: String!
+  section_id: String!
+  student: Student
+}

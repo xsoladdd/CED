@@ -1,4 +1,3 @@
-import { Field, ObjectType } from "type-graphql";
 import {
   Column,
   Entity,
@@ -21,38 +20,30 @@ import { EmployeeProfile } from "./EmployeeProfile";
   employee_profile_id UUID [ref: - employee_profile.ID]
 */
 
-@ObjectType()
 @Entity()
 export class Employee extends BasicColumns {
-  @Field()
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id?: string;
 
-  @Field()
   @Column()
   role: string;
 
-  @Field({ nullable: true })
   @Column({ default: 1 })
   status?: number;
 
-  @Field()
   @Column()
   employee_id: string;
 
   @Column()
   password: string;
 
-  @Field({ nullable: true })
   @Column({ nullable: true })
   partial_password?: string;
 
-  @Field(() => EmployeeProfile, { nullable: true })
-  @OneToOne(() => EmployeeProfile, { nullable: true })
+  @OneToOne(() => EmployeeProfile, { nullable: true, cascade: true })
   @JoinColumn()
   profile?: EmployeeProfile;
 
-  @Field(() => [AuditTrail], { nullable: true })
   @OneToMany(() => AuditTrail, (auditTrail) => auditTrail.employee)
   audit?: AuditTrail[];
 }

@@ -1,0 +1,12 @@
+type EmployeeProfile {
+  id: String
+  first_name: String!
+  middle_name: String
+  last_name: String!
+}
+
+input EmployeeProfileInput {
+  first_name: String!
+  middle_name: String
+  last_name: String!
+}

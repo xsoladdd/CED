@@ -1,0 +1,6 @@
+type StudentSchoolRecord {
+  id: String!
+  sy_graduated: String!
+  school_name: String!
+  type: String!
+}

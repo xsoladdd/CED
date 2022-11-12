@@ -1,0 +1,11 @@
+type StudentRequirements {
+  id: String
+  has_form_137: Boolean!
+  has_psa: Boolean!
+  has_parent_marriage_contract: Boolean!
+  has_report_card: Boolean!
+  has_report_of_rating: Boolean!
+  has_good_moral: Boolean!
+  has_school_government_recognition: Boolean!
+  has_baptismal: Boolean!
+}

@@ -1,0 +1,6 @@
+type StudentTransferRecord {
+  id: String
+  sy_entered: String
+  sy_exit: String
+  student: Student
+}

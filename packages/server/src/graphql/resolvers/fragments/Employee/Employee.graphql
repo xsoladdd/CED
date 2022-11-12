@@ -1,0 +1,16 @@
+type Employee {
+  id: String
+  role: String!
+  status: Int
+  employee_id: String!
+  partial_password: String
+  profile: EmployeeProfile
+  audit: [AuditTrail]
+}
+
+input EmployeeInput {
+  role: String!
+  employee_id: String!
+  password: String!
+  profile: EmployeeProfileInput
+}

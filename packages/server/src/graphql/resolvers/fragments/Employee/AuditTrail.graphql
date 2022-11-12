@@ -1,0 +1,7 @@
+type AuditTrail {
+  id: String
+  timestamp: String!
+  description: String!
+  action_type_id: String!
+  employee: Employee!
+}

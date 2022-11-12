@@ -8,7 +8,7 @@ import http from "http";
 import "reflect-metadata";
 import { conn } from "./config/db";
 import { PORT } from "./global";
-import { generateSchema } from "./graphql/generateSchema";
+import { generateTypeDefs, resolvers } from "./graphql";
 import { Icontext } from "./types";
 import JWT from "./utils/JWT";
 
@@ -19,12 +19,13 @@ const main = async () => {
 
   const app = express();
   const httpServer = http.createServer(app);
-  const schema = await generateSchema();
+  const typeDefs = await generateTypeDefs();
   const server = new ApolloServer<Icontext>({
-    schema,
+    typeDefs,
+    resolvers,
+    // resolvers,
     formatError: (
       formattedError: GraphQLFormattedError
-      // error: unknown
     ): GraphQLFormattedError => {
       return formattedError;
     },

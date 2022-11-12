@@ -1,0 +1,6 @@
+type GlobalVars {
+  id: String
+  identifier: String
+  value: String
+  title: String
+}

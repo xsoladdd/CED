@@ -1,0 +1,18 @@
+input AuthInput {
+  EID: String!
+  password: String!
+}
+
+type AuthResponse {
+  token: String!
+  needNewPassword: Boolean!
+}
+
+type Mutation {
+  auth(input: AuthInput!): AuthResponse
+  changeMyPassword(password: String!): Employee
+}
+
+type Query {
+  getMe: Employee
+}

@@ -1,0 +1,17 @@
+type Student {
+  id: String
+  LRN: String!
+  first_name: String!
+  middle_name: String
+  last_name: String!
+  gender: String!
+  birthday: String
+  contact_number: String
+  email: String!
+  enrollment_records: [EnrolledRecords]
+  address: StudentAddress
+  parent_guardians: [StudentParentGuardian]
+  requirements: StudentRequirements
+  school_records: StudentSchoolRecord
+  transfer_records: [StudentTransferRecord]
+}

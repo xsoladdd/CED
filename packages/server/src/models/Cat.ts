@@ -1,24 +1,17 @@
-import { Field, ObjectType } from "type-graphql";
-import { Column, Entity, Generated, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { BasicColumns } from "../utils/BasicColumns";
 
-@ObjectType()
 @Entity()
 export class Cat extends BasicColumns {
-  @PrimaryGeneratedColumn()
-  @Field(() => String)
-  @Generated("uuid")
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Field()
   @Column()
   firstName: string;
 
-  @Field()
   @Column()
   lastName: string;
 
-  @Field()
   @Column()
   age: number;
 }

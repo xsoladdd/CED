@@ -1,0 +1,10 @@
+type StudentParentGuardian {
+  id: String
+  first_name: String!
+  middle_name: String
+  last_name: String!
+  contact_number: String
+  email: String!
+  type: String!
+  student: Student
+}
