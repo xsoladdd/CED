@@ -19,91 +19,160 @@ export type AuditTrail = {
   action_type_id: Scalars['String'];
   description: Scalars['String'];
   employee: Employee;
-  id: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
   timestamp: Scalars['String'];
 };
 
-export type Cat = {
-  __typename?: 'Cat';
-  age: Scalars['Float'];
-  firstName: Scalars['String'];
-  id: Scalars['String'];
-  lastName: Scalars['String'];
+export type AuthInput = {
+  EID: Scalars['String'];
+  password: Scalars['String'];
+};
+
+export type AuthResponse = {
+  __typename?: 'AuthResponse';
+  needNewPassword: Scalars['Boolean'];
+  token: Scalars['String'];
 };
 
 export type Employee = {
   __typename?: 'Employee';
-  audit?: Maybe<Array<AuditTrail>>;
+  audit?: Maybe<Array<Maybe<AuditTrail>>>;
   employee_id: Scalars['String'];
-  id: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
   partial_password?: Maybe<Scalars['String']>;
   profile?: Maybe<EmployeeProfile>;
   role: Scalars['String'];
-  status?: Maybe<Scalars['Float']>;
+  status?: Maybe<Scalars['Int']>;
+};
+
+export type EmployeeInput = {
+  employee_id: Scalars['String'];
+  password: Scalars['String'];
+  profile?: InputMaybe<EmployeeProfileInput>;
+  role: Scalars['String'];
 };
 
 export type EmployeeProfile = {
   __typename?: 'EmployeeProfile';
   first_name: Scalars['String'];
-  id: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
   last_name: Scalars['String'];
   middle_name?: Maybe<Scalars['String']>;
+};
+
+export type EmployeeProfileInput = {
+  first_name: Scalars['String'];
+  last_name: Scalars['String'];
+  middle_name?: InputMaybe<Scalars['String']>;
 };
 
 export type EnrolledRecords = {
   __typename?: 'EnrolledRecords';
   SY: Scalars['String'];
   grade_level_id: Scalars['String'];
-  id: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
   section_id: Scalars['String'];
-  student: Student;
+  student?: Maybe<Student>;
 };
 
 export type GlobalVars = {
   __typename?: 'GlobalVars';
-  id: Scalars['String'];
-  identifier: Scalars['String'];
-  title: Scalars['String'];
-  value: Scalars['String'];
-};
-
-export type GlobalVarsReturn = {
-  __typename?: 'GlobalVarsReturn';
-  school_year: GlobalVars;
-};
-
-export type LoginInput = {
-  EID: Scalars['String'];
-  password: Scalars['String'];
-};
-
-export type LoginReturn = {
-  __typename?: 'LoginReturn';
-  token: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
+  identifier?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  employee_auth: LoginReturn;
+  addEmployee?: Maybe<Employee>;
+  auth?: Maybe<AuthResponse>;
+  changeEmployeePassword?: Maybe<Employee>;
+  changeMyPassword?: Maybe<Employee>;
+  disabledEmployee?: Maybe<Scalars['String']>;
+  resetEmployeePassword?: Maybe<Employee>;
 };
 
 
-export type MutationEmployee_AuthArgs = {
-  input: LoginInput;
+export type MutationAddEmployeeArgs = {
+  input: AddEmployeeInput;
+};
+
+
+export type MutationAuthArgs = {
+  input: AuthInput;
+};
+
+
+export type MutationChangeEmployeePasswordArgs = {
+  employee_id: Scalars['String'];
+  password: Scalars['String'];
+};
+
+
+export type MutationChangeMyPasswordArgs = {
+  password: Scalars['String'];
+};
+
+
+export type MutationDisabledEmployeeArgs = {
+  employee_id: Scalars['String'];
+};
+
+
+export type MutationResetEmployeePasswordArgs = {
+  employee_id: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  employee_detail: Employee;
-  get_globa_vars: GlobalVarsReturn;
-  meow: Scalars['String'];
-  meow_but_need_token: Scalars['String'];
+  getAuditTrails?: Maybe<Array<Maybe<AuditTrail>>>;
+  getEmployee?: Maybe<Employee>;
+  getEmployees?: Maybe<Array<Maybe<Employee>>>;
+  getMe?: Maybe<Employee>;
+  getStudent?: Maybe<Student>;
+  getStudents?: Maybe<Array<Maybe<Student>>>;
+  meow?: Maybe<Scalars['String']>;
 };
 
-export type Sections = {
-  __typename?: 'Sections';
-  id: Scalars['String'];
+
+export type QueryGetAuditTrailsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  search?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryGetEmployeeArgs = {
+  employee_id: Scalars['String'];
+};
+
+
+export type QueryGetEmployeesArgs = {
+  filter?: InputMaybe<EmployeesFilter>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  search?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryGetStudentArgs = {
+  LRN: Scalars['String'];
+};
+
+
+export type QueryGetStudentsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  search?: InputMaybe<Scalars['String']>;
+};
+
+export type Section = {
+  __typename?: 'Section';
+  id?: Maybe<Scalars['String']>;
   name: Scalars['String'];
+  year_level: Scalars['String'];
 };
 
 export type Student = {
@@ -113,16 +182,16 @@ export type Student = {
   birthday?: Maybe<Scalars['String']>;
   contact_number?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  enrollment_records?: Maybe<Array<EnrolledRecords>>;
+  enrollment_records?: Maybe<Array<Maybe<EnrolledRecords>>>;
   first_name: Scalars['String'];
   gender: Scalars['String'];
-  id: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
   last_name: Scalars['String'];
   middle_name?: Maybe<Scalars['String']>;
-  parent_guardians?: Maybe<Array<StudentParentGuardian>>;
+  parent_guardians?: Maybe<Array<Maybe<StudentParentGuardian>>>;
   requirements?: Maybe<StudentRequirements>;
   school_records?: Maybe<StudentSchoolRecord>;
-  transfer_records?: Maybe<Array<StudentTransferRecord>>;
+  transfer_records?: Maybe<Array<Maybe<StudentTransferRecord>>>;
 };
 
 export type StudentAddress = {
@@ -140,13 +209,13 @@ export type StudentAddress = {
 
 export type StudentParentGuardian = {
   __typename?: 'StudentParentGuardian';
-  contact_number: Scalars['String'];
+  contact_number?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   first_name: Scalars['String'];
-  id: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
   last_name: Scalars['String'];
   middle_name?: Maybe<Scalars['String']>;
-  student: Student;
+  student?: Maybe<Student>;
   type: Scalars['String'];
 };
 
@@ -160,7 +229,7 @@ export type StudentRequirements = {
   has_report_card: Scalars['Boolean'];
   has_report_of_rating: Scalars['Boolean'];
   has_school_government_recognition: Scalars['Boolean'];
-  id: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
 };
 
 export type StudentSchoolRecord = {
@@ -173,42 +242,49 @@ export type StudentSchoolRecord = {
 
 export type StudentTransferRecord = {
   __typename?: 'StudentTransferRecord';
-  id: Scalars['String'];
-  student: Student;
-  sy_entered: Scalars['String'];
-  sy_exit: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
+  student?: Maybe<Student>;
+  sy_entered?: Maybe<Scalars['String']>;
+  sy_exit?: Maybe<Scalars['String']>;
 };
 
-export type Employee_Auth_MutationMutationVariables = Exact<{
-  input: LoginInput;
+export type AddEmployeeInput = {
+  employee: EmployeeInput;
+};
+
+export type EmployeesFilter = {
+  status?: InputMaybe<Scalars['Int']>;
+};
+
+export type AuthMutationMutationVariables = Exact<{
+  input: AuthInput;
 }>;
 
 
-export type Employee_Auth_MutationMutation = { __typename?: 'Mutation', employee_auth: { __typename?: 'LoginReturn', token: string } };
+export type AuthMutationMutation = { __typename?: 'Mutation', auth?: { __typename?: 'AuthResponse', needNewPassword: boolean, token: string } | null };
 
-export type Employee_Detail_QueryQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type Employee_Detail_QueryQuery = { __typename?: 'Query', employee_detail: { __typename?: 'Employee', employee_id: string, id: string, role: string, profile?: { __typename?: 'EmployeeProfile', first_name: string, last_name: string, middle_name?: string | null } | null } };
-
-export type Get_Global_Vars_QueryQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Get_Global_Vars_QueryQuery = { __typename?: 'Query', get_globa_vars: { __typename?: 'GlobalVarsReturn', school_year: { __typename?: 'GlobalVars', title: string, value: string } } };
+export type GetMeQuery = { __typename?: 'Query', getMe?: { __typename?: 'Employee', employee_id: string, id?: string | null, role: string, profile?: { __typename?: 'EmployeeProfile', first_name: string, last_name: string, middle_name?: string | null } | null } | null };
 
-export type MeowQueryQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetEmployeesQueryQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  search?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<EmployeesFilter>;
+}>;
 
 
-export type MeowQueryQuery = { __typename?: 'Query', meow: string };
+export type GetEmployeesQueryQuery = { __typename?: 'Query', getEmployees?: Array<{ __typename?: 'Employee', employee_id: string, id?: string | null, partial_password?: string | null, role: string, status?: number | null, profile?: { __typename?: 'EmployeeProfile', first_name: string, id?: string | null, middle_name?: string | null, last_name: string } | null } | null> | null };
 
 export type PingQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PingQuery = { __typename?: 'Query', meow_but_need_token: string };
+export type PingQuery = { __typename?: 'Query', meow?: string | null };
 
 
-export const Employee_Auth_MutationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"employee_auth_mutation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LoginInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"employee_auth"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]}}]} as unknown as DocumentNode<Employee_Auth_MutationMutation, Employee_Auth_MutationMutationVariables>;
-export const Employee_Detail_QueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"employee_detail_query"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"employee_detail"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"employee_id"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"middle_name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]}}]} as unknown as DocumentNode<Employee_Detail_QueryQuery, Employee_Detail_QueryQueryVariables>;
-export const Get_Global_Vars_QueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"get_global_vars_query"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"get_globa_vars"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"school_year"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<Get_Global_Vars_QueryQuery, Get_Global_Vars_QueryQueryVariables>;
-export const MeowQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"meowQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"meow"}}]}}]} as unknown as DocumentNode<MeowQueryQuery, MeowQueryQueryVariables>;
-export const PingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ping"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"meow_but_need_token"}}]}}]} as unknown as DocumentNode<PingQuery, PingQueryVariables>;
+export const AuthMutationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"authMutation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AuthInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"auth"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"needNewPassword"}},{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]}}]} as unknown as DocumentNode<AuthMutationMutation, AuthMutationMutationVariables>;
+export const GetMeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetMe"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getMe"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"employee_id"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"middle_name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]}}]} as unknown as DocumentNode<GetMeQuery, GetMeQueryVariables>;
+export const GetEmployeesQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getEmployeesQuery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"search"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"employeesFilter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getEmployees"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"search"},"value":{"kind":"Variable","name":{"kind":"Name","value":"search"}}},{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"employee_id"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"partial_password"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"middle_name"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}}]}}]}}]}}]} as unknown as DocumentNode<GetEmployeesQueryQuery, GetEmployeesQueryQueryVariables>;
+export const PingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Ping"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"meow"}}]}}]} as unknown as DocumentNode<PingQuery, PingQueryVariables>;

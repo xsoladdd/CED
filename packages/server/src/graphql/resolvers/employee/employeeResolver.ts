@@ -1,6 +1,6 @@
 import { hash } from "argon2";
 import { GraphQLError } from "graphql";
-import { Not } from "typeorm";
+import { Like, Not } from "typeorm";
 import { conn } from "../../../config/db";
 import { AuditTrail } from "../../../models/Employee/AuditTrail";
 import { Employee } from "../../../models/Employee/Employee";
@@ -10,20 +10,23 @@ import { addEmployeeSchema } from "./helper";
 
 export const employeeResolver: Resolvers = {
   Query: {
-    getEmployees: async (_, { limit, offset, search }) => {
+    getEmployees: async (_, { limit, offset, search, filter }) => {
       try {
         console.log(search);
         const employeeRepo = conn.getRepository(Employee);
         const employees = await employeeRepo.find({
           where: {
-            status: 1,
+            status:
+              typeof filter?.status === "undefined"
+                ? undefined
+                : (filter?.status as number),
+            employee_id: search ? Like(`%${search}%`) : undefined,
             role: Not("BA"),
           },
           relations: { audit: true, profile: true },
           skip: offset ? offset : 0,
           take: limit ? limit : 10,
         });
-        console.log(employees);
         return employees;
       } catch (error) {
         throw new GraphQLError(error, {
@@ -39,7 +42,7 @@ export const employeeResolver: Resolvers = {
         const employees = await employeeRepo.findOne({
           where: {
             employee_id,
-            status: 1,
+            // status: 1,
             role: Not("BA"),
           },
           relations: { audit: true, profile: true },

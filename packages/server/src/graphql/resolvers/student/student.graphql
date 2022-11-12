@@ -1,0 +1,4 @@
+type Query {
+  getStudents(limit: Int, offset: Int, search: String): [Student]
+  getStudent(LRN: String!): Student
+}

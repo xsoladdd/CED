@@ -16,7 +16,7 @@
     "lint:fix": "npm run lint --fix ",
     "precommit": "yarn lint:fix && yarn lint && yarn build",
     "cz": "cd ../../ && cz && cd ./packages/latte",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "gen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.7.1",

@@ -1,5 +1,5 @@
-query employee_detail_query {
-  employee_detail {
+query GetMe {
+  getMe {
     employee_id
     id
     profile {

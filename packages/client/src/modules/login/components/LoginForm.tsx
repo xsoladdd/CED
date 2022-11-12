@@ -3,16 +3,14 @@ import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import React from "react";
 import Text from "../../../components/Text";
-import { Employee_Auth_MutationDocument } from "../../../graphQL/generated/graphql";
+import { AuthMutationDocument } from "../../../graphQL/generated/graphql";
 import { loginShema } from "../helper";
 import ErrorBox from "./ErrorBox";
 
 const LoginForm: React.FC = ({}) => {
   const { push } = useRouter();
 
-  const [executeEmployeeAuthMutation] = useMutation(
-    Employee_Auth_MutationDocument
-  );
+  const [executeEmployeeAuthMutation] = useMutation(AuthMutationDocument);
 
   const formik = useFormik({
     initialValues: {
@@ -33,9 +31,11 @@ const LoginForm: React.FC = ({}) => {
           }
         },
         onCompleted: (data) => {
-          console.log(data?.employee_auth.token);
-          localStorage.setItem("token", data?.employee_auth.token);
-          push("/dashboard");
+          const { auth } = data;
+          if (auth?.token) {
+            localStorage.setItem("token", auth?.token);
+            push("/dashboard");
+          }
         },
       });
       setSubmitting(false);

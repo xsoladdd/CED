@@ -7,7 +7,7 @@ type Student {
   gender: String!
   birthday: String
   contact_number: String
-  email: String!
+  email: String
   enrollment_records: [EnrolledRecords]
   address: StudentAddress
   parent_guardians: [StudentParentGuardian]

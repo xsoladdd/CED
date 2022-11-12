@@ -1,0 +1,6 @@
+mutation authMutation($input: AuthInput!) {
+  auth(input: $input) {
+    needNewPassword
+    token
+  }
+}

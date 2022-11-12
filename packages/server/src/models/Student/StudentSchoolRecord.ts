@@ -18,7 +18,7 @@ export class StudentSchoolRecord extends BasicColumns {
   sy_graduated: string;
 
   @Column()
-  school_name?: string;
+  school_name: string;
 
   @Column()
   type: string;

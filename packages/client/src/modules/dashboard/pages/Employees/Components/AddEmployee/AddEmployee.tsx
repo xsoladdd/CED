@@ -5,7 +5,7 @@ import Card, {
   CardHeader,
 } from "../../../../../../components/Card";
 import useStore from "../../../../../../store/useStore";
-import { IemployeeData } from "../../../../../../store/useStore/slices/emplyees/types";
+import { IemployeeData } from "../../../../../../store/useStore/slices/employees/types";
 import { joinClass } from "../../../../../../utils/joinClass";
 import { generateInput } from "../../../Shared/Components/StudentDetails/Components/helper";
 import { defaultInfo } from "./helper";

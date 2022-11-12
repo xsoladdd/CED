@@ -1,4 +1,4 @@
-import { IemployeeData } from "../../../../../../store/useStore/slices/emplyees/types";
+import { IemployeeData } from "../../../../../../store/useStore/slices/employees/types";
 
 export const defaultInfo: IemployeeData = {
   EID: "",

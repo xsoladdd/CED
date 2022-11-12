@@ -3,18 +3,16 @@ import * as types from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
-    "mutation employee_auth_mutation($input: LoginInput!) {\n  employee_auth(input: $input) {\n    token\n  }\n}": types.Employee_Auth_MutationDocument,
-    "query employee_detail_query {\n  employee_detail {\n    employee_id\n    id\n    profile {\n      first_name\n      last_name\n      middle_name\n    }\n    role\n  }\n}": types.Employee_Detail_QueryDocument,
-    "query get_global_vars_query {\n  get_globa_vars {\n    school_year {\n      title\n      value\n    }\n  }\n}": types.Get_Global_Vars_QueryDocument,
-    "query meowQuery {\n  meow\n}": types.MeowQueryDocument,
-    "query ping {\n  meow_but_need_token\n}": types.PingDocument,
+    "mutation authMutation($input: AuthInput!) {\n  auth(input: $input) {\n    needNewPassword\n    token\n  }\n}": types.AuthMutationDocument,
+    "query GetMe {\n  getMe {\n    employee_id\n    id\n    profile {\n      first_name\n      last_name\n      middle_name\n    }\n    role\n  }\n}": types.GetMeDocument,
+    "query getEmployeesQuery($limit: Int, $offset: Int, $search: String, $filter: employeesFilter) {\n  getEmployees(limit: $limit, offset: $offset, search: $search, filter: $filter) {\n    employee_id\n    id\n    partial_password\n    role\n    status\n    profile {\n      first_name\n      id\n      middle_name\n      last_name\n    }\n  }\n}": types.GetEmployeesQueryDocument,
+    "query Ping {\n  meow\n}": types.PingDocument,
 };
 
-export function graphql(source: "mutation employee_auth_mutation($input: LoginInput!) {\n  employee_auth(input: $input) {\n    token\n  }\n}"): (typeof documents)["mutation employee_auth_mutation($input: LoginInput!) {\n  employee_auth(input: $input) {\n    token\n  }\n}"];
-export function graphql(source: "query employee_detail_query {\n  employee_detail {\n    employee_id\n    id\n    profile {\n      first_name\n      last_name\n      middle_name\n    }\n    role\n  }\n}"): (typeof documents)["query employee_detail_query {\n  employee_detail {\n    employee_id\n    id\n    profile {\n      first_name\n      last_name\n      middle_name\n    }\n    role\n  }\n}"];
-export function graphql(source: "query get_global_vars_query {\n  get_globa_vars {\n    school_year {\n      title\n      value\n    }\n  }\n}"): (typeof documents)["query get_global_vars_query {\n  get_globa_vars {\n    school_year {\n      title\n      value\n    }\n  }\n}"];
-export function graphql(source: "query meowQuery {\n  meow\n}"): (typeof documents)["query meowQuery {\n  meow\n}"];
-export function graphql(source: "query ping {\n  meow_but_need_token\n}"): (typeof documents)["query ping {\n  meow_but_need_token\n}"];
+export function graphql(source: "mutation authMutation($input: AuthInput!) {\n  auth(input: $input) {\n    needNewPassword\n    token\n  }\n}"): (typeof documents)["mutation authMutation($input: AuthInput!) {\n  auth(input: $input) {\n    needNewPassword\n    token\n  }\n}"];
+export function graphql(source: "query GetMe {\n  getMe {\n    employee_id\n    id\n    profile {\n      first_name\n      last_name\n      middle_name\n    }\n    role\n  }\n}"): (typeof documents)["query GetMe {\n  getMe {\n    employee_id\n    id\n    profile {\n      first_name\n      last_name\n      middle_name\n    }\n    role\n  }\n}"];
+export function graphql(source: "query getEmployeesQuery($limit: Int, $offset: Int, $search: String, $filter: employeesFilter) {\n  getEmployees(limit: $limit, offset: $offset, search: $search, filter: $filter) {\n    employee_id\n    id\n    partial_password\n    role\n    status\n    profile {\n      first_name\n      id\n      middle_name\n      last_name\n    }\n  }\n}"): (typeof documents)["query getEmployeesQuery($limit: Int, $offset: Int, $search: String, $filter: employeesFilter) {\n  getEmployees(limit: $limit, offset: $offset, search: $search, filter: $filter) {\n    employee_id\n    id\n    partial_password\n    role\n    status\n    profile {\n      first_name\n      id\n      middle_name\n      last_name\n    }\n  }\n}"];
+export function graphql(source: "query Ping {\n  meow\n}"): (typeof documents)["query Ping {\n  meow\n}"];
 
 export function graphql(source: string): unknown;
 export function graphql(source: string) {

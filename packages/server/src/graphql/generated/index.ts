@@ -131,6 +131,8 @@ export type Query = {
   getEmployee?: Maybe<Employee>;
   getEmployees?: Maybe<Array<Maybe<Employee>>>;
   getMe?: Maybe<Employee>;
+  getStudent?: Maybe<Student>;
+  getStudents?: Maybe<Array<Maybe<Student>>>;
   meow?: Maybe<Scalars['String']>;
 };
 
@@ -148,6 +150,19 @@ export type QueryGetEmployeeArgs = {
 
 
 export type QueryGetEmployeesArgs = {
+  filter?: InputMaybe<EmployeesFilter>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  search?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryGetStudentArgs = {
+  LRN: Scalars['String'];
+};
+
+
+export type QueryGetStudentsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   search?: InputMaybe<Scalars['String']>;
@@ -166,7 +181,7 @@ export type Student = {
   address?: Maybe<StudentAddress>;
   birthday?: Maybe<Scalars['String']>;
   contact_number?: Maybe<Scalars['String']>;
-  email: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
   enrollment_records?: Maybe<Array<Maybe<EnrolledRecords>>>;
   first_name: Scalars['String'];
   gender: Scalars['String'];
@@ -235,6 +250,10 @@ export type StudentTransferRecord = {
 
 export type AddEmployeeInput = {
   employee: EmployeeInput;
+};
+
+export type EmployeesFilter = {
+  status?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -328,6 +347,7 @@ export type ResolversTypes = {
   StudentSchoolRecord: ResolverTypeWrapper<StudentSchoolRecord>;
   StudentTransferRecord: ResolverTypeWrapper<StudentTransferRecord>;
   addEmployeeInput: AddEmployeeInput;
+  employeesFilter: EmployeesFilter;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -354,6 +374,7 @@ export type ResolversParentTypes = {
   StudentSchoolRecord: StudentSchoolRecord;
   StudentTransferRecord: StudentTransferRecord;
   addEmployeeInput: AddEmployeeInput;
+  employeesFilter: EmployeesFilter;
 };
 
 export type AuditTrailResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuditTrail'] = ResolversParentTypes['AuditTrail']> = {
@@ -421,6 +442,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getEmployee?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<QueryGetEmployeeArgs, 'employee_id'>>;
   getEmployees?: Resolver<Maybe<Array<Maybe<ResolversTypes['Employee']>>>, ParentType, ContextType, Partial<QueryGetEmployeesArgs>>;
   getMe?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType>;
+  getStudent?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<QueryGetStudentArgs, 'LRN'>>;
+  getStudents?: Resolver<Maybe<Array<Maybe<ResolversTypes['Student']>>>, ParentType, ContextType, Partial<QueryGetStudentsArgs>>;
   meow?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
@@ -436,7 +459,7 @@ export type StudentResolvers<ContextType = any, ParentType extends ResolversPare
   address?: Resolver<Maybe<ResolversTypes['StudentAddress']>, ParentType, ContextType>;
   birthday?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   contact_number?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   enrollment_records?: Resolver<Maybe<Array<Maybe<ResolversTypes['EnrolledRecords']>>>, ParentType, ContextType>;
   first_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   gender?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
