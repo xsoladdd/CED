@@ -23,12 +23,7 @@ const LoginForm: React.FC = ({}) => {
       await executeEmployeeAuthMutation({
         variables: { input: values },
         onError: (error) => {
-          if (error.message.includes("employee ID")) {
-            return setErrors({ EID: error.message });
-          }
-          if (error.message.includes("password")) {
-            return setErrors({ password: error.message });
-          }
+          return setErrors({ password: error.message });
         },
         onCompleted: (data) => {
           const { auth } = data;

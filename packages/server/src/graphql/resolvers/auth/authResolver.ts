@@ -5,6 +5,7 @@ import { Employee } from "../../../models/Employee/Employee";
 import { authorized } from "../../../utils/authorized";
 import { errorType } from "../../../utils/errorType";
 import JWT from "../../../utils/JWT";
+import { recordTrail } from "../../../utils/recordTrail";
 import { Resolvers } from "../../generated";
 import { loginInputSchema } from "./helper";
 
@@ -22,22 +23,30 @@ export const authResolver: Resolvers = {
         const { EID, password } = input;
         const employeeRepo = conn.getRepository(Employee);
         const user = await employeeRepo.findOne({
-          where: { employee_id: EID, status: 1 },
+          where: { employee_id: EID },
         });
         if (!user) {
-          throw new GraphQLError("Invalid employee ID", {
+          throw new GraphQLError("Incorrect employee ID or password", {
             extensions: {
-              code: errorType.VALIDATION_ERROR,
+              code: errorType.AUTHENTICATION_ERROR,
+            },
+          });
+        }
+        if (user.status === 0) {
+          throw new GraphQLError("Account is suspended", {
+            extensions: {
+              code: errorType.AUTHENTICATION_ERROR,
             },
           });
         }
         if (!(await verify(user.password, password))) {
-          throw new GraphQLError("Incorrect password", {
+          throw new GraphQLError("Incorrect employee ID or password", {
             extensions: {
-              code: errorType.VALIDATION_ERROR,
+              code: errorType.AUTHENTICATION_ERROR,
             },
           });
         }
+        await recordTrail(user.employee_id, "LOGIN");
         const token = JWT.generateJWT(user);
         return {
           token,

@@ -1,10 +1,10 @@
 import { CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from "typeorm";
 
 export class BasicColumns {
-  @CreateDateColumn({ select: false })
+  @CreateDateColumn()
   created_at?: Date;
 
-  @UpdateDateColumn({ select: false })
+  @UpdateDateColumn()
   updated_at?: Date;
 
   @DeleteDateColumn()

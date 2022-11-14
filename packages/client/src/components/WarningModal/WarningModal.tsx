@@ -24,6 +24,9 @@ const WarningModal: React.FC<IModalProps> = ({
     case "red":
       colorClass = "btn-error";
       break;
+    case "yellow":
+      colorClass = "btn-warning";
+      break;
 
     default:
       colorClass = "btn-success";

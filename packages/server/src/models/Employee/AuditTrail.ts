@@ -13,7 +13,7 @@ import { Employee } from "./Employee";
 @Entity()
 export class AuditTrail extends BasicColumns {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id?: string;
 
   @Column()
   timestamp: string;
@@ -22,7 +22,7 @@ export class AuditTrail extends BasicColumns {
   description: string;
 
   @Column()
-  action_type_id: string;
+  action_type: string;
 
   @ManyToOne(() => Employee, (employee) => employee.audit)
   employee: Employee;

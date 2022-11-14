@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
 import { Seeder } from "typeorm-extension";
-import { GlobalVars } from "../../../models/GlobalVars";
+import { GlobalVars } from "../../GlobalVars";
 import { globalVarsType } from "../../../utils/globalVarsType";
 export default class GlobalVarsSeeders implements Seeder {
   public async run(dataSource: DataSource): Promise<any> {

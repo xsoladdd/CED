@@ -2,7 +2,7 @@ import { IglobalSlice } from "./types";
 
 export const globalSlice: StoreSlice<IglobalSlice> = (set) => ({
   globalVars: {
-    active_school_year: "2022-2023",
+    school_year: "",
     year_level: [
       {
         title: "Kinder",
@@ -122,19 +122,22 @@ export const globalSlice: StoreSlice<IglobalSlice> = (set) => ({
       { title: "Registrar Account", value: "RT" },
       // { title: "BA", value: "Backdoor Account" },
     ],
-    audit_trail_type: [
-      { title: "Managed Student", value: "managed_student" },
-      { title: "Logged", value: "logged_in" },
-      { title: "Viewed Archive", value: "viewed_archive" },
-      { title: "Managed Student", value: "managed_student" },
-      { title: "Others", value: "others" },
-    ],
-    setGlobalVars: ({ school_year }) =>
+    audit_trail_type: [],
+    setSchoolYear: (school_year) =>
       set(({ globalVars }: IglobalSlice): IglobalSlice => {
         return {
           globalVars: {
             ...globalVars,
-            active_school_year: school_year.value,
+            school_year,
+          },
+        };
+      }),
+    setAuditTrailType: (audit_trail_type_array) =>
+      set(({ globalVars }: IglobalSlice): IglobalSlice => {
+        return {
+          globalVars: {
+            ...globalVars,
+            audit_trail_type: audit_trail_type_array,
           },
         };
       }),

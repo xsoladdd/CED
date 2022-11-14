@@ -25,6 +25,10 @@ export class EnrolledRecords extends BasicColumns {
   @Column()
   section_id: string;
 
+  // FP, PP, NP
+  @Column({ default: "NP" })
+  payment_status: string;
+
   @ManyToOne(() => Student, (student) => student.enrollment_records)
   student: Student;
 }

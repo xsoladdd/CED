@@ -6,6 +6,14 @@ input employeesFilter {
   status: Int
 }
 
+input auditTrailFilter {
+  type: String
+}
+
+input addEmployeeInput {
+  employee: EmployeeInput!
+}
+
 type Query {
   getEmployees(
     limit: Int
@@ -14,16 +22,18 @@ type Query {
     filter: employeesFilter
   ): [Employee]
   getEmployee(employee_id: String!): Employee
-  getAuditTrails(limit: Int, offset: Int, search: String): [AuditTrail]
-}
-
-input addEmployeeInput {
-  employee: EmployeeInput!
+  getAuditTrails(
+    limit: Int
+    offset: Int
+    search: String
+    filter: auditTrailFilter
+  ): [AuditTrail]
 }
 
 type Mutation {
   addEmployee(input: addEmployeeInput!): Employee
-  disabledEmployee(employee_id: String!): String
+  disableEmployee(employee_id: String!): String
+  enableEmployee(employee_id: String!): String
   resetEmployeePassword(employee_id: String!, password: String!): Employee
   changeEmployeePassword(employee_id: String!, password: String!): Employee
 }

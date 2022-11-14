@@ -4,15 +4,16 @@ import { Like, Not } from "typeorm";
 import { conn } from "../../../config/db";
 import { AuditTrail } from "../../../models/Employee/AuditTrail";
 import { Employee } from "../../../models/Employee/Employee";
+import { authorized } from "../../../utils/authorized";
 import { errorType } from "../../../utils/errorType";
 import { Resolvers } from "../../generated";
 import { addEmployeeSchema } from "./helper";
 
 export const employeeResolver: Resolvers = {
   Query: {
-    getEmployees: async (_, { limit, offset, search, filter }) => {
+    getEmployees: async (_, { limit, offset, search, filter }, ctx) => {
       try {
-        console.log(search);
+        authorized(ctx);
         const employeeRepo = conn.getRepository(Employee);
         const employees = await employeeRepo.find({
           where: {
@@ -26,6 +27,9 @@ export const employeeResolver: Resolvers = {
           relations: { audit: true, profile: true },
           skip: offset ? offset : 0,
           take: limit ? limit : 10,
+          order: {
+            created_at: "ASC",
+          },
         });
         return employees;
       } catch (error) {
@@ -36,8 +40,9 @@ export const employeeResolver: Resolvers = {
         });
       }
     },
-    getEmployee: async (_, { employee_id }) => {
+    getEmployee: async (_, { employee_id }, ctx) => {
       try {
+        authorized(ctx);
         const employeeRepo = conn.getRepository(Employee);
         const employees = await employeeRepo.findOne({
           where: {
@@ -56,12 +61,27 @@ export const employeeResolver: Resolvers = {
         });
       }
     },
-    getAuditTrails: async (_, { limit, offset, search }) => {
+    getAuditTrails: async (_, { limit, offset, search, filter }, ctx) => {
       try {
-        console.log(search);
+        authorized(ctx);
         const auditTrailRepo = conn.getRepository(AuditTrail);
+        const searchString =
+          search || search !== "" ? Like(`%${search}%`) : undefined;
         const auditTrails = await auditTrailRepo.find({
-          relations: { employee: true },
+          where: {
+            action_type:
+              typeof filter?.type === "undefined" || filter?.type === ""
+                ? undefined
+                : (filter?.type as string),
+            employee: {
+              employee_id: searchString,
+              // profile: {
+              //   first_name: searchString,
+              //   last_name: searchString,
+              // },
+            },
+          },
+          relations: { employee: { profile: true } },
           skip: offset ? offset : 0,
           take: limit ? limit : 10,
         });
@@ -76,8 +96,9 @@ export const employeeResolver: Resolvers = {
     },
   },
   Mutation: {
-    addEmployee: async (_, { input }) => {
+    addEmployee: async (_, { input }, ctx) => {
       try {
+        authorized(ctx);
         const { employee } = input;
         await addEmployeeSchema.validate(employee).catch((err) => {
           throw new GraphQLError(err.message, {
@@ -92,7 +113,7 @@ export const employeeResolver: Resolvers = {
         const checkEID = await employeeRepo.findOne({
           where: {
             employee_id: employee.employee_id,
-            status: 1,
+            // status: 1,
           },
         });
         if (checkEID) {
@@ -129,10 +150,10 @@ export const employeeResolver: Resolvers = {
         });
       }
     },
-    disabledEmployee: async (_, { employee_id }) => {
+    disableEmployee: async (_, { employee_id }, ctx) => {
       try {
+        authorized(ctx);
         const employeeRepo = conn.getRepository(Employee);
-        // Check if employee_id exist
         const selectedEmployee = await employeeRepo.findOne({
           where: {
             employee_id: employee_id,
@@ -149,7 +170,7 @@ export const employeeResolver: Resolvers = {
 
         selectedEmployee.status = 0;
         await employeeRepo.save(selectedEmployee);
-        return "";
+        return "Succesfully disabled account";
       } catch (error) {
         throw new GraphQLError(error, {
           extensions: {
@@ -158,8 +179,38 @@ export const employeeResolver: Resolvers = {
         });
       }
     },
-    resetEmployeePassword: async (_, { employee_id, password }) => {
+    enableEmployee: async (_, { employee_id }, ctx) => {
       try {
+        authorized(ctx);
+        const employeeRepo = conn.getRepository(Employee);
+        const selectedEmployee = await employeeRepo.findOne({
+          where: {
+            employee_id: employee_id,
+            status: 0,
+          },
+        });
+        if (!selectedEmployee) {
+          throw new GraphQLError("No employee found. Invalid employee_id", {
+            extensions: {
+              code: errorType.SERVER_ERROR,
+            },
+          });
+        }
+
+        selectedEmployee.status = 1;
+        await employeeRepo.save(selectedEmployee);
+        return "Succesfully enabled account";
+      } catch (error) {
+        throw new GraphQLError(error, {
+          extensions: {
+            code: errorType.SERVER_ERROR,
+          },
+        });
+      }
+    },
+    resetEmployeePassword: async (_, { employee_id, password }, ctx) => {
+      try {
+        authorized(ctx);
         const employeeRepo = conn.getRepository(Employee);
         // Check if employee_id exist
         const selectedEmployee = await employeeRepo.findOne({
@@ -188,8 +239,9 @@ export const employeeResolver: Resolvers = {
         });
       }
     },
-    changeEmployeePassword: async (_, { employee_id, password }) => {
+    changeEmployeePassword: async (_, { employee_id, password }, ctx) => {
       try {
+        authorized(ctx);
         const employeeRepo = conn.getRepository(Employee);
         // Check if employee_id exist
         const selectedEmployee = await employeeRepo.findOne({

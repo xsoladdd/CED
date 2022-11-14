@@ -1,44 +1,50 @@
-import { useQuery } from "@apollo/client";
 import React, { useRef } from "react";
-import { FaSyncAlt, FaUserAltSlash } from "react-icons/fa";
+import { FaSyncAlt, FaUserAlt, FaUserAltSlash } from "react-icons/fa";
 import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
 import Card, { CardFooter, CardHeader } from "../../../../components/Card";
 import Status from "../../../../components/Status";
+import TableLoading from "../../../../components/Table/Loading";
 import Tooltip from "../../../../components/Tooltip";
 import WarningModal from "../../../../components/WarningModal";
-import { GetEmployeesQueryDocument } from "../../../../graphQL/generated/graphql";
 import useDashboardRouter from "../../../../hooks/useDashboardRouter";
-import { usePagination } from "../../../../hooks/usePagination";
 import useToggle from "../../../../hooks/useToggle";
 import useStore from "../../../../store/useStore";
+import { joinClass } from "../../../../utils/joinClass";
 import LegendCard from "./Components/LegendCard";
 import { column, generateRoleTitle } from "./helper";
+import { useEmployee } from "./useEmployee";
 
 const Employees: React.FC = ({}) => {
   const { pushRoute } = useDashboardRouter();
+  const { status: modalStatus, toggle: toggleModalStatus } = useToggle(false);
+  const { status: resetPasswordStatus, toggle: toggleResetPasswordStatus } =
+    useToggle(false);
 
   const selectRef = useRef<HTMLSelectElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
-  const { status: modalStatus, toggle: toggleModalStatus } = useToggle(false);
+  const newPassword = "password2023";
 
-  const { handleNext, handleBack, itemsPerPage, page, pageOffset } =
-    usePagination();
-  const { refetch, data, loading, error } = useQuery(
-    GetEmployeesQueryDocument,
-    {
-      variables: {
-        limit: itemsPerPage,
-        offset: pageOffset,
-        search: searchRef.current?.value,
-        filter: {
-          status:
-            selectRef.current?.value === ""
-              ? undefined
-              : parseInt(selectRef.current?.value as string),
-        },
-      },
-    }
+  const employeeRef = useRef<{ employee_id?: string; status?: number | null }>({
+    employee_id: undefined,
+    status: undefined,
+  });
+
+  const {
+    getEmployeeQuery: { data, loading, error },
+    handleRefetch,
+    pagination: { handleBack, handleNext, page },
+    enableAccountMutation: [enableAccount, { loading: enableEmployeeLoading }],
+    disableAccountMutation: [
+      disableAccount,
+      { loading: disableEmployeeLoading },
+    ],
+  } = useEmployee(
+    searchRef.current?.value,
+    selectRef.current?.value === ""
+      ? undefined
+      : parseInt(selectRef.current?.value as string),
+    employeeRef.current.employee_id
   );
 
   const {
@@ -49,37 +55,41 @@ const Employees: React.FC = ({}) => {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        refetch({
-          limit: itemsPerPage,
-          offset: pageOffset,
-          search: searchRef.current?.value,
-          filter: {
+        // resetPagination();
+        if (
+          searchRef.current?.value !== "" ||
+          selectRef.current?.value !== ""
+        ) {
+          handleRefetch({
+            search: searchRef.current?.value,
             status:
               selectRef.current?.value === ""
                 ? undefined
                 : parseInt(selectRef.current?.value as string),
-          },
-        });
+          });
+        }
       }}
       onReset={(e) => {
         e.preventDefault();
-        if (selectRef.current?.value) {
-          selectRef.current.value = "";
-        }
-        if (searchRef.current?.value) {
-          searchRef.current.value = "";
-        }
-        refetch({
-          limit: itemsPerPage,
-          offset: pageOffset,
-          search: searchRef.current?.value,
-          filter: {
+        // resetPagination();
+        if (
+          searchRef.current?.value !== "" ||
+          selectRef.current?.value !== ""
+        ) {
+          if (selectRef.current?.value) {
+            selectRef.current.value = "";
+          }
+          if (searchRef.current?.value) {
+            searchRef.current.value = "";
+          }
+          handleRefetch({
+            search: searchRef.current?.value,
             status:
               selectRef.current?.value === ""
                 ? undefined
                 : parseInt(selectRef.current?.value as string),
-          },
-        });
+          });
+        }
       }}
       className="w-5/6"
     >
@@ -88,21 +98,6 @@ const Employees: React.FC = ({}) => {
         header={<CardHeader title="Filter" />}
         footer={
           <CardFooter
-            left={
-              <div className="flex gap-2">
-                <button
-                  className="btn btn-sm btn-info"
-                  onClick={() =>
-                    pushRoute({
-                      title: "Add new employee",
-                      route: "employees:add",
-                    })
-                  }
-                >
-                  Add employee
-                </button>
-              </div>
-            }
             right={
               <div className="flex gap-2">
                 <button className="btn btn-sm btn-link" type={"reset"}>
@@ -147,7 +142,7 @@ const Employees: React.FC = ({}) => {
     </form>
   );
 
-  const table_body =
+  const tableData =
     data?.getEmployees?.length !== 0 &&
     data?.getEmployees?.map((props, idx) => (
       <>
@@ -162,16 +157,36 @@ const Employees: React.FC = ({}) => {
           <td>
             <div className="flex gap-2 place-content-center">
               <Tooltip text="Reset Password" direction="top">
-                <button className="btn btn-xs btn-success ">
+                <button
+                  className="btn btn-xs btn-success "
+                  onClick={() => toggleResetPasswordStatus()}
+                >
                   <FaSyncAlt size="12" />
                 </button>
               </Tooltip>
-              <Tooltip text="Deactivate Account" direction="left">
+              <Tooltip
+                text={props?.status ? "Enable Account" : "Disable Account"}
+                direction="left"
+              >
                 <button
-                  className="btn btn-xs btn-error "
-                  onClick={() => toggleModalStatus()}
+                  className={joinClass(
+                    "btn btn-xs",
+                    props?.status ? `btn-error` : `btn-info`
+                  )}
+                  disabled={enableEmployeeLoading || disableEmployeeLoading}
+                  onClick={() => {
+                    employeeRef.current = {
+                      employee_id: props?.employee_id,
+                      status: props?.status,
+                    };
+                    toggleModalStatus();
+                  }}
                 >
-                  <FaUserAltSlash size="12" />
+                  {props?.status ? (
+                    <FaUserAltSlash size="12" />
+                  ) : (
+                    <FaUserAlt size="12" />
+                  )}
                 </button>
               </Tooltip>
             </div>
@@ -187,10 +202,31 @@ const Employees: React.FC = ({}) => {
         handleClose={() => toggleModalStatus()}
         handleProceed={() => {
           toggleModalStatus();
-          console.log("DEACT ACCOUNT");
+          const { employee_id, status } = employeeRef.current;
+          if (employee_id) {
+            if (status === 1) {
+              console.log(`disableAccount`);
+              disableAccount({ variables: { employeeId: employee_id } });
+            }
+            if (status === 0) {
+              console.log(`enableAccount`);
+              enableAccount({ variables: { employeeId: employee_id } });
+            }
+          }
         }}
       >
         {`Changes won't be save. are you sure you want to cancel?`}
+      </WarningModal>
+
+      <WarningModal
+        status={resetPasswordStatus}
+        handleClose={() => toggleResetPasswordStatus()}
+        handleProceed={() => {
+          toggleResetPasswordStatus();
+        }}
+        color="yellow"
+      >
+        {`Are you sure that you want to reset password? User password will be "${newPassword}"`}
       </WarningModal>
       <div className="flex flex-col gap-5">
         <div className="flex gap-5 ">
@@ -198,7 +234,18 @@ const Employees: React.FC = ({}) => {
           <LegendCard />
         </div>
         <Card className="w-full">
-          <div className="w-full flex justify-end mb-[20px]">
+          <div className="w-full flex justify-between mb-[20px]">
+            <button
+              className="btn btn-sm btn-info"
+              onClick={() =>
+                pushRoute({
+                  title: "Add new employee",
+                  route: "employees:add",
+                })
+              }
+            >
+              Add employee
+            </button>
             <div className="flex gap-3 place-items-center">
               <span>
                 <FiArrowLeft size="15" onClick={() => handleBack()} />
@@ -212,7 +259,7 @@ const Employees: React.FC = ({}) => {
               </span>
             </div>
           </div>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto min-h-[200px]">
             <table className="table w-full table-compact table-zebra">
               <thead>
                 <tr className="text-center">
@@ -223,8 +270,12 @@ const Employees: React.FC = ({}) => {
               </thead>
 
               <tbody className="text-center">
-                {loading ? "loading" : table_body}
-                {error && "Something went wrong fetching the table"}
+                {loading ? <TableLoading>loading</TableLoading> : tableData}
+                {error && (
+                  <TableLoading>
+                    Something went wrong fetching the table
+                  </TableLoading>
+                )}
               </tbody>
             </table>
           </div>

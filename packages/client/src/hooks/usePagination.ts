@@ -11,7 +11,6 @@ export const usePagination = (itemsPerPage = 10) => {
   };
 
   const handleBack = () => {
-    console.log(page);
     if (page !== 1) {
       setPageOffset(pageOffset - itemsPerPage);
       setPage(page - 1);

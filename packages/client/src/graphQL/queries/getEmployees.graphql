@@ -1,4 +1,4 @@
-query getEmployeesQuery(
+query getEmployees(
   $limit: Int
   $offset: Int
   $search: String

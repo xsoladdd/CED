@@ -1,0 +1,6 @@
+query getGlobalVars {
+  getGlobalVars {
+    audit_trail_types
+    school_year
+  }
+}

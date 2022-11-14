@@ -1,15 +1,18 @@
 import { useQuery } from "@apollo/client";
-import { GetMeDocument } from "../../graphQL/generated/graphql";
+import {
+  GetGlobalVarsDocument,
+  GetMeDocument,
+} from "../../graphQL/generated/graphql";
 import useStore from "../../store/useStore";
 
 const useDashboard = () => {
   const {
     user: { setData },
-    // globalVars: { setGlobalVars },
+    globalVars: { setAuditTrailType, setSchoolYear },
   } = useStore();
 
   // Fetch for employee Level
-  const { loading: employeeDatailsQueryLoading } = useQuery(GetMeDocument, {
+  const { loading: getMeLoading } = useQuery(GetMeDocument, {
     onCompleted: (data) => {
       if (data.getMe) {
         const { employee_id, id, role, profile } = data.getMe;
@@ -27,25 +30,20 @@ const useDashboard = () => {
     },
   });
 
-  // const { loading: getGlobalVarsQueryLoading } = useQuery(
-  //   Get_Global_Vars_QueryDocument,
-  //   {
-  //     onCompleted: (value) => {
-  //       console.log(value.get_globa_vars.school_year);
-  //       setGlobalVars({
-  //         school_year: {
-  //           ...value.get_globa_vars.school_year,
-  //           id: "",
-  //           identifier: "",
-  //         },
-  //       });
-  //     },
-  //   }
-  // );
+  const { loading: getGlobalVarsLoading } = useQuery(GetGlobalVarsDocument, {
+    onCompleted: (values) => {
+      if (values.getGlobalVars) {
+        const { audit_trail_types, school_year } = values.getGlobalVars;
+        // console.log(audit_trail_types);
+        setAuditTrailType(audit_trail_types as string[]);
+        setSchoolYear(school_year);
+      }
+    },
+  });
 
   // Fetch for global variables
 
-  return { loading: employeeDatailsQueryLoading };
+  return { loading: getMeLoading || getGlobalVarsLoading };
 };
 
 export default useDashboard;
