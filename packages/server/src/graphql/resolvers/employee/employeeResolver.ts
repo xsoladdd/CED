@@ -6,6 +6,7 @@ import { AuditTrail } from "../../../models/Employee/AuditTrail";
 import { Employee } from "../../../models/Employee/Employee";
 import { authorized } from "../../../utils/authorized";
 import { errorType } from "../../../utils/errorType";
+import { recordTrail } from "../../../utils/recordTrail";
 import { Resolvers } from "../../generated";
 import { addEmployeeSchema } from "./helper";
 
@@ -28,7 +29,7 @@ export const employeeResolver: Resolvers = {
           skip: offset ? offset : 0,
           take: limit ? limit : 10,
           order: {
-            created_at: "ASC",
+            created_at: "DESC",
           },
         });
         return employees;
@@ -84,6 +85,9 @@ export const employeeResolver: Resolvers = {
           relations: { employee: { profile: true } },
           skip: offset ? offset : 0,
           take: limit ? limit : 10,
+          order: {
+            created_at: "DESC",
+          },
         });
         return auditTrails;
       } catch (error) {
@@ -98,7 +102,8 @@ export const employeeResolver: Resolvers = {
   Mutation: {
     addEmployee: async (_, { input }, ctx) => {
       try {
-        authorized(ctx);
+        const { employee_id: EID } = authorized(ctx);
+        recordTrail(EID, "ADD_EMPLOYEE");
         const { employee } = input;
         await addEmployeeSchema.validate(employee).catch((err) => {
           throw new GraphQLError(err.message, {

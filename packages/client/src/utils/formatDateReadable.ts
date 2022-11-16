@@ -1,7 +1,9 @@
 import { format } from "date-fns";
 
-export const formatDateReadable = (date?: Date | string): string => {
-  const dateFormat = "MMMM dd yyyy";
+export const formatDateReadable = (
+  date?: Date | string,
+  dateFormat = "MMMM dd yyyy"
+): string => {
   if (!date) return "";
   if (typeof date === "string") {
     const conv = new Date(date);

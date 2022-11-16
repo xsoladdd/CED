@@ -17,10 +17,8 @@ export const useEmployee = (
     variables: {
       limit: pagination.itemsPerPage,
       offset: pagination.pageOffset,
-      search,
-      filter: {
-        status,
-      },
+      search: "",
+      filter: {},
     },
   });
 

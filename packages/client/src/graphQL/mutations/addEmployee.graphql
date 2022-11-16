@@ -1,0 +1,14 @@
+mutation addEmployee($input: addEmployeeInput!) {
+  addEmployee(input: $input) {
+    employee_id
+    id
+    profile {
+      first_name
+      last_name
+      middle_name
+    }
+    role
+    status
+    partial_password
+  }
+}

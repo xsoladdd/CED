@@ -4,6 +4,7 @@ import { authResolver } from "./resolvers/auth/authResolver";
 import { employeeResolver } from "./resolvers/employee/employeeResolver";
 import { globalVarResolver } from "./resolvers/globalVars/globalVarResolver";
 import { meowResolver } from "./resolvers/meow/meowResolver";
+import { testResolver } from "./resolvers/test/testResolver";
 
 export const generateTypeDefs = async (): Promise<string> => {
   return await new Promise((resolve) => {
@@ -29,4 +30,5 @@ export const resolvers = [
   authResolver,
   employeeResolver,
   globalVarResolver,
+  testResolver,
 ];

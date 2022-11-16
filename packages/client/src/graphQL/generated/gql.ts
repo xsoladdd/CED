@@ -3,6 +3,7 @@ import * as types from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
+    "mutation addEmployee($input: addEmployeeInput!) {\n  addEmployee(input: $input) {\n    employee_id\n    id\n    profile {\n      first_name\n      last_name\n      middle_name\n    }\n    role\n    status\n    partial_password\n  }\n}": types.AddEmployeeDocument,
     "mutation authMutation($input: AuthInput!) {\n  auth(input: $input) {\n    needNewPassword\n    token\n  }\n}": types.AuthMutationDocument,
     "mutation disableEmployee($employeeId: String!) {\n  disableEmployee(employee_id: $employeeId)\n}": types.DisableEmployeeDocument,
     "mutation enableEmployee($employeeId: String!) {\n  enableEmployee(employee_id: $employeeId)\n}": types.EnableEmployeeDocument,
@@ -11,8 +12,10 @@ const documents = {
     "query getEmployees($limit: Int, $offset: Int, $search: String, $filter: employeesFilter) {\n  getEmployees(limit: $limit, offset: $offset, search: $search, filter: $filter) {\n    employee_id\n    id\n    partial_password\n    role\n    status\n    profile {\n      first_name\n      id\n      middle_name\n      last_name\n    }\n  }\n}": types.GetEmployeesDocument,
     "query getGlobalVars {\n  getGlobalVars {\n    audit_trail_types\n    school_year\n  }\n}": types.GetGlobalVarsDocument,
     "query Ping {\n  meow\n}": types.PingDocument,
+    "query Query {\n  test\n}": types.QueryDocument,
 };
 
+export function graphql(source: "mutation addEmployee($input: addEmployeeInput!) {\n  addEmployee(input: $input) {\n    employee_id\n    id\n    profile {\n      first_name\n      last_name\n      middle_name\n    }\n    role\n    status\n    partial_password\n  }\n}"): (typeof documents)["mutation addEmployee($input: addEmployeeInput!) {\n  addEmployee(input: $input) {\n    employee_id\n    id\n    profile {\n      first_name\n      last_name\n      middle_name\n    }\n    role\n    status\n    partial_password\n  }\n}"];
 export function graphql(source: "mutation authMutation($input: AuthInput!) {\n  auth(input: $input) {\n    needNewPassword\n    token\n  }\n}"): (typeof documents)["mutation authMutation($input: AuthInput!) {\n  auth(input: $input) {\n    needNewPassword\n    token\n  }\n}"];
 export function graphql(source: "mutation disableEmployee($employeeId: String!) {\n  disableEmployee(employee_id: $employeeId)\n}"): (typeof documents)["mutation disableEmployee($employeeId: String!) {\n  disableEmployee(employee_id: $employeeId)\n}"];
 export function graphql(source: "mutation enableEmployee($employeeId: String!) {\n  enableEmployee(employee_id: $employeeId)\n}"): (typeof documents)["mutation enableEmployee($employeeId: String!) {\n  enableEmployee(employee_id: $employeeId)\n}"];
@@ -21,6 +24,7 @@ export function graphql(source: "query getAuditTrails($limit: Int, $search: Stri
 export function graphql(source: "query getEmployees($limit: Int, $offset: Int, $search: String, $filter: employeesFilter) {\n  getEmployees(limit: $limit, offset: $offset, search: $search, filter: $filter) {\n    employee_id\n    id\n    partial_password\n    role\n    status\n    profile {\n      first_name\n      id\n      middle_name\n      last_name\n    }\n  }\n}"): (typeof documents)["query getEmployees($limit: Int, $offset: Int, $search: String, $filter: employeesFilter) {\n  getEmployees(limit: $limit, offset: $offset, search: $search, filter: $filter) {\n    employee_id\n    id\n    partial_password\n    role\n    status\n    profile {\n      first_name\n      id\n      middle_name\n      last_name\n    }\n  }\n}"];
 export function graphql(source: "query getGlobalVars {\n  getGlobalVars {\n    audit_trail_types\n    school_year\n  }\n}"): (typeof documents)["query getGlobalVars {\n  getGlobalVars {\n    audit_trail_types\n    school_year\n  }\n}"];
 export function graphql(source: "query Ping {\n  meow\n}"): (typeof documents)["query Ping {\n  meow\n}"];
+export function graphql(source: "query Query {\n  test\n}"): (typeof documents)["query Query {\n  test\n}"];
 
 export function graphql(source: string): unknown;
 export function graphql(source: string) {

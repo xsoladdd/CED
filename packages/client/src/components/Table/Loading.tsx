@@ -4,7 +4,7 @@ const TableLoading: React.FC = ({ children }) => {
   return (
     <>
       <tr>
-        <td colSpan={20} className="text-center capitalize">
+        <td colSpan={20} className="text-center uppercase">
           {children}
         </td>
       </tr>

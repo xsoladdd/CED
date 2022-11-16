@@ -15,7 +15,7 @@ const options: SeederOptions & DataSourceOptions = {
   logging: NODE_ENV !== "production",
   entities: [__dirname + "/../models/**/*.{ts,js}"],
   migrations: [__dirname + "/../migrations/**/*.{ts,js}"],
-  seeds: [__dirname + "/../db/seeds/**/*.{ts,js}"],
+  seeds: [__dirname + "/../models/seeds/**/*.{ts,js}"],
   subscribers: [],
 };
 

@@ -1,10 +1,7 @@
-import { useQuery } from "@apollo/client";
 import { NextPage } from "next";
 import React, { Suspense } from "react";
-import { Employee_Detail_QueryDocument } from "../../graphQL/generated/graphql";
 import useAuth from "../../hooks/useAuth";
 import useDashboardRouter from "../../hooks/useDashboardRouter";
-import useStore from "../../store/useStore";
 import DashboardLayout from "./Layout";
 import PageLoading from "./Layout/PageLoading";
 import routes from "./routes";

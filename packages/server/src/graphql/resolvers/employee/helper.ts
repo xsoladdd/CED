@@ -2,7 +2,7 @@ import * as yup from "yup";
 
 const profileSchema = yup.object().shape({
   first_name: yup.string().min(2).required("required"),
-  middle_name: yup.string().min(2),
+  middle_name: yup.string(),
   last_name: yup.string().min(2).required("required"),
 });
 

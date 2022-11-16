@@ -271,6 +271,9 @@ const Employees: React.FC = ({}) => {
 
               <tbody className="text-center">
                 {loading ? <TableLoading>loading</TableLoading> : tableData}
+                {data?.getEmployees?.length === 0 ? (
+                  <TableLoading>No data found</TableLoading>
+                ) : null}
                 {error && (
                   <TableLoading>
                     Something went wrong fetching the table

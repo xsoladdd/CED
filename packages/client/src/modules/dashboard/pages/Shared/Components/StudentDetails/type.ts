@@ -9,8 +9,8 @@ export interface IgenerateInput {
   value?: string | Date;
   onChange?: (e: ChangeEvent<any>) => void;
   onDateChange?: (date: Date | null) => void;
-  error?: string | boolean | FormikErrors<Date>;
-  touched?: boolean;
+  error?: string | boolean | FormikErrors<Date> | FormikErrors<any> | undefined;
+  touched?: boolean | undefined;
   id: string;
   disabled?: boolean;
   inputType?: "select" | "input" | "date";

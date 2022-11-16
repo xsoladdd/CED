@@ -1,23 +1,79 @@
+import { useMutation } from "@apollo/client";
 import { useFormik } from "formik";
 import React from "react";
 import Card, {
   CardFooter,
   CardHeader,
 } from "../../../../../../components/Card";
+import {
+  AddEmployeeDocument,
+  EmployeeInput,
+  GetAuditTrailsDocument,
+  GetEmployeesDocument,
+} from "../../../../../../graphQL/generated/graphql";
+import useDashboardRouter from "../../../../../../hooks/useDashboardRouter";
 import useStore from "../../../../../../store/useStore";
-import { IemployeeData } from "../../../../../../store/useStore/slices/employees/types";
 import { joinClass } from "../../../../../../utils/joinClass";
 import { generateInput } from "../../../Shared/Components/StudentDetails/Components/helper";
-import { defaultInfo } from "./helper";
+import { addEmployeeFormSchema } from "./helper";
 
 const AddEmployee: React.FC = ({}) => {
   const {
     globalVars: { roles },
   } = useStore();
-  const formik = useFormik<IemployeeData>({
-    initialValues: { ...defaultInfo },
-    onSubmit: (values) => {
-      console.log(values);
+
+  const { pushRoute } = useDashboardRouter();
+
+  const [addEmployee, { loading }] = useMutation(AddEmployeeDocument, {
+    refetchQueries: [
+      {
+        query: GetEmployeesDocument,
+        notifyOnNetworkStatusChange: true,
+        variables: {
+          limit: 10,
+          offset: 0,
+          search: "",
+          filter: {},
+        },
+      },
+      {
+        query: GetAuditTrailsDocument,
+        notifyOnNetworkStatusChange: true,
+        variables: {
+          limit: 10,
+          offset: 0,
+          search: "",
+          filter: {
+            type: "",
+          },
+        },
+      },
+    ],
+    awaitRefetchQueries: true,
+    onCompleted: () => {
+      pushRoute({ title: "employees", route: "employees" }, true);
+    },
+  });
+
+  const formik = useFormik<EmployeeInput>({
+    initialValues: {
+      employee_id: "",
+      role: "RT",
+      password: "",
+      profile: {
+        first_name: "",
+        last_name: "",
+      },
+    },
+    validationSchema: addEmployeeFormSchema,
+    onSubmit: async (values) => {
+      await addEmployee({
+        variables: {
+          input: {
+            employee: values,
+          },
+        },
+      });
     },
   });
 
@@ -28,6 +84,7 @@ const AddEmployee: React.FC = ({}) => {
           <button
             className={joinClass(`btn btn-sm`, "btn-success")}
             type="submit"
+            disabled={loading}
           >
             {"Submit"}
           </button>
@@ -35,40 +92,53 @@ const AddEmployee: React.FC = ({}) => {
       }
     />
   );
-
   const form = (
     <>
       <div>
         <div className="flex gap-3">
           {generateInput({
-            id: "first_name",
+            id: "profile.first_name",
             label: "First name :",
             onChange: formik.handleChange,
-            value: formik.values.first_name,
-            error: formik.errors.first_name,
-            touched: formik.touched.first_name,
+            value: formik.values.profile?.first_name,
+            error:
+              typeof formik.errors.profile === "object" &&
+              (formik.errors.profile as { first_name: string }).first_name,
+            touched:
+              typeof formik.touched.profile === "object" &&
+              (formik.touched.profile as { first_name: boolean }).first_name,
             placeholder: "First name",
             required: true,
             className: "w-1/3",
           })}
           {generateInput({
-            id: "middle_name",
+            id: "profile.middle_name",
             label: "Middle name :",
             onChange: formik.handleChange,
-            value: formik.values.middle_name,
-            error: formik.errors.middle_name,
-            touched: formik.touched.middle_name,
+            value: formik.values.profile?.middle_name
+              ? formik.values.profile?.middle_name
+              : "",
+            error:
+              typeof formik.errors.profile === "object" &&
+              (formik.errors.profile as { middle_name: string }).middle_name,
+            touched:
+              typeof formik.touched.profile === "object" &&
+              (formik.touched.profile as { middle_name: boolean }).middle_name,
             placeholder: "Middle name",
             className: "w-1/3",
           })}
           {generateInput({
             required: true,
-            id: "last_name",
+            id: "profile.last_name",
             label: "Last name :",
             onChange: formik.handleChange,
-            value: formik.values.last_name,
-            error: formik.errors.last_name,
-            touched: formik.touched.last_name,
+            value: formik.values.profile?.last_name,
+            error:
+              typeof formik.errors.profile === "object" &&
+              (formik.errors.profile as { last_name: string }).last_name,
+            touched:
+              typeof formik.touched.profile === "object" &&
+              (formik.touched.profile as { last_name: boolean }).last_name,
             placeholder: "Middle name",
             className: "w-1/3",
           })}
@@ -92,23 +162,23 @@ const AddEmployee: React.FC = ({}) => {
           })}
           {generateInput({
             required: true,
-            id: "EID",
+            id: "employee_id",
             label: "Employee ID :",
             onChange: formik.handleChange,
-            value: formik.values.EID,
-            error: formik.errors.EID,
-            touched: formik.touched.EID,
+            value: formik.values.employee_id,
+            error: formik.errors.employee_id,
+            touched: formik.touched.employee_id,
             placeholder: "Employee ID",
             className: "w-1/3",
           })}
           {generateInput({
             required: true,
-            id: "partial_password",
+            id: "password",
             label: "Partial Password :",
             onChange: formik.handleChange,
-            value: formik.values.partial_password,
-            error: formik.errors.partial_password,
-            touched: formik.touched.partial_password,
+            value: formik.values.password,
+            error: formik.errors.password,
+            touched: formik.touched.password,
             placeholder: "######",
             className: "w-1/3",
           })}

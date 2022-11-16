@@ -3,7 +3,6 @@ import { conn } from "../config/db";
 import { AuditTrail } from "../models/Employee/AuditTrail";
 import { Employee } from "../models/Employee/Employee";
 import { errorType } from "./errorType";
-import { formatDate } from "./formatDate";
 
 export const recordTrailType = {
   ADD_EMPLOYEE: "ADD_EMPLOYEE",
@@ -58,7 +57,7 @@ export const recordTrail = async (
         action_type: type,
         employee,
         description,
-        timestamp: formatDate(new Date()),
+        timestamp: new Date().toString(),
       };
       await auditTrailRepo.save(trail);
     }

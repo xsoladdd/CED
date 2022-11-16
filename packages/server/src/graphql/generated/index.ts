@@ -142,6 +142,7 @@ export type Query = {
   getStudent?: Maybe<Student>;
   getStudents?: Maybe<Array<Maybe<Student>>>;
   meow?: Maybe<Scalars['String']>;
+  test?: Maybe<Scalars['String']>;
 };
 
 
@@ -471,6 +472,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getStudent?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<QueryGetStudentArgs, 'LRN'>>;
   getStudents?: Resolver<Maybe<Array<Maybe<ResolversTypes['Student']>>>, ParentType, ContextType, Partial<QueryGetStudentsArgs>>;
   meow?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  test?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
 export type SectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Section'] = ResolversParentTypes['Section']> = {

@@ -6,6 +6,7 @@ import TableLoading from "../../../../components/Table/Loading";
 import { GetAuditTrailsDocument } from "../../../../graphQL/generated/graphql";
 import { usePagination } from "../../../../hooks/usePagination";
 import useStore from "../../../../store/useStore";
+import { formatDateReadable } from "../../../../utils/formatDateReadable";
 import { column } from "./helper";
 
 const AuditTrail: React.FC = ({}) => {
@@ -133,9 +134,11 @@ const AuditTrail: React.FC = ({}) => {
       return (
         <tr key={idx}>
           <td>{props?.id}</td>
-          <td>{props?.action_type}</td>
+          <td>{props?.action_type.replace("_", " ")}</td>
           <td>{props?.description}</td>
-          <td>{props?.timestamp}</td>
+          <td>
+            {formatDateReadable(props?.timestamp, "MMMM dd yyyy - hh:mm aa")}
+          </td>
           <td>
             {`${props?.employee.profile?.first_name}
                 ${props?.employee.profile?.last_name}`}
