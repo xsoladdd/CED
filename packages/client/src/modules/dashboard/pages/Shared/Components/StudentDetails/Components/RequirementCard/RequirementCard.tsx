@@ -13,16 +13,19 @@ const RequirementCard: React.FC = ({}) => {
   const { status: modalStatus, toggle: toggleModal } = useToggle(false);
   const {
     student: {
-      setSelectedRequirementsInfo,
-      selectedStudent: { requirementInfo },
+      // setSelectedRequirementsInfo,
+      selectedStudent: { requirements },
     },
   } = useStore();
   const formik = useFormik({
-    initialValues: requirementInfo,
+    initialValues: {
+      ...requirements,
+    },
     enableReinitialize: true,
     onSubmit: (values) => {
       // qwer Fix Submitting with API
-      setSelectedRequirementsInfo(values);
+      // setSelectedRequirementsInfo(values);
+
       toggleGreenModalStatus();
       console.log(values);
       toggle();

@@ -1,4 +1,25 @@
+type getStudentsResponse {
+  students: [Student]
+  length: Int
+}
+
 type Query {
-  getStudents(limit: Int, offset: Int, search: String): [Student]
-  getStudent(LRN: String!): Student
+  getStudents(limit: Int, offset: Int, search: String): getStudentsResponse
+  getStudent(SID: String!): Student
+}
+
+input updateStudentBasicInfoInput {
+  first_name: String!
+  middle_name: String
+  last_name: String!
+  birthday: String
+  contact_number: String
+  email: String!
+}
+
+type Mutation {
+  updateStudentBasicInfo(
+    input: updateStudentBasicInfoInput!
+    SID: String!
+  ): Student
 }

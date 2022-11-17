@@ -1,3 +1,5 @@
+import { Student } from "../../../../graphQL/generated/graphql";
+
 export interface IStudentBasicInfo {
   LRN: string;
   first_name: string;
@@ -55,13 +57,13 @@ export interface IStudentAcademicInfo {
     | "Senior High";
 }
 
-export interface IselectedStudentState {
-  basicInfo: IStudentBasicInfo;
-  addressInfo: IStudentAddressInfo;
-  guardianInfo: IStudentGuardianInfo;
-  requirementInfo: IStudentRequirementsInfo;
-  academicInfo: Array<IStudentAcademicInfo>;
-}
+// export interface IselectedStudentState {
+//   basicInfo: IStudentBasicInfo;
+//   addressInfo: IStudentAddressInfo;
+//   guardianInfo: IStudentGuardianInfo;
+//   requirementInfo: IStudentRequirementsInfo;
+//   academicInfo: Array<IStudentAcademicInfo>;
+// }
 
 export interface IstudentData extends IStudentBasicInfo {
   status: "E" | "A" | "NE"; // Enrolled, Alumni and Not Enrolled
@@ -91,8 +93,8 @@ export interface IStudentSlice {
       type: selectedType;
     };
     setSelectedRecord: (id: string, type: selectedType) => void;
-    selectedStudent: IselectedStudentState;
-    setSelectedStudent: (params: IselectedStudentState) => void;
+    selectedStudent: Student;
+    setSelectedStudent: (params: Student) => void;
     setSelectedBasicInfo: (params: IStudentBasicInfo) => void;
     setSelectedGuardianInfo: (params: IStudentGuardianInfo) => void;
     setSelectedAddressInfo: (params: IStudentAddressInfo) => void;

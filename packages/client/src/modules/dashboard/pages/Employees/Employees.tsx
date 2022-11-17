@@ -6,6 +6,7 @@ import Status from "../../../../components/Status";
 import TableLoading from "../../../../components/Table/Loading";
 import Tooltip from "../../../../components/Tooltip";
 import WarningModal from "../../../../components/WarningModal";
+import { Employee } from "../../../../graphQL/generated/graphql";
 import useDashboardRouter from "../../../../hooks/useDashboardRouter";
 import useToggle from "../../../../hooks/useToggle";
 import useStore from "../../../../store/useStore";
@@ -33,7 +34,7 @@ const Employees: React.FC = ({}) => {
   const {
     getEmployeeQuery: { data, loading, error },
     handleRefetch,
-    pagination: { handleBack, handleNext, page },
+    pagination: { handleBack, handleNext, page, itemsPerPage },
     enableAccountMutation: [enableAccount, { loading: enableEmployeeLoading }],
     disableAccountMutation: [
       disableAccount,
@@ -46,6 +47,8 @@ const Employees: React.FC = ({}) => {
       : parseInt(selectRef.current?.value as string),
     employeeRef.current.employee_id
   );
+
+  const pageCount = (data?.getEmployees?.length as number) / itemsPerPage;
 
   const {
     globalVars: { roles },
@@ -71,7 +74,6 @@ const Employees: React.FC = ({}) => {
       }}
       onReset={(e) => {
         e.preventDefault();
-        // resetPagination();
         if (
           searchRef.current?.value !== "" ||
           selectRef.current?.value !== ""
@@ -143,8 +145,9 @@ const Employees: React.FC = ({}) => {
   );
 
   const tableData =
-    data?.getEmployees?.length !== 0 &&
-    data?.getEmployees?.map((props, idx) => (
+    data?.getEmployees?.employees &&
+    data?.getEmployees?.employees.length !== 0 &&
+    (data?.getEmployees?.employees as Array<Employee>).map((props, idx) => (
       <>
         <tr key={idx}>
           <td>{props?.employee_id}</td>
@@ -250,11 +253,15 @@ const Employees: React.FC = ({}) => {
               <span>
                 <FiArrowLeft size="15" onClick={() => handleBack()} />
               </span>
-              <span className="text-sm">Page {page} </span>
+              <span className="text-sm">
+                Page {page} out of {pageCount}
+              </span>
               <span>
                 <FiArrowRight
                   size="15"
-                  onClick={() => handleNext(data?.getEmployees?.length)}
+                  onClick={() =>
+                    handleNext(data?.getEmployees?.length as number)
+                  }
                 />
               </span>
             </div>

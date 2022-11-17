@@ -12,6 +12,7 @@ type Student {
   address: StudentAddress
   parent_guardians: [StudentParentGuardian]
   requirements: StudentRequirements
-  school_records: StudentSchoolRecord
+  school_records: [StudentSchoolRecord]
   transfer_records: [StudentTransferRecord]
+  status: String
 }

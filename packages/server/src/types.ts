@@ -6,4 +6,5 @@ export interface Icontext {
   token?: string;
   employee_id?: string;
   id?: string;
+  school_year?: string;
 }

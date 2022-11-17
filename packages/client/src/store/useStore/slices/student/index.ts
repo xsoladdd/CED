@@ -8,7 +8,6 @@ import { setSelectedRequirementsInfo } from "./actions/setSelectedRequirementsIn
 import {
   defaultEnrolledStudentList,
   defaultSelectedStudent,
-  defaultStudentList,
 } from "./intialState";
 import { IStudentSlice } from "./types";
 
@@ -19,7 +18,7 @@ export const studentSlice: StoreSlice<IStudentSlice> = (set) => ({
       type: undefined,
     },
     setSelectedRecord: setSelectedRecord(set),
-    studentList: defaultStudentList,
+    studentList: [],
     enrolledStudentList: defaultEnrolledStudentList,
     selectedStudent: defaultSelectedStudent,
     setSelectedStudent: (selectedStudent) =>

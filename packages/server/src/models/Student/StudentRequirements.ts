@@ -17,7 +17,7 @@ import { BasicColumns } from "../../utils/BasicColumns";
 @Entity()
 export class StudentRequirements extends BasicColumns {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id?: string;
 
   @Column({ default: false })
   has_form_137: boolean;

@@ -26,17 +26,16 @@ const AddressCard: React.FC = ({}) => {
 
   const {
     student: {
-      selectedStudent: { addressInfo },
-      setSelectedAddressInfo,
+      selectedStudent: { address },
     },
   } = useStore();
   useEffect(() => {
     regions().then((regionList: Array<IregionType>) => {
       setRegion(regionList);
       // get region code
-      if (!addressInfo.region) return;
+      if (!address?.region) return;
       const regionCode = regionList.filter(
-        ({ region_name }) => region_name === addressInfo.region
+        ({ region_name }) => region_name === address.region
       );
       // Block if region name doesnt exist
       if (regionCode.length === 0) return;
@@ -44,7 +43,7 @@ const AddressCard: React.FC = ({}) => {
         (provinceList: Array<Iprovince>) => {
           setProvince(provinceList);
           const provinceCode = provinceList.filter(
-            ({ province_name }) => province_name === addressInfo.province
+            ({ province_name }) => province_name === address.province
           );
           // Block if province name doesnt exist
           if (provinceCode.length === 0) return;
@@ -52,7 +51,7 @@ const AddressCard: React.FC = ({}) => {
             (cityList: Array<ICity>) => {
               setCity(cityList);
               const cityCode = cityList.filter(
-                ({ city_name }) => city_name === addressInfo.city
+                ({ city_name }) => city_name === address.city
               );
               if (cityCode.length === 0) return;
               barangays(cityCode[0].city_code).then(
@@ -65,15 +64,16 @@ const AddressCard: React.FC = ({}) => {
         }
       );
     });
-  }, [addressInfo]);
+  }, [address]);
 
   const formik = useFormik({
-    initialValues: addressInfo,
+    initialValues: { ...address },
     validationSchema: addressInfoSchema,
     enableReinitialize: true,
     onSubmit: (values) => {
       // qwer Fix Submitting with API
-      setSelectedAddressInfo(values);
+      // setSelectedAddressInfo(values);
+      console.log(values);
       toggle();
     },
   });
@@ -133,7 +133,7 @@ const AddressCard: React.FC = ({}) => {
               id: "no",
               label: "House number :",
               onChange: formik.handleChange,
-              value: formik.values.no,
+              value: formik.values.no ? formik.values.no : "",
               error: formik.errors.no,
               touched: formik.touched.no,
               placeholder: "",
@@ -145,7 +145,7 @@ const AddressCard: React.FC = ({}) => {
               id: "street",
               label: "Street :",
               onChange: formik.handleChange,
-              value: formik.values.street,
+              value: formik.values.street ? formik.values.street : "",
               error: formik.errors.street,
               touched: formik.touched.street,
               placeholder: "",
@@ -157,7 +157,7 @@ const AddressCard: React.FC = ({}) => {
               id: "subdiv",
               label: "Subdivision :",
               onChange: formik.handleChange,
-              value: formik.values.subdiv,
+              value: formik.values.subdiv ? formik.values.subdiv : "",
               error: formik.errors.subdiv,
               touched: formik.touched.subdiv,
               placeholder: "",
@@ -166,12 +166,12 @@ const AddressCard: React.FC = ({}) => {
             {generateInput({
               disabled: !isEditOn,
               required: true,
-              id: "zipcode",
+              id: "zip",
               label: "Zip code :",
               onChange: formik.handleChange,
-              value: formik.values.zipcode,
-              error: formik.errors.zipcode,
-              touched: formik.touched.zipcode,
+              value: formik.values.zip,
+              error: formik.errors.zip,
+              touched: formik.touched.zip,
               placeholder: "",
               className: "w-1/4",
             })}

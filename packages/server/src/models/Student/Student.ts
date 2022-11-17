@@ -36,7 +36,7 @@ import { StudentTransferRecord } from "./StudentTransferRecord";
 @Entity()
 export class Student extends BasicColumns {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id?: string;
 
   @Column()
   LRN: string;
@@ -64,31 +64,36 @@ export class Student extends BasicColumns {
 
   @OneToMany(
     () => EnrolledRecords,
-    (enrollment_records) => enrollment_records.student
+    (enrollment_records) => enrollment_records.student,
+    { cascade: true }
   )
   enrollment_records?: EnrolledRecords[];
 
-  @OneToOne(() => StudentAddress, { nullable: true })
+  @OneToOne(() => StudentAddress, { nullable: true, cascade: true })
   @JoinColumn()
   address?: StudentAddress;
 
   @OneToMany(
     () => StudentParentGuardian,
-    (parent_guardians) => parent_guardians.student
+    (parent_guardians) => parent_guardians.student,
+    { cascade: true }
   )
   parent_guardians?: StudentParentGuardian[];
 
-  @OneToOne(() => StudentRequirements, { nullable: true })
+  @OneToOne(() => StudentRequirements, { nullable: true, cascade: true })
   @JoinColumn()
   requirements?: StudentRequirements;
 
-  @OneToOne(() => StudentSchoolRecord, { nullable: true })
+  @OneToMany(() => StudentSchoolRecord, (record) => record.student, {
+    cascade: true,
+  })
   @JoinColumn()
-  school_records?: StudentSchoolRecord;
+  school_records?: StudentSchoolRecord[];
 
   @OneToMany(
     () => StudentTransferRecord,
-    (transfer_records) => transfer_records.student
+    (transfer_records) => transfer_records.student,
+    { cascade: true }
   )
   transfer_records?: StudentTransferRecord[];
 }

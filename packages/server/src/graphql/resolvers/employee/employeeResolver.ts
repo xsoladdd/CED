@@ -1,6 +1,6 @@
 import { hash } from "argon2";
 import { GraphQLError } from "graphql";
-import { Like, Not } from "typeorm";
+import { FindOptionsWhere, Like, Not } from "typeorm";
 import { conn } from "../../../config/db";
 import { AuditTrail } from "../../../models/Employee/AuditTrail";
 import { Employee } from "../../../models/Employee/Employee";
@@ -16,15 +16,16 @@ export const employeeResolver: Resolvers = {
       try {
         authorized(ctx);
         const employeeRepo = conn.getRepository(Employee);
+        const where: FindOptionsWhere<Employee> = {
+          status:
+            typeof filter?.status === "undefined"
+              ? undefined
+              : (filter?.status as number),
+          employee_id: search ? Like(`%${search}%`) : undefined,
+          role: Not("BA"),
+        };
         const employees = await employeeRepo.find({
-          where: {
-            status:
-              typeof filter?.status === "undefined"
-                ? undefined
-                : (filter?.status as number),
-            employee_id: search ? Like(`%${search}%`) : undefined,
-            role: Not("BA"),
-          },
+          where,
           relations: { audit: true, profile: true },
           skip: offset ? offset : 0,
           take: limit ? limit : 10,
@@ -32,7 +33,13 @@ export const employeeResolver: Resolvers = {
             created_at: "DESC",
           },
         });
-        return employees;
+        const length = await employeeRepo.count({
+          where,
+        });
+        return {
+          employees,
+          length,
+        };
       } catch (error) {
         throw new GraphQLError(error, {
           extensions: {
@@ -68,20 +75,18 @@ export const employeeResolver: Resolvers = {
         const auditTrailRepo = conn.getRepository(AuditTrail);
         const searchString =
           search || search !== "" ? Like(`%${search}%`) : undefined;
-        const auditTrails = await auditTrailRepo.find({
-          where: {
-            action_type:
-              typeof filter?.type === "undefined" || filter?.type === ""
-                ? undefined
-                : (filter?.type as string),
-            employee: {
-              employee_id: searchString,
-              // profile: {
-              //   first_name: searchString,
-              //   last_name: searchString,
-              // },
-            },
+
+        const where: FindOptionsWhere<AuditTrail> = {
+          action_type:
+            typeof filter?.type === "undefined" || filter?.type === ""
+              ? undefined
+              : (filter?.type as string),
+          employee: {
+            employee_id: searchString,
           },
+        };
+        const auditTrails = await auditTrailRepo.find({
+          where,
           relations: { employee: { profile: true } },
           skip: offset ? offset : 0,
           take: limit ? limit : 10,
@@ -89,7 +94,10 @@ export const employeeResolver: Resolvers = {
             created_at: "DESC",
           },
         });
-        return auditTrails;
+        const length = await auditTrailRepo.count({
+          where,
+        });
+        return { audit_trail: auditTrails, length };
       } catch (error) {
         throw new GraphQLError(error, {
           extensions: {

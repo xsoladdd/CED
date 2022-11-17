@@ -5,6 +5,7 @@ import Card, { CardHeader } from "../../../../../../../../components/Card";
 import RequiredIndicator from "../../../../../../../../components/Required/RequiredIndicator";
 import Text from "../../../../../../../../components/Text";
 import WarningModal from "../../../../../../../../components/WarningModal";
+import { StudentSchoolRecord } from "../../../../../../../../graphQL/generated/graphql";
 import useToggle from "../../../../../../../../hooks/useToggle";
 import useStore from "../../../../../../../../store/useStore";
 import { joinClass } from "../../../../../../../../utils/joinClass";
@@ -18,27 +19,42 @@ const AcademicRecordCard: React.FC = ({}) => {
     useToggle(false);
   const {
     student: {
-      selectedStudent: { academicInfo },
-      setSelectedAcademicRecordInfo,
+      selectedStudent: { school_records },
     },
   } = useStore();
-  const formik = useFormik({
-    initialValues: academicInfo.map(
-      ({ academicLevel, school, schoolYear }) => ({
-        academicLevel,
-        school,
-        schoolYear,
-        isActive: true,
-      })
-    ),
+  console.log(`school_records`, school_records);
+
+  interface valueStructure {
+    val: {
+      sy_graduated?: string;
+      school_name?: string;
+      is_active: boolean;
+      type: string;
+    }[];
+  }
+
+  const formik = useFormik<valueStructure>({
+    initialValues: {
+      val: [
+        ...(school_records
+          ? (school_records as Array<StudentSchoolRecord>).map((props) => ({
+              sy_graduated: props?.sy_graduated,
+              school_name: props?.school_name,
+              type: props?.type,
+              is_active: true,
+            }))
+          : []),
+      ],
+    },
     validationSchema: academicRecordInfoSchema,
     enableReinitialize: true,
     onSubmit: (values) => {
       // qwer Fix Submitting with API
-      const trimmedArray = values.filter(({ isActive }) => isActive);
-      setSelectedAcademicRecordInfo(trimmedArray);
-      formik.setValues(trimmedArray);
-      saveModalStatusToggle();
+      // const trimmedArray = values.filter(({ isActive }) => isActive);
+      // setSelectedAcademicRecordInfo(trimmedArray);
+      // formik.setValues(trimmedArray);
+      // saveModalStatusToggle();
+      console.log(values);
       toggle();
     },
   });
@@ -71,24 +87,29 @@ const AcademicRecordCard: React.FC = ({}) => {
             type="button"
             onClick={(e) => {
               e.preventDefault();
-              formik.setValues([
-                ...academicInfo.map((itmArr) => ({
-                  ...itmArr,
-                  isActive: true,
-                })),
-                {
-                  academicLevel: "Junior High",
-                  school: "",
-                  schoolYear: "",
-                  isActive: false,
-                },
-                {
-                  academicLevel: "Junior High",
-                  school: "",
-                  schoolYear: "",
-                  isActive: false,
-                },
-              ]);
+              // formik.setValues([
+              //   ...(school_records &&
+              //     school_records.length !== 0 &&
+              //     school_records.map((props) => ({
+              //       academicLevel: props?.sy_graduated,
+              //       school: props?.school_name,
+              //       schoolYear: props?.sy_graduated,
+              //       isActive: true,
+              //       isActive: true,
+              //     }))),
+              //   {
+              //     academicLevel: "Junior High",
+              //     school: "",
+              //     schoolYear: "",
+              //     isActive: false,
+              //   },
+              //   {
+              //     academicLevel: "Junior High",
+              //     school: "",
+              //     schoolYear: "",
+              //     isActive: false,
+              //   },
+              // ]);
               toggle();
             }}
           >
@@ -117,7 +138,7 @@ const AcademicRecordCard: React.FC = ({}) => {
                     type="checkbox"
                     className="checkbox  checkbox-sm checkbox-primary"
                     id={`[${idx}]isActive`}
-                    checked={formik.values[idx]?.isActive}
+                    checked={formik.values.val[idx]?.is_active}
                     onChange={formik.handleChange}
                   />
                   <span className="label-text">Active</span>
@@ -127,38 +148,56 @@ const AcademicRecordCard: React.FC = ({}) => {
           </>
         )}
         {generateInput({
-          disabled: !isEditOn || !formik.values[idx]?.isActive,
+          disabled: !isEditOn || !formik.values.val[idx]?.is_active,
           required: true,
           id: `[${idx}]school`,
           label: "School",
           onChange: formik.handleChange,
-          error: formik.errors[idx]?.school,
-          touched: formik.touched[idx]?.school,
-          value: formik.values[idx]?.school,
+          value: formik.values.val[idx]?.school_name,
+          error:
+            formik.errors.val &&
+            formik.errors.val.length !== 0 &&
+            (formik.errors.val[idx] as { school_name: string }).school_name,
+          touched:
+            formik.touched.val &&
+            formik.touched.val.length !== 0 &&
+            (formik.touched.val[idx] as { school_name: boolean }).school_name,
           placeholder: "School",
           className: "w-3/5",
         })}
         {generateInput({
-          disabled: !isEditOn || !formik.values[idx]?.isActive,
+          disabled: !isEditOn || !formik.values.val[idx]?.is_active,
           required: true,
           id: `[${idx}]schoolYear`,
           label: "School Year",
           onChange: formik.handleChange,
-          error: formik.errors[idx]?.schoolYear,
-          touched: formik.touched[idx]?.schoolYear,
-          value: formik.values[idx]?.schoolYear,
+          value: formik.values.val[idx]?.sy_graduated,
+          error:
+            formik.errors.val &&
+            formik.errors.val.length !== 0 &&
+            (formik.errors.val[idx] as { sy_graduated: string }).sy_graduated,
+          touched:
+            formik.touched.val &&
+            formik.touched.val.length !== 0 &&
+            (formik.touched.val[idx] as { sy_graduated: boolean }).sy_graduated,
           placeholder: "ex: 2014-2015",
           className: "w-1/5",
         })}
         {generateInput({
-          disabled: !isEditOn || !formik.values[idx]?.isActive,
+          disabled: !isEditOn || !formik.values.val[idx]?.is_active,
           required: true,
           id: `[${idx}]academicLevel`,
           label: "Academic Level :",
           onChange: formik.handleChange,
-          error: formik.errors[idx]?.academicLevel,
-          touched: formik.touched[idx]?.academicLevel,
-          value: formik.values[idx]?.academicLevel,
+          value: formik.values.val[idx]?.type,
+          error:
+            formik.errors.val &&
+            formik.errors.val.length !== 0 &&
+            (formik.errors.val[idx] as { type: string }).type,
+          touched:
+            formik.touched.val &&
+            formik.touched.val.length !== 0 &&
+            (formik.touched.val[idx] as { type: boolean }).type,
           inputType: "select",
           selectValues: [
             { text: "Pre-Elementary", value: "Pre-Elementary" },
@@ -173,12 +212,12 @@ const AcademicRecordCard: React.FC = ({}) => {
   };
   const formItems = (
     <div className="flex gap-2 flex-col">
-      {/* {isEditOn
-        ? [0, 1, 2, 3, 4].map((idx) => record(idx))
-        : formik.values.map((_, idx) => record(idx))} */}
-      {formik.values.map((_, idx) => record(idx))}
+      {formik.values &&
+        formik.values.val.length !== 0 &&
+        formik.values.val.map((_, idx) => record(idx))}
     </div>
   );
+  console.log(formik.values);
 
   return (
     <>
@@ -205,7 +244,7 @@ const AcademicRecordCard: React.FC = ({}) => {
           }}
         >
           <div className="">
-            {formik.values.filter(
+            {/* {formik.values.filter(
               ({ isActive, school }) => !isActive && !!school
             ).length === 0 ? (
               <p>Are you sure that you want to save changes</p>
@@ -223,7 +262,7 @@ const AcademicRecordCard: React.FC = ({}) => {
                     ))}
                 </ol>
               </>
-            )}
+            )} */}
           </div>
         </WarningModal>
         <Card className="w-full" header={header}>
@@ -234,7 +273,7 @@ const AcademicRecordCard: React.FC = ({}) => {
             </span>
           )}
 
-          {formik.values.length === 0 ? (
+          {formik.values.val.length === 0 ? (
             <Text className="italic">No previous record</Text>
           ) : (
             formItems

@@ -19,7 +19,7 @@ import { Student } from "./Student";
 @Entity()
 export class StudentParentGuardian extends BasicColumns {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id?: string;
 
   @Column()
   first_name: string;
@@ -40,5 +40,5 @@ export class StudentParentGuardian extends BasicColumns {
   type: string;
 
   @ManyToOne(() => Student, (student) => student.parent_guardians)
-  student: Student;
+  student?: Student;
 }

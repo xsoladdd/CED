@@ -1,14 +1,14 @@
 import * as Yup from "yup";
 
 const personProfileSchema = Yup.object().shape({
-  firstName: Yup.string().min(2, "Field Too Short!").max(50, "Too Long!"),
+  first_name: Yup.string().min(2, "Field Too Short!").max(50, "Too Long!"),
   // .when("firstName", {
   //   is: (exists: any) => !!exists,
   //   then: Yup.string().required(),
   //   otherwise: Yup.string(),
   // }),
-  middleName: Yup.string().min(2, "Too Short!").max(50, "Too Long!"),
-  lastName: Yup.string().when("firstName", {
+  middle_name: Yup.string().min(2, "Too Short!").max(50, "Too Long!"),
+  last_name: Yup.string().when("first_name", {
     is: (exists: any) => !!exists,
     then: Yup.string()
       .min(2, "Too Short!")
@@ -16,7 +16,7 @@ const personProfileSchema = Yup.object().shape({
       .required("Required"),
     otherwise: Yup.string(),
   }),
-  email: Yup.string().when("firstName", {
+  email: Yup.string().when("first_name", {
     is: (exists: any) => !!exists,
     then: Yup.string()
       .email("Invalid email")
@@ -25,7 +25,7 @@ const personProfileSchema = Yup.object().shape({
       .required("Required"),
     otherwise: Yup.string(),
   }),
-  mobileNumber: Yup.string()
+  contact_number: Yup.string()
     .min(11, "Field Too Short!")
     .max(14, "Too Long!")
     .when("firstName", {

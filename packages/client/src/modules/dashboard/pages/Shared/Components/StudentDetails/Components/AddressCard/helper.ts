@@ -13,7 +13,7 @@ export const addressInfoSchema = Yup.object().shape({
   // .required("Required"),
   no: Yup.string().min(2, "Field Too Short!").max(50, "Too Long!"),
   // .required("Required"),
-  zipcode: Yup.string()
+  zip: Yup.string()
     .min(3, "Field Too Short!")
     .max(50, "Too Long!")
     .required("Required"),

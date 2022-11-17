@@ -1,5 +1,5 @@
 type StudentAddress {
-  id: String!
+  id: String
   no: String
   street: String
   subdiv: String

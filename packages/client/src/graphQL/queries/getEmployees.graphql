@@ -10,16 +10,9 @@ query getEmployees(
     search: $search
     filter: $filter
   ) {
-    employee_id
-    id
-    partial_password
-    role
-    status
-    profile {
-      first_name
-      id
-      middle_name
-      last_name
+    length
+    employees {
+      ...EmployeeFragment
     }
   }
 }

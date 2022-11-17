@@ -3,6 +3,7 @@ import React from "react";
 import { FiEdit, FiSave, FiX } from "react-icons/fi";
 import Card, { CardHeader } from "../../../../../../../../components/Card";
 import WarningModal from "../../../../../../../../components/WarningModal";
+import { Student } from "../../../../../../../../graphQL/generated/graphql";
 import useToggle from "../../../../../../../../hooks/useToggle";
 import useStore from "../../../../../../../../store/useStore";
 import { generateInput } from "../helper";
@@ -13,19 +14,19 @@ const BasicInfoCard: React.FC = ({}) => {
   const { status: modalStatus, toggle: toggleModal } = useToggle(false);
 
   const {
-    student: {
-      selectedStudent: { basicInfo },
-      setSelectedBasicInfo,
-    },
+    student: { selectedStudent },
   } = useStore();
 
-  const formik = useFormik({
-    initialValues: basicInfo,
+  const formik = useFormik<Student>({
+    initialValues: {
+      ...selectedStudent,
+    },
     validationSchema: basicInfoSchema,
     enableReinitialize: true,
     onSubmit: (values) => {
       // qwer Fix Submitting with API
-      setSelectedBasicInfo(values);
+      // setSelectedBasicInfo(values);
+      console.log(values);
       toggle();
     },
   });
@@ -98,7 +99,7 @@ const BasicInfoCard: React.FC = ({}) => {
               id: "middle_name",
               label: "Middle name :",
               onChange: formik.handleChange,
-              value: formik.values.middle_name,
+              value: formik.values.middle_name ? formik.values.middle_name : "",
               error: formik.errors.middle_name,
               touched: formik.touched.middle_name,
               placeholder: "Middle name",
@@ -117,7 +118,7 @@ const BasicInfoCard: React.FC = ({}) => {
               className: "w-1/3",
             })}
           </div>
-          <div className="flex gap-3   ">
+          <div className="flex gap-3">
             {generateInput({
               disabled: !isEditOn,
               required: true,
@@ -147,7 +148,6 @@ const BasicInfoCard: React.FC = ({}) => {
               ],
               className: "w-1/3",
             })}
-
             {generateInput({
               disabled: !isEditOn,
               required: true,
@@ -159,7 +159,9 @@ const BasicInfoCard: React.FC = ({}) => {
                   formik.setFieldValue("birthday", date);
                 }
               },
-              value: formik.values.birthday,
+              value: formik.values.birthday
+                ? formik.values.birthday
+                : "2000-01-01",
               error: formik.errors.birthday,
               touched: !!formik.touched.birthday,
               placeholder: "Birthday",
@@ -174,7 +176,7 @@ const BasicInfoCard: React.FC = ({}) => {
               id: "email",
               label: "Email :",
               onChange: formik.handleChange,
-              value: formik.values.email,
+              value: formik.values.email ? formik.values.email : "",
               error: formik.errors.email,
               touched: formik.touched.email,
               placeholder: "Email",
@@ -182,13 +184,15 @@ const BasicInfoCard: React.FC = ({}) => {
             })}
             {generateInput({
               disabled: !isEditOn,
-              id: "mobile_number",
+              id: "contact_number",
               required: true,
               label: "Mobile Number :",
               onChange: formik.handleChange,
-              value: formik.values.mobile_number,
-              error: formik.errors.mobile_number,
-              touched: formik.touched.mobile_number,
+              value: formik.values.contact_number
+                ? formik.values.contact_number
+                : "",
+              error: formik.errors.contact_number,
+              touched: formik.touched.contact_number,
               placeholder: "Mobile Number",
               className: "w-1/3 ",
             })}

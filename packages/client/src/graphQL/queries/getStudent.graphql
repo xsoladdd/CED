@@ -1,0 +1,5 @@
+query GetStudent($sid: String!) {
+  getStudent(SID: $sid) {
+    ...StudentFragment
+  }
+}

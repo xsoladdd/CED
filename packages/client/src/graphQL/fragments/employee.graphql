@@ -1,0 +1,13 @@
+fragment EmployeeFragment on Employee {
+  employee_id
+  id
+  partial_password
+  role
+  status
+  profile {
+    first_name
+    id
+    middle_name
+    last_name
+  }
+}

@@ -14,19 +14,28 @@ const GuardianCard: React.FC = ({}) => {
   const { status: modalStatus, toggle: toggleModal } = useToggle(false);
   const {
     student: {
-      setSelectedGuardianInfo,
-      selectedStudent: { guardianInfo },
+      selectedStudent: { parent_guardians },
     },
   } = useStore();
   const formik = useFormik({
-    initialValues: guardianInfo,
-    // ? guardianInfo
-    // : { ...defaultState.guardianInfo },
+    initialValues: {
+      father: {
+        ...(parent_guardians?.filter((props) => props?.type === "F").length !==
+          0 && parent_guardians?.filter((props) => props?.type === "F")[0]),
+      },
+      mother: {
+        ...(parent_guardians?.filter((props) => props?.type === "M").length !==
+          0 && parent_guardians?.filter((props) => props?.type === "M")[0]),
+      },
+      guardian: {
+        ...(parent_guardians?.filter((props) => props?.type === "G").length !==
+          0 && parent_guardians?.filter((props) => props?.type === "G")[0]),
+      },
+    },
     validationSchema: guardianSchema,
     enableReinitialize: true,
     onSubmit: (values) => {
       // qwer Fix Submitting with API
-      setSelectedGuardianInfo(values);
       console.log(values);
       toggle();
     },
@@ -78,24 +87,28 @@ const GuardianCard: React.FC = ({}) => {
           {generateInput({
             disabled: !isEditOn,
             required: true,
-            id: "father.firstName",
+            id: "father.first_name",
             label: "First name :",
             onChange: formik.handleChange,
-            value: formik.values.father.firstName,
-            error: formik.errors.father?.firstName,
-            touched: formik.touched.father?.firstName,
+            value: formik.values.father?.first_name
+              ? formik.values.father?.first_name
+              : "",
+            error: formik.errors.father?.first_name,
+            touched: formik.touched.father?.first_name,
             placeholder: "First Name",
             className: "w-1/3",
           })}
 
           {generateInput({
             disabled: !isEditOn,
-            id: "father.middleName",
+            id: "father.middle_name",
             label: "Middle name :",
             onChange: formik.handleChange,
-            value: formik.values.father.middleName,
-            error: formik.errors.father?.middleName,
-            touched: formik.touched.father?.middleName,
+            value: formik.values.father.middle_name
+              ? formik.values.father.middle_name
+              : "",
+            error: formik.errors.father?.middle_name,
+            touched: formik.touched.father?.middle_name,
             placeholder: "Middle Name",
             className: "w-1/3",
           })}
@@ -103,12 +116,12 @@ const GuardianCard: React.FC = ({}) => {
           {generateInput({
             disabled: !isEditOn,
             required: true,
-            id: "father.lastName",
+            id: "father.last_name",
             label: "Last name :",
             onChange: formik.handleChange,
-            value: formik.values.father.lastName,
-            error: formik.errors.father?.lastName,
-            touched: formik.touched.father?.lastName,
+            value: formik.values.father.last_name,
+            error: formik.errors.father?.last_name,
+            touched: formik.touched.father?.last_name,
             placeholder: "Last Name",
             className: "w-1/3",
           })}
@@ -130,12 +143,14 @@ const GuardianCard: React.FC = ({}) => {
           {generateInput({
             disabled: !isEditOn,
             required: true,
-            id: "father.mobileNumber",
+            id: "father.contact_number",
             label: "Mobile Number :",
             onChange: formik.handleChange,
-            value: formik.values.father.mobileNumber,
-            error: formik.errors.father?.mobileNumber,
-            touched: formik.touched.father?.mobileNumber,
+            value: formik.values.father?.contact_number
+              ? formik.values.father.contact_number
+              : "",
+            error: formik.errors.father?.contact_number,
+            touched: formik.touched.father?.contact_number,
             placeholder: "Mobile Number",
             className: "w-1/2",
           })}
@@ -153,24 +168,26 @@ const GuardianCard: React.FC = ({}) => {
         {generateInput({
           disabled: !isEditOn,
           required: true,
-          id: "mother.firstName",
+          id: "mother.first_name",
           label: "First name :",
           onChange: formik.handleChange,
-          value: formik.values.mother.firstName,
-          error: formik.errors.mother?.firstName,
-          touched: formik.touched.mother?.firstName,
+          value: formik.values.mother.first_name,
+          error: formik.errors.mother?.first_name,
+          touched: formik.touched.mother?.first_name,
           placeholder: "First Name",
           className: "w-1/3",
         })}
 
         {generateInput({
           disabled: !isEditOn,
-          id: "mother.middleName",
+          id: "mother.middle_name",
           label: "Middle name :",
           onChange: formik.handleChange,
-          value: formik.values.mother.middleName,
-          error: formik.errors.mother?.middleName,
-          touched: formik.touched.mother?.middleName,
+          value: formik.values.mother.middle_name
+            ? formik.values.mother.middle_name
+            : "",
+          error: formik.errors.mother?.middle_name,
+          touched: formik.touched.mother?.middle_name,
           placeholder: "Middle Name",
           className: "w-1/3",
         })}
@@ -178,12 +195,12 @@ const GuardianCard: React.FC = ({}) => {
         {generateInput({
           disabled: !isEditOn,
           required: true,
-          id: "mother.lastName",
+          id: "mother.last_name",
           label: "Last name :",
           onChange: formik.handleChange,
-          value: formik.values.mother.lastName,
-          error: formik.errors.mother?.lastName,
-          touched: formik.touched.mother?.lastName,
+          value: formik.values.mother.last_name,
+          error: formik.errors.mother?.last_name,
+          touched: formik.touched.mother?.last_name,
           placeholder: "Last Name",
           className: "w-1/3",
         })}
@@ -205,12 +222,14 @@ const GuardianCard: React.FC = ({}) => {
         {generateInput({
           disabled: !isEditOn,
           required: true,
-          id: "mother.mobileNumber",
+          id: "mother.contact_number",
           label: "Mobile Number :",
           onChange: formik.handleChange,
-          value: formik.values.mother.mobileNumber,
-          error: formik.errors.mother?.mobileNumber,
-          touched: formik.touched.mother?.mobileNumber,
+          value: formik.values.mother.contact_number
+            ? formik.values.mother.contact_number
+            : "",
+          error: formik.errors.mother?.contact_number,
+          touched: formik.touched.mother?.contact_number,
           placeholder: "Mobile Number",
           className: "w-1/2",
         })}
@@ -227,24 +246,26 @@ const GuardianCard: React.FC = ({}) => {
         {generateInput({
           disabled: !isEditOn,
           required: true,
-          id: "guardian.firstName",
+          id: "guardian.first_name",
           label: "First name :",
           onChange: formik.handleChange,
-          value: formik.values.guardian.firstName,
-          error: formik.errors.guardian?.firstName,
-          touched: formik.touched.guardian?.firstName,
+          value: formik.values.guardian.first_name,
+          error: formik.errors.guardian?.first_name,
+          touched: formik.touched.guardian?.first_name,
           placeholder: "First Name",
           className: "w-1/3",
         })}
 
         {generateInput({
           disabled: !isEditOn,
-          id: "guardian.middleName",
+          id: "guardian.middle_name",
           label: "Middle name :",
           onChange: formik.handleChange,
-          value: formik.values.guardian.middleName,
-          error: formik.errors.guardian?.middleName,
-          touched: formik.touched.guardian?.middleName,
+          value: formik.values.guardian.middle_name
+            ? formik.values.guardian.middle_name
+            : "",
+          error: formik.errors.guardian?.middle_name,
+          touched: formik.touched.guardian?.middle_name,
           placeholder: "Middle Name",
           className: "w-1/3",
         })}
@@ -252,12 +273,12 @@ const GuardianCard: React.FC = ({}) => {
         {generateInput({
           disabled: !isEditOn,
           required: true,
-          id: "guardian.lastName",
+          id: "guardian.last_name",
           label: "Last name :",
           onChange: formik.handleChange,
-          value: formik.values.guardian.lastName,
-          error: formik.errors.guardian?.lastName,
-          touched: formik.touched.guardian?.lastName,
+          value: formik.values.guardian.last_name,
+          error: formik.errors.guardian?.last_name,
+          touched: formik.touched.guardian?.last_name,
           placeholder: "Last Name",
           className: "w-1/3",
         })}
@@ -280,12 +301,14 @@ const GuardianCard: React.FC = ({}) => {
         {generateInput({
           disabled: !isEditOn,
           required: true,
-          id: "guardian.mobileNumber",
+          id: "guardian.contact_number",
           label: "Mobile Number :",
           onChange: formik.handleChange,
-          value: formik.values.guardian.mobileNumber,
-          error: formik.errors.guardian?.mobileNumber,
-          touched: formik.touched.guardian?.mobileNumber,
+          value: formik.values.guardian.contact_number
+            ? formik.values.guardian.contact_number
+            : "",
+          error: formik.errors.guardian?.contact_number,
+          touched: formik.touched.guardian?.contact_number,
           placeholder: "Mobile Number",
           className: "w-1/2",
         })}

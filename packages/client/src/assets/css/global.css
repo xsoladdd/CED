@@ -8,3 +8,8 @@
   font-family: "IBM Plex Sans", sans-serif;
   font-family: "Inter", sans-serif;
 }
+
+body {
+  overflow: hidden;
+  scrollbar-width: none;
+}

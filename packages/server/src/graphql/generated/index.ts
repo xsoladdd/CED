@@ -93,6 +93,7 @@ export type Mutation = {
   disableEmployee?: Maybe<Scalars['String']>;
   enableEmployee?: Maybe<Scalars['String']>;
   resetEmployeePassword?: Maybe<Employee>;
+  updateStudentBasicInfo?: Maybe<Student>;
 };
 
 
@@ -132,15 +133,21 @@ export type MutationResetEmployeePasswordArgs = {
   password: Scalars['String'];
 };
 
+
+export type MutationUpdateStudentBasicInfoArgs = {
+  SID: Scalars['String'];
+  input: UpdateStudentBasicInfoInput;
+};
+
 export type Query = {
   __typename?: 'Query';
-  getAuditTrails?: Maybe<Array<Maybe<AuditTrail>>>;
+  getAuditTrails: GetAuditTrailsResponse;
   getEmployee?: Maybe<Employee>;
-  getEmployees?: Maybe<Array<Maybe<Employee>>>;
+  getEmployees: GetEmployeesResponse;
   getGlobalVars?: Maybe<GetGlobalVarsResponse>;
   getMe?: Maybe<Employee>;
   getStudent?: Maybe<Student>;
-  getStudents?: Maybe<Array<Maybe<Student>>>;
+  getStudents?: Maybe<GetStudentsResponse>;
   meow?: Maybe<Scalars['String']>;
   test?: Maybe<Scalars['String']>;
 };
@@ -168,7 +175,7 @@ export type QueryGetEmployeesArgs = {
 
 
 export type QueryGetStudentArgs = {
-  LRN: Scalars['String'];
+  SID: Scalars['String'];
 };
 
 
@@ -200,7 +207,8 @@ export type Student = {
   middle_name?: Maybe<Scalars['String']>;
   parent_guardians?: Maybe<Array<Maybe<StudentParentGuardian>>>;
   requirements?: Maybe<StudentRequirements>;
-  school_records?: Maybe<StudentSchoolRecord>;
+  school_records?: Maybe<Array<Maybe<StudentSchoolRecord>>>;
+  status?: Maybe<Scalars['String']>;
   transfer_records?: Maybe<Array<Maybe<StudentTransferRecord>>>;
 };
 
@@ -208,7 +216,7 @@ export type StudentAddress = {
   __typename?: 'StudentAddress';
   barangay: Scalars['String'];
   city: Scalars['String'];
-  id: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
   no?: Maybe<Scalars['String']>;
   province: Scalars['String'];
   region: Scalars['String'];
@@ -244,7 +252,7 @@ export type StudentRequirements = {
 
 export type StudentSchoolRecord = {
   __typename?: 'StudentSchoolRecord';
-  id: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
   school_name: Scalars['String'];
   sy_graduated: Scalars['String'];
   type: Scalars['String'];
@@ -270,10 +278,37 @@ export type EmployeesFilter = {
   status?: InputMaybe<Scalars['Int']>;
 };
 
+export type GetAuditTrailsResponse = {
+  __typename?: 'getAuditTrailsResponse';
+  audit_trail?: Maybe<Array<Maybe<AuditTrail>>>;
+  length?: Maybe<Scalars['Int']>;
+};
+
+export type GetEmployeesResponse = {
+  __typename?: 'getEmployeesResponse';
+  employees?: Maybe<Array<Maybe<Employee>>>;
+  length?: Maybe<Scalars['Int']>;
+};
+
 export type GetGlobalVarsResponse = {
   __typename?: 'getGlobalVarsResponse';
   audit_trail_types: Array<Maybe<Scalars['String']>>;
   school_year: Scalars['String'];
+};
+
+export type GetStudentsResponse = {
+  __typename?: 'getStudentsResponse';
+  length?: Maybe<Scalars['Int']>;
+  students?: Maybe<Array<Maybe<Student>>>;
+};
+
+export type UpdateStudentBasicInfoInput = {
+  birthday?: InputMaybe<Scalars['String']>;
+  contact_number?: InputMaybe<Scalars['String']>;
+  email: Scalars['String'];
+  first_name: Scalars['String'];
+  last_name: Scalars['String'];
+  middle_name?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -369,7 +404,11 @@ export type ResolversTypes = {
   addEmployeeInput: AddEmployeeInput;
   auditTrailFilter: AuditTrailFilter;
   employeesFilter: EmployeesFilter;
+  getAuditTrailsResponse: ResolverTypeWrapper<GetAuditTrailsResponse>;
+  getEmployeesResponse: ResolverTypeWrapper<GetEmployeesResponse>;
   getGlobalVarsResponse: ResolverTypeWrapper<GetGlobalVarsResponse>;
+  getStudentsResponse: ResolverTypeWrapper<GetStudentsResponse>;
+  updateStudentBasicInfoInput: UpdateStudentBasicInfoInput;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -398,7 +437,11 @@ export type ResolversParentTypes = {
   addEmployeeInput: AddEmployeeInput;
   auditTrailFilter: AuditTrailFilter;
   employeesFilter: EmployeesFilter;
+  getAuditTrailsResponse: GetAuditTrailsResponse;
+  getEmployeesResponse: GetEmployeesResponse;
   getGlobalVarsResponse: GetGlobalVarsResponse;
+  getStudentsResponse: GetStudentsResponse;
+  updateStudentBasicInfoInput: UpdateStudentBasicInfoInput;
 };
 
 export type AuditTrailResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuditTrail'] = ResolversParentTypes['AuditTrail']> = {
@@ -461,16 +504,17 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   disableEmployee?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationDisableEmployeeArgs, 'employee_id'>>;
   enableEmployee?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationEnableEmployeeArgs, 'employee_id'>>;
   resetEmployeePassword?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<MutationResetEmployeePasswordArgs, 'employee_id' | 'password'>>;
+  updateStudentBasicInfo?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<MutationUpdateStudentBasicInfoArgs, 'SID' | 'input'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  getAuditTrails?: Resolver<Maybe<Array<Maybe<ResolversTypes['AuditTrail']>>>, ParentType, ContextType, Partial<QueryGetAuditTrailsArgs>>;
+  getAuditTrails?: Resolver<ResolversTypes['getAuditTrailsResponse'], ParentType, ContextType, Partial<QueryGetAuditTrailsArgs>>;
   getEmployee?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<QueryGetEmployeeArgs, 'employee_id'>>;
-  getEmployees?: Resolver<Maybe<Array<Maybe<ResolversTypes['Employee']>>>, ParentType, ContextType, Partial<QueryGetEmployeesArgs>>;
+  getEmployees?: Resolver<ResolversTypes['getEmployeesResponse'], ParentType, ContextType, Partial<QueryGetEmployeesArgs>>;
   getGlobalVars?: Resolver<Maybe<ResolversTypes['getGlobalVarsResponse']>, ParentType, ContextType>;
   getMe?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType>;
-  getStudent?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<QueryGetStudentArgs, 'LRN'>>;
-  getStudents?: Resolver<Maybe<Array<Maybe<ResolversTypes['Student']>>>, ParentType, ContextType, Partial<QueryGetStudentsArgs>>;
+  getStudent?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<QueryGetStudentArgs, 'SID'>>;
+  getStudents?: Resolver<Maybe<ResolversTypes['getStudentsResponse']>, ParentType, ContextType, Partial<QueryGetStudentsArgs>>;
   meow?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   test?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
@@ -496,7 +540,8 @@ export type StudentResolvers<ContextType = any, ParentType extends ResolversPare
   middle_name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   parent_guardians?: Resolver<Maybe<Array<Maybe<ResolversTypes['StudentParentGuardian']>>>, ParentType, ContextType>;
   requirements?: Resolver<Maybe<ResolversTypes['StudentRequirements']>, ParentType, ContextType>;
-  school_records?: Resolver<Maybe<ResolversTypes['StudentSchoolRecord']>, ParentType, ContextType>;
+  school_records?: Resolver<Maybe<Array<Maybe<ResolversTypes['StudentSchoolRecord']>>>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   transfer_records?: Resolver<Maybe<Array<Maybe<ResolversTypes['StudentTransferRecord']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -504,7 +549,7 @@ export type StudentResolvers<ContextType = any, ParentType extends ResolversPare
 export type StudentAddressResolvers<ContextType = any, ParentType extends ResolversParentTypes['StudentAddress'] = ResolversParentTypes['StudentAddress']> = {
   barangay?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   city?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   no?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   province?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   region?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -540,7 +585,7 @@ export type StudentRequirementsResolvers<ContextType = any, ParentType extends R
 };
 
 export type StudentSchoolRecordResolvers<ContextType = any, ParentType extends ResolversParentTypes['StudentSchoolRecord'] = ResolversParentTypes['StudentSchoolRecord']> = {
-  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   school_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   sy_graduated?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -555,9 +600,27 @@ export type StudentTransferRecordResolvers<ContextType = any, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type GetAuditTrailsResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['getAuditTrailsResponse'] = ResolversParentTypes['getAuditTrailsResponse']> = {
+  audit_trail?: Resolver<Maybe<Array<Maybe<ResolversTypes['AuditTrail']>>>, ParentType, ContextType>;
+  length?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GetEmployeesResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['getEmployeesResponse'] = ResolversParentTypes['getEmployeesResponse']> = {
+  employees?: Resolver<Maybe<Array<Maybe<ResolversTypes['Employee']>>>, ParentType, ContextType>;
+  length?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type GetGlobalVarsResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['getGlobalVarsResponse'] = ResolversParentTypes['getGlobalVarsResponse']> = {
   audit_trail_types?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>;
   school_year?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GetStudentsResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['getStudentsResponse'] = ResolversParentTypes['getStudentsResponse']> = {
+  length?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  students?: Resolver<Maybe<Array<Maybe<ResolversTypes['Student']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -577,6 +640,9 @@ export type Resolvers<ContextType = any> = {
   StudentRequirements?: StudentRequirementsResolvers<ContextType>;
   StudentSchoolRecord?: StudentSchoolRecordResolvers<ContextType>;
   StudentTransferRecord?: StudentTransferRecordResolvers<ContextType>;
+  getAuditTrailsResponse?: GetAuditTrailsResponseResolvers<ContextType>;
+  getEmployeesResponse?: GetEmployeesResponseResolvers<ContextType>;
   getGlobalVarsResponse?: GetGlobalVarsResponseResolvers<ContextType>;
+  getStudentsResponse?: GetStudentsResponseResolvers<ContextType>;
 };
 

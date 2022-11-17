@@ -12,12 +12,12 @@ export const basicInfoSchema = Yup.object().shape({
     .required("Required"),
   email: Yup.string().email("Invalid email").required("Required"),
   birthday: Yup.date().required("Required"),
-  gender: Yup.string().oneOf(["M", "F"]).required("Required"),
+  gender: Yup.string().oneOf(["M", "F", "m", "f"]).required("Required"),
   LRN: Yup.string()
     .min(14, "Field Too Short!")
     .max(16, "Too Long!")
     .required("Required"),
-  mobile_number: Yup.string()
+  contact_number: Yup.string()
     .min(11, "Field Too Short!")
     .max(14, "Too Long!")
     .required(),

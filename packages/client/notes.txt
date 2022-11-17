@@ -42,3 +42,17 @@ DATE FORMAT
 
 
 school_system CED 20140023
+
+
+
+
+
+pm2 start --name instance-name -- command
+pm2 start --name instance-name -- start
+
+
+
+
+
+QNA
+    -

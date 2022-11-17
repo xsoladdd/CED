@@ -1,3 +1,5 @@
+const plugin = require("tailwindcss/plugin");
+
 /* eslint-disable global-require */
 module.exports = {
   content: [`./src/**/*.{jsx,tsx,stories.tsx,ts}`],
@@ -14,7 +16,7 @@ module.exports = {
 
           accent: "#a3c3d0",
 
-          neutral: "#22252F",
+          neutral: "#22252F"
 
           // "base-100": "#fff",
           // "base-200": "#EBEBEB",
@@ -32,8 +34,8 @@ module.exports = {
 
           // warning: "#eab308",
           // "warning-content": "#ffffff",
-        },
-      },
+        }
+      }
       // "dark",
       // "light",
     ],
@@ -43,9 +45,9 @@ module.exports = {
     logs: true,
     rtl: false,
     prefix: "",
-    darkTheme: "business",
+    darkTheme: "business"
   },
-  darkMode: `class`, // or 'media'
+  darkMode: `class` // or 'media'
   // theme: {
   //   colors: ({ colors }) => {
   //     return {

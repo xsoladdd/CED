@@ -1,0 +1,61 @@
+fragment StudentFragment on Student {
+  id
+  LRN
+  first_name
+  middle_name
+  last_name
+  gender
+  birthday
+  contact_number
+  email
+  enrollment_records {
+    id
+    SY
+    grade_level_id
+    section_id
+    payment_status
+  }
+  address {
+    id
+    no
+    street
+    subdiv
+    barangay
+    city
+    province
+    region
+    zip
+  }
+  parent_guardians {
+    id
+    first_name
+    middle_name
+    last_name
+    contact_number
+    email
+    type
+  }
+  requirements {
+    id
+    has_form_137
+    has_psa
+    has_parent_marriage_contract
+    has_report_card
+    has_report_of_rating
+    has_good_moral
+    has_school_government_recognition
+    has_baptismal
+  }
+  school_records {
+    id
+    sy_graduated
+    school_name
+    type
+  }
+  transfer_records {
+    id
+    sy_entered
+    sy_exit
+  }
+  status
+}

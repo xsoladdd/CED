@@ -17,7 +17,7 @@ import { BasicColumns } from "../../utils/BasicColumns";
 @Entity()
 export class StudentAddress extends BasicColumns {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id?: string;
 
   @Column({ nullable: true })
   no?: string;

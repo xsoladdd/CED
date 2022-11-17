@@ -10,17 +10,15 @@ query getAuditTrails(
     offset: $offset
     filter: $filter
   ) {
-    action_type
-    description
-    employee {
-      employee_id
-      profile {
-        first_name
-        last_name
+    length
+    audit_trail {
+      action_type
+      description
+      employee {
+        ...EmployeeFragment
       }
-      role
+      timestamp
+      id
     }
-    timestamp
-    id
   }
 }

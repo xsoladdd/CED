@@ -1,4 +1,5 @@
-import { IenrolledStudent, IselectedStudentState, IstudentData } from "./types";
+import { Student } from "../../../../graphQL/generated/graphql";
+import { IenrolledStudent, IselectedStudentState } from "./types";
 
 export const defaultSelectedStudent: IselectedStudentState = {
   basicInfo: {
@@ -58,128 +59,7 @@ export const defaultSelectedStudent: IselectedStudentState = {
 };
 
 // Mock Data
-export const defaultStudentList: Array<IstudentData> = [
-  {
-    id: "283255ed-cc13-4aa6-9c40-d4cd0844fb6d",
-    LRN: "31791203861068",
-    first_name: "Keenan",
-    middle_name: "Pineaux",
-    last_name: "Shirtliff",
-    email: "kshirtliff0@npr.org",
-    gender: "M",
-    birthday: "2021-10-21",
-    mobile_number: "09336217048",
-    status: "NE",
-  },
-  {
-    id: "98bc4f37-7202-45f7-a6cf-ea02bff46fd6",
-    LRN: "76955186876245",
-    first_name: "Philippa",
-    middle_name: "Potkin",
-    last_name: "Biernat",
-    email: "pbiernat1@nymag.com",
-    gender: "F",
-    birthday: "2021-10-21",
-    mobile_number: "09317139246",
-    status: "NE",
-  },
-  {
-    id: "dec63bb1-6771-410a-946e-fd1090b180c7",
-    LRN: "18132662872134",
-    first_name: "Celesta",
-    middle_name: "Lyven",
-    last_name: "Larmett",
-    email: "clarmett2@trellian.com",
-    gender: "F",
-    birthday: "2021-10-21",
-    mobile_number: "09896147159",
-    status: "E",
-  },
-  {
-    id: "773e056c-536c-4303-b13d-1237bf46d1d5",
-    LRN: "21699257521364",
-    first_name: "Patrizio",
-    middle_name: "Euston",
-    last_name: "Skellion",
-    email: "pskellion3@yahoo.co.jp",
-    gender: "M",
-    birthday: "2021-10-21",
-    mobile_number: "09401846560",
-    status: "A",
-  },
-  {
-    id: "428c2f08-09c3-4032-a88d-9eed3c700c9c",
-    LRN: "26091236600117",
-    first_name: "Antonina",
-    middle_name: "Bussell",
-    last_name: "Scotfurth",
-    email: "ascotfurth4@smugmug.com",
-    gender: "F",
-    birthday: "2021-10-21",
-    mobile_number: "09014695709",
-    status: "E",
-  },
-  {
-    id: "172ac645-a24c-4773-b5cc-793fa9744e7a",
-    LRN: "85649121816295",
-    first_name: "Willey",
-    middle_name: "Fallows",
-    last_name: "Liston",
-    email: "wliston5@webs.com",
-    gender: "M",
-    birthday: "2021-10-21",
-    mobile_number: "09959462446",
-    status: "E",
-  },
-  {
-    id: "7057d11c-ce2c-4723-b57c-ceca276bbca2",
-    LRN: "03559682031007",
-    first_name: "Paxton",
-    middle_name: "Vannikov",
-    last_name: "Twaite",
-    email: "ptwaite6@gov.uk",
-    gender: "M",
-    birthday: "2021-10-21",
-    mobile_number: "09053366871",
-    status: "A",
-  },
-  {
-    id: "6d58da38-c18c-4fde-881b-9f5cda0ea1b7",
-    LRN: "83774082733281",
-    first_name: "Evanne",
-    middle_name: "Spier",
-    last_name: "McCandie",
-    email: "emccandie7@hostgator.com",
-    gender: "F",
-    birthday: "2021-10-21",
-    mobile_number: "09686838298",
-    status: "NE",
-  },
-  {
-    id: "6bbf5abc-a76c-46e7-91e3-ad046c17119b",
-    LRN: "41177257054475",
-    first_name: "Alessandra",
-    middle_name: "Steels",
-    last_name: "McPhelimy",
-    email: "amcphelimy8@mac.com",
-    gender: "F",
-    birthday: "2021-10-21",
-    mobile_number: "09991190247",
-    status: "NE",
-  },
-  {
-    id: "b1758a73-b264-493d-a092-b450e9c32739",
-    LRN: "27933317796114",
-    first_name: "Celia",
-    middle_name: "Bremner",
-    last_name: "Paolotto",
-    email: "cpaolotto9@soundcloud.com",
-    gender: "F",
-    birthday: "2021-10-21",
-    mobile_number: "09043708394",
-    status: "E",
-  },
-];
+export const defaultStudentList: Array<Student> = [];
 
 export const defaultEnrolledStudentList: Array<IenrolledStudent> = [
   {

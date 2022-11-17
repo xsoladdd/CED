@@ -73,7 +73,7 @@ const LoginForm: React.FC = ({}) => {
         </div>
         <ErrorBox
           error={
-            formik.touched.EID && formik.touched.password
+            formik.touched.password
               ? formik.errors.EID || formik.errors.password
               : ""
           }

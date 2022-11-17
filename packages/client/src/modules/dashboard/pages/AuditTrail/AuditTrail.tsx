@@ -3,7 +3,10 @@ import React, { useRef } from "react";
 import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
 import Card, { CardFooter, CardHeader } from "../../../../components/Card";
 import TableLoading from "../../../../components/Table/Loading";
-import { GetAuditTrailsDocument } from "../../../../graphQL/generated/graphql";
+import {
+  AuditTrail,
+  GetAuditTrailsDocument,
+} from "../../../../graphQL/generated/graphql";
 import { usePagination } from "../../../../hooks/usePagination";
 import useStore from "../../../../store/useStore";
 import { formatDateReadable } from "../../../../utils/formatDateReadable";
@@ -37,6 +40,8 @@ const AuditTrail: React.FC = ({}) => {
       },
     },
   });
+
+  const pageCount = (data?.getAuditTrails?.length as number) / itemsPerPage;
 
   const handleRefetch = () =>
     refetch({
@@ -128,9 +133,12 @@ const AuditTrail: React.FC = ({}) => {
     </form>
   );
 
+  const audit_trail = data?.getAuditTrails?.audit_trail as Array<AuditTrail>;
+
   const tableData =
-    data?.getAuditTrails?.length !== 0 &&
-    data?.getAuditTrails?.map((props, idx) => {
+    audit_trail &&
+    audit_trail.length !== 0 &&
+    audit_trail.map((props, idx) => {
       return (
         <tr key={idx}>
           <td>{props?.id}</td>
@@ -155,11 +163,13 @@ const AuditTrail: React.FC = ({}) => {
         <span>
           <FiArrowLeft size="15" onClick={() => handleBack()} />
         </span>
-        <span className="text-sm">Page {page} </span>
+        <span className="text-sm">
+          Page {page} out of {pageCount}
+        </span>
         <span>
           <FiArrowRight
             size="15"
-            onClick={() => handleNext(data?.getAuditTrails?.length)}
+            onClick={() => handleNext(data?.getAuditTrails?.length as number)}
           />
         </span>
       </div>
