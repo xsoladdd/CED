@@ -15,43 +15,43 @@ const ParentGuardianForm: React.FC<{
         </Text>
         <div className="flex gap-3">
           {generateInput({
-            required: !!formik.values.guardianInfo.father.firstName,
-            id: "guardianInfo.father.firstName",
+            required: !!formik.values.guardianInfo.father.first_name,
+            id: "guardianInfo.father.first_name",
             label: "First name :",
             onChange: formik.handleChange,
-            value: formik.values.guardianInfo?.father.firstName,
-            error: formik.errors.guardianInfo?.father?.firstName,
-            touched: formik.touched.guardianInfo?.father?.firstName,
+            value: formik.values.guardianInfo?.father.first_name,
+            error: formik.errors.guardianInfo?.father?.first_name,
+            touched: formik.touched.guardianInfo?.father?.first_name,
             placeholder: "First Name",
             className: "w-1/3",
           })}
 
           {generateInput({
-            id: "guardianInfo.father.middleName",
+            id: "guardianInfo.father.middle_name",
             label: "Middle name :",
             onChange: formik.handleChange,
-            value: formik.values.guardianInfo.father.middleName,
-            error: formik.errors.guardianInfo?.father?.middleName,
-            touched: formik.touched.guardianInfo?.father?.middleName,
+            value: formik.values.guardianInfo.father.middle_name,
+            error: formik.errors.guardianInfo?.father?.middle_name,
+            touched: formik.touched.guardianInfo?.father?.middle_name,
             placeholder: "Middle Name",
             className: "w-1/3",
           })}
 
           {generateInput({
-            required: !!formik.values.guardianInfo.father.firstName,
-            id: "guardianInfo.father.lastName",
+            required: !!formik.values.guardianInfo.father.first_name,
+            id: "guardianInfo.father.last_name",
             label: "Last name :",
             onChange: formik.handleChange,
-            value: formik.values.guardianInfo.father.lastName,
-            error: formik.errors.guardianInfo?.father?.lastName,
-            touched: formik.touched.guardianInfo?.father?.lastName,
+            value: formik.values.guardianInfo.father.last_name,
+            error: formik.errors.guardianInfo?.father?.last_name,
+            touched: formik.touched.guardianInfo?.father?.last_name,
             placeholder: "Last Name",
             className: "w-1/3",
           })}
         </div>
         <div className="flex gap-3">
           {generateInput({
-            required: !!formik.values.guardianInfo.father.firstName,
+            required: !!formik.values.guardianInfo.father.first_name,
             id: "guardianInfo.father.email",
             label: "Email :",
             onChange: formik.handleChange,
@@ -63,13 +63,13 @@ const ParentGuardianForm: React.FC<{
           })}
 
           {generateInput({
-            required: !!formik.values.guardianInfo.father.firstName,
-            id: "guardianInfo.father.mobileNumber",
+            required: !!formik.values.guardianInfo.father.first_name,
+            id: "guardianInfo.father.contact_number",
             label: "Mobile Number :",
             onChange: formik.handleChange,
-            value: formik.values.guardianInfo.father.mobileNumber,
-            error: formik.errors.guardianInfo?.father?.mobileNumber,
-            touched: formik.touched.guardianInfo?.father?.mobileNumber,
+            value: formik.values.guardianInfo.father.contact_number,
+            error: formik.errors.guardianInfo?.father?.contact_number,
+            touched: formik.touched.guardianInfo?.father?.contact_number,
             placeholder: "Mobile Number",
             className: "w-1/2",
           })}
@@ -85,43 +85,43 @@ const ParentGuardianForm: React.FC<{
       </Text>
       <div className="flex gap-3">
         {generateInput({
-          required: !!formik.values.guardianInfo.mother.firstName,
-          id: "guardianInfo.mother.firstName",
+          required: !!formik.values.guardianInfo.mother.first_name,
+          id: "guardianInfo.mother.first_name",
           label: "First name :",
           onChange: formik.handleChange,
-          value: formik.values.guardianInfo.mother.firstName,
-          error: formik.errors.guardianInfo?.mother?.firstName,
-          touched: formik.touched.guardianInfo?.mother?.firstName,
+          value: formik.values.guardianInfo.mother.first_name,
+          error: formik.errors.guardianInfo?.mother?.first_name,
+          touched: formik.touched.guardianInfo?.mother?.first_name,
           placeholder: "First Name",
           className: "w-1/3",
         })}
 
         {generateInput({
-          id: "guardianInfo.mother.middleName",
+          id: "guardianInfo.mother.middle_name",
           label: "Middle name :",
           onChange: formik.handleChange,
-          value: formik.values.guardianInfo.mother.middleName,
-          error: formik.errors.guardianInfo?.mother?.middleName,
-          touched: formik.touched.guardianInfo?.mother?.middleName,
+          value: formik.values.guardianInfo.mother.middle_name,
+          error: formik.errors.guardianInfo?.mother?.middle_name,
+          touched: formik.touched.guardianInfo?.mother?.middle_name,
           placeholder: "Middle Name",
           className: "w-1/3",
         })}
 
         {generateInput({
-          required: !!formik.values.guardianInfo.mother.firstName,
-          id: "guardianInfo.mother.lastName",
+          required: !!formik.values.guardianInfo.mother.first_name,
+          id: "guardianInfo.mother.last_name",
           label: "Last name :",
           onChange: formik.handleChange,
-          value: formik.values.guardianInfo.mother.lastName,
-          error: formik.errors.guardianInfo?.mother?.lastName,
-          touched: formik.touched.guardianInfo?.mother?.lastName,
+          value: formik.values.guardianInfo.mother.last_name,
+          error: formik.errors.guardianInfo?.mother?.last_name,
+          touched: formik.touched.guardianInfo?.mother?.last_name,
           placeholder: "Last Name",
           className: "w-1/3",
         })}
       </div>
       <div className="flex gap-3">
         {generateInput({
-          required: !!formik.values.guardianInfo.mother.firstName,
+          required: !!formik.values.guardianInfo.mother.first_name,
           id: "guardianInfo.mother.email",
           label: "Email :",
           onChange: formik.handleChange,
@@ -133,13 +133,13 @@ const ParentGuardianForm: React.FC<{
         })}
 
         {generateInput({
-          required: !!formik.values.guardianInfo.mother.firstName,
-          id: "guardianInfo.mother.mobileNumber",
+          required: !!formik.values.guardianInfo.mother.first_name,
+          id: "guardianInfo.mother.contact_number",
           label: "Mobile Number :",
           onChange: formik.handleChange,
-          value: formik.values.guardianInfo.mother.mobileNumber,
-          error: formik.errors.guardianInfo?.mother?.mobileNumber,
-          touched: formik.touched.guardianInfo?.mother?.mobileNumber,
+          value: formik.values.guardianInfo.mother.contact_number,
+          error: formik.errors.guardianInfo?.mother?.contact_number,
+          touched: formik.touched.guardianInfo?.mother?.contact_number,
           placeholder: "Mobile Number",
           className: "w-1/2",
         })}
@@ -154,36 +154,36 @@ const ParentGuardianForm: React.FC<{
       </Text>
       <div className="flex gap-3">
         {generateInput({
-          required: !!formik.values.guardianInfo.guardian.firstName,
-          id: "guardianInfo.guardian.firstName",
+          required: !!formik.values.guardianInfo.guardian.first_name,
+          id: "guardianInfo.guardian.first_name",
           label: "First name :",
           onChange: formik.handleChange,
-          value: formik.values.guardianInfo.guardian.firstName,
-          error: formik.errors.guardianInfo?.guardian?.firstName,
-          touched: formik.touched.guardianInfo?.guardian?.firstName,
+          value: formik.values.guardianInfo.guardian.first_name,
+          error: formik.errors.guardianInfo?.guardian?.first_name,
+          touched: formik.touched.guardianInfo?.guardian?.first_name,
           placeholder: "First Name",
           className: "w-1/3",
         })}
 
         {generateInput({
-          id: "guardianInfo.guardian.middleName",
+          id: "guardianInfo.guardian.middle_name",
           label: "Middle name :",
           onChange: formik.handleChange,
-          value: formik.values.guardianInfo.guardian.middleName,
-          error: formik.errors.guardianInfo?.guardian?.middleName,
-          touched: formik.touched.guardianInfo?.guardian?.middleName,
+          value: formik.values.guardianInfo.guardian.middle_name,
+          error: formik.errors.guardianInfo?.guardian?.middle_name,
+          touched: formik.touched.guardianInfo?.guardian?.middle_name,
           placeholder: "Middle Name",
           className: "w-1/3",
         })}
 
         {generateInput({
-          required: !!formik.values.guardianInfo.guardian.firstName,
-          id: "guardianInfo.guardian.lastName",
+          required: !!formik.values.guardianInfo.guardian.first_name,
+          id: "guardianInfo.guardian.last_name",
           label: "Last name :",
           onChange: formik.handleChange,
-          value: formik.values.guardianInfo.guardian.lastName,
-          error: formik.errors.guardianInfo?.guardian?.lastName,
-          touched: formik.touched.guardianInfo?.guardian?.lastName,
+          value: formik.values.guardianInfo.guardian.last_name,
+          error: formik.errors.guardianInfo?.guardian?.last_name,
+          touched: formik.touched.guardianInfo?.guardian?.last_name,
           placeholder: "Last Name",
           className: "w-1/3",
         })}
@@ -191,7 +191,7 @@ const ParentGuardianForm: React.FC<{
 
       <div className="flex gap-3">
         {generateInput({
-          required: !!formik.values.guardianInfo.guardian.firstName,
+          required: !!formik.values.guardianInfo.guardian.first_name,
           id: "guardianInfo.guardian.email",
           label: "Email :",
           onChange: formik.handleChange,
@@ -203,13 +203,13 @@ const ParentGuardianForm: React.FC<{
         })}
 
         {generateInput({
-          required: !!formik.values.guardianInfo.guardian.firstName,
-          id: "guardianInfo.guardian.mobileNumber",
+          required: !!formik.values.guardianInfo.guardian.first_name,
+          id: "guardianInfo.guardian.contact_number",
           label: "Mobile Number :",
           onChange: formik.handleChange,
-          value: formik.values.guardianInfo.guardian.mobileNumber,
-          error: formik.errors.guardianInfo?.guardian?.mobileNumber,
-          touched: formik.touched.guardianInfo?.guardian?.mobileNumber,
+          value: formik.values.guardianInfo.guardian.contact_number,
+          error: formik.errors.guardianInfo?.guardian?.contact_number,
+          touched: formik.touched.guardianInfo?.guardian?.contact_number,
           placeholder: "Mobile Number",
           className: "w-1/2",
         })}

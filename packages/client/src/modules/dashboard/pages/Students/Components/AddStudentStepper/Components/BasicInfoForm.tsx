@@ -100,13 +100,13 @@ const BasicInfoForm: React.FC<{ formik: FormikProps<IselectedStudentState> }> =
             className: "w-1/3 ",
           })}
           {generateInput({
-            id: "basicInfo.mobile_number",
+            id: "basicInfo.contact_number",
             required: true,
             label: "Mobile Number :",
             onChange: formik.handleChange,
-            value: formik.values.basicInfo.mobile_number,
-            error: formik.errors.basicInfo?.mobile_number,
-            touched: formik.touched.basicInfo?.mobile_number,
+            value: formik.values.basicInfo.contact_number,
+            error: formik.errors.basicInfo?.contact_number,
+            touched: formik.touched.basicInfo?.contact_number,
             placeholder: "Mobile Number",
             className: "w-1/3 ",
           })}

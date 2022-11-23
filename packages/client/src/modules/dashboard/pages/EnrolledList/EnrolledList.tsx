@@ -205,7 +205,7 @@ const EnrolledList: React.FC = ({}) => {
                     middle_name,
                     last_name,
                     email,
-                    mobile_number,
+                    contact_number,
                   },
                 },
                 idx
@@ -224,7 +224,7 @@ const EnrolledList: React.FC = ({}) => {
                     <td>{`${first_name} ${middle_name} ${last_name}`}</td>
                     {/* <td>{birthday}</td> */}
                     <td>{email}</td>
-                    <td>{mobile_number}</td>
+                    <td>{contact_number}</td>
                     <td>{`${year} - ${sectionString}`}</td>
                     <td>
                       <Status color={status === "E" ? "green" : "grey"} />

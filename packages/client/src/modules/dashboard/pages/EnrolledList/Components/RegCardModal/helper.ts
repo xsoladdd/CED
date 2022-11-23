@@ -45,7 +45,7 @@ export const generateContentArray = (
     [{ label: "Address :", value: additional_data.addressString }],
     [{ label: "Name of Parent/Guardian :", value: additional_data.parentName }],
     [
-      { label: "Contact No. :", value: student_data.student.mobile_number },
+      { label: "Contact No. :", value: student_data.student.contact_number },
       { label: "Email :", value: student_data.student.email },
     ],
     [

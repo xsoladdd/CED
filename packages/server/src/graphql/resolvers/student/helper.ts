@@ -1,36 +1,23 @@
-import { GraphQLError } from "graphql";
-import { conn } from "../../../config/db";
-import { GlobalVars } from "../../../models/GlobalVars";
-import { errorType } from "../../../utils/errorType";
-import { globalVarsType } from "../../../utils/globalVarsType";
-import { Student } from "../../generated";
+import * as yup from "yup";
+import { date_stamp_regex, mobile_number_regex } from "../../../utils/regex";
 
-export const mapStudentStatus = async (
-  student: Array<Student>
-): Promise<Array<Student>> => {
-  const globalVarsRepo = conn.getRepository(GlobalVars);
-  const SY = await globalVarsRepo.findOne({
-    where: { identifier: globalVarsType.school_year },
-  });
-  if (!SY) {
-    throw new GraphQLError("Cannot fetch school year from global vars", {
-      extensions: {
-        code: errorType.SERVER_ERROR,
-      },
-    });
-  }
+export const addStudentValidationSchema = yup.object().shape({
+  LRN: yup.string().min(14).required(),
+  first_name: yup.string().min(2).max(20).required(),
+  middle_name: yup.string(),
+  last_name: yup.string().min(2).max(20).required(),
+  contact_number: yup
+    .string()
+    .matches(mobile_number_regex)
+    .min(11)
+    .max(15)
+    .required(),
+  email: yup.string().email().required(),
+  birthday: yup.string().matches(date_stamp_regex),
+  requirements: yup.object().required(),
+  address: yup.object().required(),
+});
 
-  return student.map((props) => {
-    if (props.enrollment_records?.length !== 0) {
-      // Check array if there is school year same as Sy now
-      const selected = props.enrollment_records?.filter(
-        (props) => props?.SY === SY.value
-      );
-      if (selected?.length === 1) {
-        return { ...props, status: "E" };
-      } else {
-        return { ...props, status: "A" };
-      }
-    } else return { ...props, status: "NE" };
-  });
+export const mapUndefined = <T = string>(param: any): T | undefined => {
+  return param ? param : undefined;
 };

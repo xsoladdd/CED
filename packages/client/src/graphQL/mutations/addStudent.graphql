@@ -1,0 +1,5 @@
+mutation addStudent($input: StudentInput!) {
+  addStudent(input: $input) {
+    ...StudentFragment
+  }
+}

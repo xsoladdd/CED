@@ -71,7 +71,7 @@ export type EnrolledRecords = {
   SY: Scalars['String'];
   grade_level_id: Scalars['String'];
   id?: Maybe<Scalars['String']>;
-  payment_status: Scalars['String'];
+  payment_status?: Maybe<Scalars['String']>;
   section_id: Scalars['String'];
   student?: Maybe<Student>;
 };
@@ -87,6 +87,7 @@ export type GlobalVars = {
 export type Mutation = {
   __typename?: 'Mutation';
   addEmployee?: Maybe<Employee>;
+  addStudent?: Maybe<Student>;
   auth?: Maybe<AuthResponse>;
   changeEmployeePassword?: Maybe<Employee>;
   changeMyPassword?: Maybe<Employee>;
@@ -99,6 +100,11 @@ export type Mutation = {
 
 export type MutationAddEmployeeArgs = {
   input: AddEmployeeInput;
+};
+
+
+export type MutationAddStudentArgs = {
+  input: StudentInput;
 };
 
 
@@ -225,6 +231,32 @@ export type StudentAddress = {
   zip: Scalars['String'];
 };
 
+export type StudentAddressInput = {
+  barangay: Scalars['String'];
+  city: Scalars['String'];
+  no?: InputMaybe<Scalars['String']>;
+  province: Scalars['String'];
+  region: Scalars['String'];
+  street?: InputMaybe<Scalars['String']>;
+  subdiv?: InputMaybe<Scalars['String']>;
+  zip: Scalars['String'];
+};
+
+export type StudentInput = {
+  LRN: Scalars['String'];
+  address?: InputMaybe<StudentAddressInput>;
+  birthday?: InputMaybe<Scalars['String']>;
+  contact_number?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  first_name: Scalars['String'];
+  gender: Scalars['String'];
+  last_name: Scalars['String'];
+  middle_name?: InputMaybe<Scalars['String']>;
+  parent_guardians?: InputMaybe<Array<InputMaybe<StudentParentGuardianInput>>>;
+  requirements?: InputMaybe<StudentRequirementsInput>;
+  school_records?: InputMaybe<Array<InputMaybe<StudentSchoolRecordInput>>>;
+};
+
 export type StudentParentGuardian = {
   __typename?: 'StudentParentGuardian';
   contact_number?: Maybe<Scalars['String']>;
@@ -234,6 +266,15 @@ export type StudentParentGuardian = {
   last_name: Scalars['String'];
   middle_name?: Maybe<Scalars['String']>;
   student?: Maybe<Student>;
+  type: Scalars['String'];
+};
+
+export type StudentParentGuardianInput = {
+  contact_number?: InputMaybe<Scalars['String']>;
+  email: Scalars['String'];
+  first_name: Scalars['String'];
+  last_name: Scalars['String'];
+  middle_name?: InputMaybe<Scalars['String']>;
   type: Scalars['String'];
 };
 
@@ -250,9 +291,26 @@ export type StudentRequirements = {
   id?: Maybe<Scalars['String']>;
 };
 
+export type StudentRequirementsInput = {
+  has_baptismal: Scalars['Boolean'];
+  has_form_137: Scalars['Boolean'];
+  has_good_moral: Scalars['Boolean'];
+  has_parent_marriage_contract: Scalars['Boolean'];
+  has_psa: Scalars['Boolean'];
+  has_report_card: Scalars['Boolean'];
+  has_report_of_rating: Scalars['Boolean'];
+  has_school_government_recognition: Scalars['Boolean'];
+};
+
 export type StudentSchoolRecord = {
   __typename?: 'StudentSchoolRecord';
   id?: Maybe<Scalars['String']>;
+  school_name: Scalars['String'];
+  sy_graduated: Scalars['String'];
+  type: Scalars['String'];
+};
+
+export type StudentSchoolRecordInput = {
   school_name: Scalars['String'];
   sy_graduated: Scalars['String'];
   type: Scalars['String'];
@@ -313,7 +371,7 @@ export type UpdateStudentBasicInfoInput = {
 
 export type EmployeeFragmentFragment = { __typename?: 'Employee', employee_id: string, id?: string | null, partial_password?: string | null, role: string, status?: number | null, profile?: { __typename?: 'EmployeeProfile', first_name: string, id?: string | null, middle_name?: string | null, last_name: string } | null } & { ' $fragmentName'?: 'EmployeeFragmentFragment' };
 
-export type StudentFragmentFragment = { __typename?: 'Student', id?: string | null, LRN: string, first_name: string, middle_name?: string | null, last_name: string, gender: string, birthday?: string | null, contact_number?: string | null, email?: string | null, status?: string | null, enrollment_records?: Array<{ __typename?: 'EnrolledRecords', id?: string | null, SY: string, grade_level_id: string, section_id: string, payment_status: string } | null> | null, address?: { __typename?: 'StudentAddress', id?: string | null, no?: string | null, street?: string | null, subdiv?: string | null, barangay: string, city: string, province: string, region: string, zip: string } | null, parent_guardians?: Array<{ __typename?: 'StudentParentGuardian', id?: string | null, first_name: string, middle_name?: string | null, last_name: string, contact_number?: string | null, email: string, type: string } | null> | null, requirements?: { __typename?: 'StudentRequirements', id?: string | null, has_form_137: boolean, has_psa: boolean, has_parent_marriage_contract: boolean, has_report_card: boolean, has_report_of_rating: boolean, has_good_moral: boolean, has_school_government_recognition: boolean, has_baptismal: boolean } | null, school_records?: Array<{ __typename?: 'StudentSchoolRecord', id?: string | null, sy_graduated: string, school_name: string, type: string } | null> | null, transfer_records?: Array<{ __typename?: 'StudentTransferRecord', id?: string | null, sy_entered?: string | null, sy_exit?: string | null } | null> | null } & { ' $fragmentName'?: 'StudentFragmentFragment' };
+export type StudentFragmentFragment = { __typename?: 'Student', id?: string | null, LRN: string, first_name: string, middle_name?: string | null, last_name: string, gender: string, birthday?: string | null, contact_number?: string | null, email?: string | null, status?: string | null, enrollment_records?: Array<{ __typename?: 'EnrolledRecords', id?: string | null, SY: string, grade_level_id: string, section_id: string, payment_status?: string | null } | null> | null, address?: { __typename?: 'StudentAddress', id?: string | null, no?: string | null, street?: string | null, subdiv?: string | null, barangay: string, city: string, province: string, region: string, zip: string } | null, parent_guardians?: Array<{ __typename?: 'StudentParentGuardian', id?: string | null, first_name: string, middle_name?: string | null, last_name: string, contact_number?: string | null, email: string, type: string } | null> | null, requirements?: { __typename?: 'StudentRequirements', id?: string | null, has_form_137: boolean, has_psa: boolean, has_parent_marriage_contract: boolean, has_report_card: boolean, has_report_of_rating: boolean, has_good_moral: boolean, has_school_government_recognition: boolean, has_baptismal: boolean } | null, school_records?: Array<{ __typename?: 'StudentSchoolRecord', id?: string | null, sy_graduated: string, school_name: string, type: string } | null> | null, transfer_records?: Array<{ __typename?: 'StudentTransferRecord', id?: string | null, sy_entered?: string | null, sy_exit?: string | null } | null> | null } & { ' $fragmentName'?: 'StudentFragmentFragment' };
 
 export type AddEmployeeMutationVariables = Exact<{
   input: AddEmployeeInput;
@@ -321,6 +379,16 @@ export type AddEmployeeMutationVariables = Exact<{
 
 
 export type AddEmployeeMutation = { __typename?: 'Mutation', addEmployee?: { __typename?: 'Employee', employee_id: string, id?: string | null, role: string, status?: number | null, partial_password?: string | null, profile?: { __typename?: 'EmployeeProfile', first_name: string, last_name: string, middle_name?: string | null } | null } | null };
+
+export type AddStudentMutationVariables = Exact<{
+  input: StudentInput;
+}>;
+
+
+export type AddStudentMutation = { __typename?: 'Mutation', addStudent?: (
+    { __typename?: 'Student' }
+    & { ' $fragmentRefs'?: { 'StudentFragmentFragment': StudentFragmentFragment } }
+  ) | null };
 
 export type AuthMutationMutationVariables = Exact<{
   input: AuthInput;
@@ -414,6 +482,7 @@ export type QueryQuery = { __typename?: 'Query', test?: string | null };
 export const EmployeeFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EmployeeFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Employee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"employee_id"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"partial_password"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"middle_name"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}}]}}]}}]} as unknown as DocumentNode<EmployeeFragmentFragment, unknown>;
 export const StudentFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"StudentFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Student"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"LRN"}},{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"middle_name"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"birthday"}},{"kind":"Field","name":{"kind":"Name","value":"contact_number"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"enrollment_records"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"SY"}},{"kind":"Field","name":{"kind":"Name","value":"grade_level_id"}},{"kind":"Field","name":{"kind":"Name","value":"section_id"}},{"kind":"Field","name":{"kind":"Name","value":"payment_status"}}]}},{"kind":"Field","name":{"kind":"Name","value":"address"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"no"}},{"kind":"Field","name":{"kind":"Name","value":"street"}},{"kind":"Field","name":{"kind":"Name","value":"subdiv"}},{"kind":"Field","name":{"kind":"Name","value":"barangay"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"province"}},{"kind":"Field","name":{"kind":"Name","value":"region"}},{"kind":"Field","name":{"kind":"Name","value":"zip"}}]}},{"kind":"Field","name":{"kind":"Name","value":"parent_guardians"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"middle_name"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"contact_number"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"Field","name":{"kind":"Name","value":"requirements"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"has_form_137"}},{"kind":"Field","name":{"kind":"Name","value":"has_psa"}},{"kind":"Field","name":{"kind":"Name","value":"has_parent_marriage_contract"}},{"kind":"Field","name":{"kind":"Name","value":"has_report_card"}},{"kind":"Field","name":{"kind":"Name","value":"has_report_of_rating"}},{"kind":"Field","name":{"kind":"Name","value":"has_good_moral"}},{"kind":"Field","name":{"kind":"Name","value":"has_school_government_recognition"}},{"kind":"Field","name":{"kind":"Name","value":"has_baptismal"}}]}},{"kind":"Field","name":{"kind":"Name","value":"school_records"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sy_graduated"}},{"kind":"Field","name":{"kind":"Name","value":"school_name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"Field","name":{"kind":"Name","value":"transfer_records"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sy_entered"}},{"kind":"Field","name":{"kind":"Name","value":"sy_exit"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]} as unknown as DocumentNode<StudentFragmentFragment, unknown>;
 export const AddEmployeeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"addEmployee"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"addEmployeeInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addEmployee"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"employee_id"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"middle_name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"partial_password"}}]}}]}}]} as unknown as DocumentNode<AddEmployeeMutation, AddEmployeeMutationVariables>;
+export const AddStudentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"addStudent"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"StudentInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addStudent"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"StudentFragment"}}]}}]}},...StudentFragmentFragmentDoc.definitions]} as unknown as DocumentNode<AddStudentMutation, AddStudentMutationVariables>;
 export const AuthMutationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"authMutation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AuthInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"auth"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"needNewPassword"}},{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]}}]} as unknown as DocumentNode<AuthMutationMutation, AuthMutationMutationVariables>;
 export const DisableEmployeeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"disableEmployee"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"employeeId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"disableEmployee"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"employee_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"employeeId"}}}]}]}}]} as unknown as DocumentNode<DisableEmployeeMutation, DisableEmployeeMutationVariables>;
 export const EnableEmployeeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"enableEmployee"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"employeeId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"enableEmployee"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"employee_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"employeeId"}}}]}]}}]} as unknown as DocumentNode<EnableEmployeeMutation, EnableEmployeeMutationVariables>;

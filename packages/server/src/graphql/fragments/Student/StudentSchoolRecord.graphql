@@ -4,3 +4,9 @@ type StudentSchoolRecord {
   school_name: String!
   type: String!
 }
+
+input StudentSchoolRecordInput {
+  sy_graduated: String!
+  school_name: String!
+  type: String!
+}

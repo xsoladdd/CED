@@ -6,16 +6,16 @@ export interface IStudentBasicInfo {
   middle_name: string;
   last_name: string;
   email: string;
-  mobile_number: string;
+  contact_number: string;
   birthday: string;
   gender: "M" | "F";
 }
 
 interface IPersonProfile {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  mobileNumber: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  contact_number: string;
   email: string;
 }
 
@@ -33,7 +33,7 @@ export interface IStudentAddressInfo {
   subdiv: string;
   street: string;
   no: string;
-  zipcode: string;
+  zip: string;
 }
 
 export interface IStudentRequirementsInfo {
@@ -57,13 +57,13 @@ export interface IStudentAcademicInfo {
     | "Senior High";
 }
 
-// export interface IselectedStudentState {
-//   basicInfo: IStudentBasicInfo;
-//   addressInfo: IStudentAddressInfo;
-//   guardianInfo: IStudentGuardianInfo;
-//   requirementInfo: IStudentRequirementsInfo;
-//   academicInfo: Array<IStudentAcademicInfo>;
-// }
+export interface IselectedStudentState {
+  basicInfo: IStudentBasicInfo;
+  addressInfo: IStudentAddressInfo;
+  guardianInfo: IStudentGuardianInfo;
+  requirementInfo: IStudentRequirementsInfo;
+  academicInfo: Array<IStudentAcademicInfo>;
+}
 
 export interface IstudentData extends IStudentBasicInfo {
   status: "E" | "A" | "NE"; // Enrolled, Alumni and Not Enrolled

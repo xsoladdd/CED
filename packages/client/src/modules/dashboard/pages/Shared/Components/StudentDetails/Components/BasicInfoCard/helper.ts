@@ -20,5 +20,5 @@ export const basicInfoSchema = Yup.object().shape({
   contact_number: Yup.string()
     .min(11, "Field Too Short!")
     .max(14, "Too Long!")
-    .required(),
+    .required("Required"),
 });

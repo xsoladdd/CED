@@ -22,4 +22,5 @@ type Mutation {
     input: updateStudentBasicInfoInput!
     SID: String!
   ): Student
+  addStudent(input: StudentInput!): Student
 }

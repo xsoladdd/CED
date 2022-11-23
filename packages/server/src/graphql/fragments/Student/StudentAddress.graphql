@@ -9,3 +9,14 @@ type StudentAddress {
   region: String!
   zip: String!
 }
+
+input StudentAddressInput {
+  no: String
+  street: String
+  subdiv: String
+  barangay: String!
+  city: String!
+  province: String!
+  region: String!
+  zip: String!
+}

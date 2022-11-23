@@ -11,36 +11,36 @@ import { basicInfoSchema } from "../../../../Shared/Components/StudentDetails/Co
 import { guardianSchema } from "../../../../Shared/Components/StudentDetails/Components/GuardianCard/helper";
 export const defaultValue: IselectedStudentState = {
   basicInfo: {
-    birthday: `01-01-2000`,
+    birthday: "1997-01-01",
     email: "",
     first_name: "",
     gender: "M",
     last_name: "",
     LRN: "",
     middle_name: "",
-    mobile_number: "",
+    contact_number: "",
   },
   guardianInfo: {
     father: {
       email: "",
-      firstName: "",
-      lastName: "",
-      middleName: "",
-      mobileNumber: "",
+      first_name: "",
+      last_name: "",
+      middle_name: "",
+      contact_number: "",
     },
     mother: {
       email: "",
-      firstName: "",
-      lastName: "",
-      middleName: "",
-      mobileNumber: "",
+      first_name: "",
+      last_name: "",
+      middle_name: "",
+      contact_number: "",
     },
     guardian: {
       email: "",
-      firstName: "",
-      lastName: "",
-      middleName: "",
-      mobileNumber: "",
+      first_name: "",
+      last_name: "",
+      middle_name: "",
+      contact_number: "",
     },
   },
   addressInfo: {
@@ -51,7 +51,7 @@ export const defaultValue: IselectedStudentState = {
     region: "",
     street: "",
     subdiv: "",
-    zipcode: "",
+    zip: "",
   },
   academicInfo: [
     { academicLevel: "Pre-Elementary", school: "", schoolYear: "" },
@@ -124,3 +124,9 @@ export const schemaArray = [
   academicInfoSchemaWrapper,
   null,
 ];
+
+export const generateField = (label: string, value: any) => (
+  <div className="min-w-[200px] uppercase">
+    <span className="font-semibold "> {label}</span>:{value}
+  </div>
+);

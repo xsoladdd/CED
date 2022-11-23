@@ -4,5 +4,5 @@ type EnrolledRecords {
   grade_level_id: String!
   section_id: String!
   student: Student
-  payment_status: String!
+  payment_status: String
 }

@@ -43,7 +43,7 @@ const ExportEnrolledCard: React.FC = ({}) => {
             student_id: checkboxState.SID ? rest.SID : undefined,
             email: checkboxState.email ? student.email : undefined,
             mobile_number: checkboxState.mobile_number
-              ? student.mobile_number
+              ? student.contact_number
               : undefined,
             birthday: checkboxState.birthday ? student.birthday : undefined,
             grade_level: checkboxState.year ? rest.grade_level : undefined,

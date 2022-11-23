@@ -28,7 +28,7 @@ const personProfileSchema = Yup.object().shape({
   contact_number: Yup.string()
     .min(11, "Field Too Short!")
     .max(14, "Too Long!")
-    .when("firstName", {
+    .when("first_name", {
       is: (exists: any) => !!exists,
       then: Yup.string()
         .min(2, "Too Short!")

@@ -71,7 +71,7 @@ export type EnrolledRecords = {
   SY: Scalars['String'];
   grade_level_id: Scalars['String'];
   id?: Maybe<Scalars['String']>;
-  payment_status: Scalars['String'];
+  payment_status?: Maybe<Scalars['String']>;
   section_id: Scalars['String'];
   student?: Maybe<Student>;
 };
@@ -87,6 +87,7 @@ export type GlobalVars = {
 export type Mutation = {
   __typename?: 'Mutation';
   addEmployee?: Maybe<Employee>;
+  addStudent?: Maybe<Student>;
   auth?: Maybe<AuthResponse>;
   changeEmployeePassword?: Maybe<Employee>;
   changeMyPassword?: Maybe<Employee>;
@@ -99,6 +100,11 @@ export type Mutation = {
 
 export type MutationAddEmployeeArgs = {
   input: AddEmployeeInput;
+};
+
+
+export type MutationAddStudentArgs = {
+  input: StudentInput;
 };
 
 
@@ -225,6 +231,32 @@ export type StudentAddress = {
   zip: Scalars['String'];
 };
 
+export type StudentAddressInput = {
+  barangay: Scalars['String'];
+  city: Scalars['String'];
+  no?: InputMaybe<Scalars['String']>;
+  province: Scalars['String'];
+  region: Scalars['String'];
+  street?: InputMaybe<Scalars['String']>;
+  subdiv?: InputMaybe<Scalars['String']>;
+  zip: Scalars['String'];
+};
+
+export type StudentInput = {
+  LRN: Scalars['String'];
+  address?: InputMaybe<StudentAddressInput>;
+  birthday?: InputMaybe<Scalars['String']>;
+  contact_number?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  first_name: Scalars['String'];
+  gender: Scalars['String'];
+  last_name: Scalars['String'];
+  middle_name?: InputMaybe<Scalars['String']>;
+  parent_guardians?: InputMaybe<Array<InputMaybe<StudentParentGuardianInput>>>;
+  requirements?: InputMaybe<StudentRequirementsInput>;
+  school_records?: InputMaybe<Array<InputMaybe<StudentSchoolRecordInput>>>;
+};
+
 export type StudentParentGuardian = {
   __typename?: 'StudentParentGuardian';
   contact_number?: Maybe<Scalars['String']>;
@@ -234,6 +266,15 @@ export type StudentParentGuardian = {
   last_name: Scalars['String'];
   middle_name?: Maybe<Scalars['String']>;
   student?: Maybe<Student>;
+  type: Scalars['String'];
+};
+
+export type StudentParentGuardianInput = {
+  contact_number?: InputMaybe<Scalars['String']>;
+  email: Scalars['String'];
+  first_name: Scalars['String'];
+  last_name: Scalars['String'];
+  middle_name?: InputMaybe<Scalars['String']>;
   type: Scalars['String'];
 };
 
@@ -250,9 +291,26 @@ export type StudentRequirements = {
   id?: Maybe<Scalars['String']>;
 };
 
+export type StudentRequirementsInput = {
+  has_baptismal: Scalars['Boolean'];
+  has_form_137: Scalars['Boolean'];
+  has_good_moral: Scalars['Boolean'];
+  has_parent_marriage_contract: Scalars['Boolean'];
+  has_psa: Scalars['Boolean'];
+  has_report_card: Scalars['Boolean'];
+  has_report_of_rating: Scalars['Boolean'];
+  has_school_government_recognition: Scalars['Boolean'];
+};
+
 export type StudentSchoolRecord = {
   __typename?: 'StudentSchoolRecord';
   id?: Maybe<Scalars['String']>;
+  school_name: Scalars['String'];
+  sy_graduated: Scalars['String'];
+  type: Scalars['String'];
+};
+
+export type StudentSchoolRecordInput = {
   school_name: Scalars['String'];
   sy_graduated: Scalars['String'];
   type: Scalars['String'];
@@ -397,9 +455,14 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']>;
   Student: ResolverTypeWrapper<Student>;
   StudentAddress: ResolverTypeWrapper<StudentAddress>;
+  StudentAddressInput: StudentAddressInput;
+  StudentInput: StudentInput;
   StudentParentGuardian: ResolverTypeWrapper<StudentParentGuardian>;
+  StudentParentGuardianInput: StudentParentGuardianInput;
   StudentRequirements: ResolverTypeWrapper<StudentRequirements>;
+  StudentRequirementsInput: StudentRequirementsInput;
   StudentSchoolRecord: ResolverTypeWrapper<StudentSchoolRecord>;
+  StudentSchoolRecordInput: StudentSchoolRecordInput;
   StudentTransferRecord: ResolverTypeWrapper<StudentTransferRecord>;
   addEmployeeInput: AddEmployeeInput;
   auditTrailFilter: AuditTrailFilter;
@@ -430,9 +493,14 @@ export type ResolversParentTypes = {
   String: Scalars['String'];
   Student: Student;
   StudentAddress: StudentAddress;
+  StudentAddressInput: StudentAddressInput;
+  StudentInput: StudentInput;
   StudentParentGuardian: StudentParentGuardian;
+  StudentParentGuardianInput: StudentParentGuardianInput;
   StudentRequirements: StudentRequirements;
+  StudentRequirementsInput: StudentRequirementsInput;
   StudentSchoolRecord: StudentSchoolRecord;
+  StudentSchoolRecordInput: StudentSchoolRecordInput;
   StudentTransferRecord: StudentTransferRecord;
   addEmployeeInput: AddEmployeeInput;
   auditTrailFilter: AuditTrailFilter;
@@ -482,7 +550,7 @@ export type EnrolledRecordsResolvers<ContextType = any, ParentType extends Resol
   SY?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   grade_level_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  payment_status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  payment_status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   section_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   student?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -498,6 +566,7 @@ export type GlobalVarsResolvers<ContextType = any, ParentType extends ResolversP
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addEmployee?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<MutationAddEmployeeArgs, 'input'>>;
+  addStudent?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<MutationAddStudentArgs, 'input'>>;
   auth?: Resolver<Maybe<ResolversTypes['AuthResponse']>, ParentType, ContextType, RequireFields<MutationAuthArgs, 'input'>>;
   changeEmployeePassword?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<MutationChangeEmployeePasswordArgs, 'employee_id' | 'password'>>;
   changeMyPassword?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<MutationChangeMyPasswordArgs, 'password'>>;

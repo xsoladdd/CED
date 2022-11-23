@@ -40,13 +40,7 @@ const Employees: React.FC = ({}) => {
       disableAccount,
       { loading: disableEmployeeLoading },
     ],
-  } = useEmployee(
-    searchRef.current?.value,
-    selectRef.current?.value === ""
-      ? undefined
-      : parseInt(selectRef.current?.value as string),
-    employeeRef.current.employee_id
-  );
+  } = useEmployee();
 
   const pageCount = (data?.getEmployees?.length as number) / itemsPerPage;
 

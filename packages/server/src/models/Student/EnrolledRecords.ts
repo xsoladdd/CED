@@ -14,7 +14,7 @@ import { Student } from "./Student";
 @Entity()
 export class EnrolledRecords extends BasicColumns {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id?: string;
 
   @Column()
   SY: string;
@@ -27,8 +27,8 @@ export class EnrolledRecords extends BasicColumns {
 
   // FP, PP, NP
   @Column({ default: "NP" })
-  payment_status: string;
+  payment_status?: string;
 
   @ManyToOne(() => Student, (student) => student.enrollment_records)
-  student: Student;
+  student?: Student;
 }

@@ -8,3 +8,12 @@ type StudentParentGuardian {
   type: String!
   student: Student
 }
+
+input StudentParentGuardianInput {
+  first_name: String!
+  middle_name: String
+  last_name: String!
+  contact_number: String
+  email: String!
+  type: String!
+}

@@ -66,12 +66,12 @@ const AddressInfoForm: React.FC<{
         })}
         {generateInput({
           required: true,
-          id: "addressInfo.zipcode",
+          id: "addressInfo.zip",
           label: "Zip code :",
           onChange: formik.handleChange,
-          value: formik.values.addressInfo.zipcode,
-          error: formik.errors.addressInfo?.zipcode,
-          touched: formik.touched.addressInfo?.zipcode,
+          value: formik.values.addressInfo.zip,
+          error: formik.errors.addressInfo?.zip,
+          touched: formik.touched.addressInfo?.zip,
           placeholder: "",
           className: "w-1/4",
         })}

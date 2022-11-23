@@ -5,10 +5,7 @@ import { setSelectedBasicInfo } from "./actions/setSelectedBasicInfo";
 import { setSelectedGuardianInfo } from "./actions/setSelectedGuardianInfo";
 import { setSelectedRecord } from "./actions/setSelectedRecord";
 import { setSelectedRequirementsInfo } from "./actions/setSelectedRequirementsInfo";
-import {
-  defaultEnrolledStudentList,
-  defaultSelectedStudent,
-} from "./intialState";
+import { defaultEnrolledStudentList } from "./intialState";
 import { IStudentSlice } from "./types";
 
 export const studentSlice: StoreSlice<IStudentSlice> = (set) => ({
@@ -20,7 +17,15 @@ export const studentSlice: StoreSlice<IStudentSlice> = (set) => ({
     setSelectedRecord: setSelectedRecord(set),
     studentList: [],
     enrolledStudentList: defaultEnrolledStudentList,
-    selectedStudent: defaultSelectedStudent,
+    selectedStudent: {
+      first_name: "",
+      gender: "M",
+      last_name: "",
+      LRN: "",
+      contact_number: "",
+      email: "",
+      middle_name: "",
+    },
     setSelectedStudent: (selectedStudent) =>
       set(
         ({ student }: IStudentSlice): IStudentSlice => ({

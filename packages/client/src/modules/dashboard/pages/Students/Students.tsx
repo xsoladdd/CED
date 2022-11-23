@@ -13,6 +13,7 @@ import {
 import useDashboardRouter from "../../../../hooks/useDashboardRouter";
 import { usePagination } from "../../../../hooks/usePagination";
 import useStore from "../../../../store/useStore";
+import { formatDateReadable } from "../../../../utils/formatDateReadable";
 import LegendCard from "./Components/LegendCard";
 import { column } from "./helper";
 
@@ -86,7 +87,7 @@ const Students: React.FC = ({}) => {
       <tr key={idx}>
         <td>{props?.LRN}</td>
         <td>{`${props?.first_name} ${props?.middle_name} ${props?.last_name}`}</td>
-        <td>{props?.birthday}</td>
+        <td>{formatDateReadable(props?.birthday as string)}</td>
         <td>{props?.contact_number}</td>
         <td>{props?.email}</td>
         <td>

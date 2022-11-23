@@ -5,6 +5,7 @@ import { authorized } from "../../../utils/authorized";
 import { errorType } from "../../../utils/errorType";
 import { getSchoolYear } from "../../../utils/getSchoolYear";
 import { Resolvers } from "../../generated";
+import { addStudentValidationSchema, mapUndefined } from "./helper";
 
 export const studentRersolver: Resolvers = {
   Student: {
@@ -87,50 +88,110 @@ export const studentRersolver: Resolvers = {
     },
   },
   Mutation: {
-    // updateStudentBasicInfo: async (_, { input, SID }, ctx) => {
-    //   try {
-    //     authorized(ctx);
-    //     const studentRepo = conn.getRepository(Student);
-    //     // Check if employee_id exist
-    //     const selectedStudent = await studentRepo.findOne({
-    //       where: { id: SID },
-    //       relations: {
-    //         enrollment_records: true,
-    //         parent_guardians: true,
-    //         transfer_records: true,
-    //         school_records: true,
-    //         requirements: true,
-    //         address: true,
-    //       },
-    //     });
-    //     if (!selectedStudent) {
-    //       throw new GraphQLError("Invalid LRN number", {
-    //         extensions: {
-    //           code: errorType.SERVER_ERROR,
-    //         },
-    //       });
-    //     }
-    //     selectedStudent.email = input.email;
-    //     selectedStudent.first_name = input.first_name;
-    //     selectedStudent.last_name = input.last_name;
-    //     if (input.middle_name) {
-    //       selectedStudent.middle_name = input.middle_name;
-    //     }
-    //     if (input.birthday) {
-    //       selectedStudent.birthday = input.birthday;
-    //     }
-    //     if (input.contact_number) {
-    //       selectedStudent.contact_number = input.contact_number;
-    //     }
-    //     const savedStudent = await studentRepo.save(selectedStudent);
-    //     return savedStudent;
-    //   } catch (error) {
-    //     throw new GraphQLError(error, {
-    //       extensions: {
-    //         code: errorType.SERVER_ERROR,
-    //       },
-    //     });
-    //   }
-    // },
+    updateStudentBasicInfo: async (_, { input, SID }, ctx) => {
+      try {
+        authorized(ctx);
+        const studentRepo = conn.getRepository(Student);
+        // Check if employee_id exist
+        const selectedStudent = await studentRepo.findOne({
+          where: { id: SID },
+          relations: {
+            enrollment_records: true,
+            parent_guardians: true,
+            transfer_records: true,
+            school_records: true,
+            requirements: true,
+            address: true,
+          },
+        });
+        if (!selectedStudent) {
+          throw new GraphQLError("Invalid LRN number", {
+            extensions: {
+              code: errorType.SERVER_ERROR,
+            },
+          });
+        }
+        selectedStudent.email = input.email;
+        selectedStudent.first_name = input.first_name;
+        selectedStudent.last_name = input.last_name;
+        if (input.middle_name) {
+          selectedStudent.middle_name = input.middle_name;
+        }
+        if (input.birthday) {
+          selectedStudent.birthday = input.birthday;
+        }
+        if (input.contact_number) {
+          selectedStudent.contact_number = input.contact_number;
+        }
+        const savedStudent = await studentRepo.save(selectedStudent);
+        return savedStudent;
+      } catch (error) {
+        throw new GraphQLError(error, {
+          extensions: {
+            code: errorType.SERVER_ERROR,
+          },
+        });
+      }
+    },
+    addStudent: async (_, { input }, ctx) => {
+      try {
+        authorized(ctx);
+        const studentRepo = conn.getRepository(Student);
+        await addStudentValidationSchema.validate(input).catch((err) => {
+          throw new GraphQLError(err.message, {
+            extensions: {
+              code: errorType.VALIDATION_ERROR,
+            },
+          });
+        });
+        const {
+          LRN,
+          parent_guardians,
+          school_records,
+          address,
+          requirements,
+          middle_name,
+          birthday,
+          contact_number,
+          email,
+          ...rest
+        } = input;
+
+        const selectValidation = await studentRepo.count({
+          where: {
+            LRN,
+          },
+        });
+        if (selectValidation !== 0) {
+          throw new GraphQLError("LRN Already Exist", {
+            extensions: {
+              code: errorType.VALIDATION_ERROR,
+            },
+          });
+        }
+
+        const newStudent: Student = {
+          ...rest,
+          LRN,
+          middle_name: mapUndefined(middle_name),
+          birthday: mapUndefined(birthday),
+          contact_number: mapUndefined(contact_number),
+          email: mapUndefined(email),
+          address: mapUndefined(address),
+          parent_guardians: mapUndefined(parent_guardians),
+          school_records: mapUndefined(school_records),
+          requirements: mapUndefined(requirements),
+        };
+
+        const savedStudent = await studentRepo.save(newStudent);
+        return savedStudent;
+      } catch (error) {
+        throw new GraphQLError(error, {
+          extensions: {
+            code: errorType.SERVER_ERROR,
+          },
+        });
+      }
+    },
   },
 };
