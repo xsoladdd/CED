@@ -38,7 +38,6 @@ const StudentDetails: React.FC = ({}) => {
         },
         onCompleted: (value) => {
           if (value && value.getStudent) {
-            console.log(`value.getStudent`, value.getStudent);
             setSelectedStudent(value.getStudent as Student);
             setFetchStatus("1");
           }

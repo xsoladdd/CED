@@ -1,0 +1,8 @@
+mutation updateStudentAcademicRecords(
+  $input: [StudentSchoolRecordInput]!
+  $id: String!
+) {
+  updateStudentAcademicRecords(input: $input, ID: $id) {
+    ...StudentFragment
+  }
+}

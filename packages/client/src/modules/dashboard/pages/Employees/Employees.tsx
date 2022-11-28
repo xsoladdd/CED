@@ -42,8 +42,9 @@ const Employees: React.FC = ({}) => {
     ],
   } = useEmployee();
 
-  const pageCount = (data?.getEmployees?.length as number) / itemsPerPage;
-
+  const pageCount = Math.ceil(
+    (data?.getEmployees?.length as number) / itemsPerPage
+  );
   const {
     globalVars: { roles },
   } = useStore();
@@ -162,7 +163,7 @@ const Employees: React.FC = ({}) => {
                 </button>
               </Tooltip>
               <Tooltip
-                text={props?.status ? "Enable Account" : "Disable Account"}
+                text={props?.status ? "Disable Account" : "Enable Account"}
                 direction="left"
               >
                 <button

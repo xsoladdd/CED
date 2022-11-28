@@ -35,7 +35,6 @@ const AddStudentStepper: React.FC = ({}) => {
     validationSchema: schemaArray[formIndex],
     onSubmit: (values, { setSubmitting }) => {
       setServerError("");
-      // qwer Fix Submitting with API
       if (formIndex !== maxPageIndex) {
         setFormIndex(formIndex + 1);
       } else {
@@ -96,6 +95,7 @@ const AddStudentStepper: React.FC = ({}) => {
                   school_name: school,
                   sy_graduated: schoolYear,
                   type: academicLevel,
+                  is_active: true,
                 })
               ),
             },

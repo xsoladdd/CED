@@ -2,6 +2,7 @@ import { config } from "dotenv";
 import { DataSource, DataSourceOptions } from "typeorm";
 import { SeederOptions } from "typeorm-extension";
 import { NODE_ENV } from "../global";
+// import { NODE_ENV } from "../global";
 config();
 
 const options: SeederOptions & DataSourceOptions = {
@@ -12,6 +13,7 @@ const options: SeederOptions & DataSourceOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   synchronize: false,
+  // logging: false,
   logging: NODE_ENV !== "production",
   entities: [__dirname + "/../models/**/*.{ts,js}"],
   migrations: [__dirname + "/../migrations/**/*.{ts,js}"],

@@ -4,14 +4,15 @@ import { NODE_ENV } from "../../../global";
 import { StudentAddress } from "../../Student/StudentAddress";
 import { Student } from "../../Student/Student";
 import { StudentRequirements } from "../../Student/StudentRequirements";
-import { StudentParentGuardian } from "../../Student/StudentParentGuardian";
+// import { StudentParentGuardian } from "../../Student/StudentParentGuardian";
 import { EnrolledRecords } from "../../Student/EnrolledRecords";
+import { StudentSchoolRecord } from "../../Student/StudentSchoolRecord";
 export default class StudentSeeder implements Seeder {
   public async run(dataSource: DataSource): Promise<any> {
     const repository = dataSource.getRepository(Student);
     // Insert year level
 
-    if (NODE_ENV !== "development") {
+    if (NODE_ENV === "development") {
       const generateAddress = () => {
         const address: StudentAddress = {
           barangay: "",
@@ -26,35 +27,36 @@ export default class StudentSeeder implements Seeder {
         return address;
       };
 
-      const generateParentGuardian = () => {
-        const parentGuardian: Array<StudentParentGuardian> = [
-          {
-            first_name: "Menard",
-            middle_name: "Vaneschi",
-            last_name: "Boar",
-            contact_number: "09294952534",
-            type: "M",
-            email: "mboar0@phpbb.com",
-          },
-          {
-            first_name: "Bartholomeus",
-            middle_name: "Bertolin",
-            last_name: "Cowper",
-            contact_number: "09991715440",
-            type: "G",
-            email: "bcowper1@psu.edu",
-          },
-          {
-            first_name: "Andres",
-            middle_name: "Gilhouley",
-            last_name: "Rickis",
-            contact_number: "09987577681",
-            type: "F",
-            email: "arickis2@dyndns.org",
-          },
-        ];
-        return parentGuardian;
-      };
+      // const generateParentGuardian = () => {
+      //   const parentGuardian: Array<StudentParentGuardian> = [
+      //     {
+      //       first_name: "Menard",
+      //       middle_name: "Vaneschi",
+      //       last_name: "Boar",
+      //       contact_number: "09294952534",
+      //       type: "M",
+      //       email: "mboar0@phpbb.com",
+      //     },
+      //     {
+      //       first_name: "Bartholomeus",
+      //       middle_name: "Bertolin",
+      //       last_name: "Cowper",
+      //       contact_number: "09991715440",
+      //       type: "G",
+      //       email: "bcowper1@psu.edu",
+      //     },
+      //     {
+      //       first_name: "Andres",
+      //       middle_name: "Gilhouley",
+      //       last_name: "Rickis",
+      //       contact_number: "09987577681",
+      //       type: "F",
+      //       email: "arickis2@dyndns.org",
+      //     },
+      //   ];
+      //   return parentGuardian;
+      // };
+
       const generateRequirements = () => {
         const requirements: StudentRequirements = {
           has_baptismal: true,
@@ -481,14 +483,42 @@ export default class StudentSeeder implements Seeder {
         return enrollmentList;
       };
 
+      const generateAcademicRecord = () => {
+        /*
+             { text: "Pre-Elementary", value: "Pre-Elementary" },
+            { text: "Elementary", value: "Elementary" },
+            { text: "Junior High", value: "Junior High" },
+            { text: "Senior High", value: "Senior High" },
+        */
+        const academicRecord: Array<StudentSchoolRecord> = [
+          {
+            school_name: "School 1",
+            sy_graduated: "2015",
+            type: "Pre-Elementary",
+          },
+          { school_name: "School 2", sy_graduated: "2016", type: "Elementary" },
+          {
+            school_name: "School 3",
+            sy_graduated: "2017",
+            type: "Junior High",
+          },
+          {
+            school_name: "School 4",
+            sy_graduated: "2018",
+            type: "Senior High",
+          },
+        ];
+        return academicRecord;
+      };
+
       const data = studentList.map((props) => {
         return {
           ...props,
           address: generateAddress(),
           requirements: generateRequirements(),
-          parent_guardians: generateParentGuardian(),
+          // parent_guardians: generateParentGuardian(),
           enrollment_records: generateEnrollmentRecord(),
-          // enrollment_records: [1, 4, 5].includes(idx) ? enrollmentList : [],
+          school_records: generateAcademicRecord(),
         };
       });
       await repository.save(data);

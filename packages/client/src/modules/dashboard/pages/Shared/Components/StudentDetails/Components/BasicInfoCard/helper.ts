@@ -5,7 +5,10 @@ export const basicInfoSchema = Yup.object().shape({
     .min(2, "Field Too Short!")
     .max(50, "Too Long!")
     .required("Required"),
-  middle_name: Yup.string().min(2, "Too Short!").max(50, "Too Long!"),
+  middle_name: Yup.string()
+    .min(2, "Too Short!")
+    .max(50, "Too Long!")
+    .nullable(),
   last_name: Yup.string()
     .min(2, "Too Short!")
     .max(50, "Too Long!")

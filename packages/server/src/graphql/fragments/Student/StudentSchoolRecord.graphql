@@ -6,7 +6,9 @@ type StudentSchoolRecord {
 }
 
 input StudentSchoolRecordInput {
+  id: String
   sy_graduated: String!
   school_name: String!
   type: String!
+  is_active: Boolean!
 }

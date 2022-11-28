@@ -1,9 +1,11 @@
+import { useMutation } from "@apollo/client";
 import { useFormik } from "formik";
 import React from "react";
 import { FiEdit, FiSave, FiX } from "react-icons/fi";
 import Card, { CardHeader } from "../../../../../../../../components/Card";
 import Text from "../../../../../../../../components/Text";
 import WarningModal from "../../../../../../../../components/WarningModal";
+import { UpdateStudentParentInfoDocument } from "../../../../../../../../graphQL/generated/graphql";
 import useToggle from "../../../../../../../../hooks/useToggle";
 import useStore from "../../../../../../../../store/useStore";
 import { generateInput } from "../helper";
@@ -14,9 +16,13 @@ const GuardianCard: React.FC = ({}) => {
   const { status: modalStatus, toggle: toggleModal } = useToggle(false);
   const {
     student: {
-      selectedStudent: { parent_guardians },
+      selectedStudent: { parent_guardians, id },
     },
   } = useStore();
+
+  const [updateStudentParentInfo] = useMutation(
+    UpdateStudentParentInfoDocument
+  );
   const formik = useFormik({
     initialValues: {
       father: {
@@ -36,8 +42,70 @@ const GuardianCard: React.FC = ({}) => {
     enableReinitialize: true,
     onSubmit: (values) => {
       // qwer Fix Submitting with API
-      console.log(values);
-      toggle();
+      updateStudentParentInfo({
+        variables: {
+          id: id as string,
+          input: {
+            father: values.father.first_name
+              ? {
+                  email: values.father.email ? values.father.email : "",
+                  first_name: values.father.first_name
+                    ? values.father.first_name
+                    : "",
+                  middle_name: values.father.middle_name
+                    ? values.father.middle_name
+                    : "",
+                  last_name: values.father.last_name
+                    ? values.father.last_name
+                    : "",
+                  contact_number: values.father.contact_number
+                    ? values.father.contact_number
+                    : "",
+                  id: values.father.id ? values.father.id : undefined,
+                }
+              : undefined,
+            mother: values.mother.first_name
+              ? {
+                  email: values.mother.email ? values.mother.email : "",
+                  first_name: values.mother.first_name
+                    ? values.mother.first_name
+                    : "",
+                  middle_name: values.mother.middle_name
+                    ? values.mother.middle_name
+                    : "",
+                  last_name: values.mother.last_name
+                    ? values.mother.last_name
+                    : "",
+                  contact_number: values.mother.contact_number,
+
+                  id: values.mother.id ? values.mother.id : undefined,
+                }
+              : undefined,
+            guardian: values.guardian.first_name
+              ? {
+                  email: values.guardian.email ? values.guardian.email : "",
+                  first_name: values.guardian.first_name
+                    ? values.guardian.first_name
+                    : "",
+                  middle_name: values.guardian.middle_name
+                    ? values.guardian.middle_name
+                    : "",
+                  last_name: values.guardian.last_name
+                    ? values.guardian.last_name
+                    : "",
+                  contact_number: values.guardian.contact_number,
+
+                  id: values.guardian.id ? values.guardian.id : undefined,
+                }
+              : undefined,
+          },
+        },
+        onCompleted: () => {
+          console.log(values);
+          toggle();
+        },
+      });
+      // toggle();
     },
   });
   const header = (

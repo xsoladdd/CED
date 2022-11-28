@@ -6,21 +6,39 @@ type getStudentsResponse {
 type Query {
   getStudents(limit: Int, offset: Int, search: String): getStudentsResponse
   getStudent(SID: String!): Student
+  checkUniqueLRN(LRN: String!, currentLRN: String): Boolean!
 }
 
 input updateStudentBasicInfoInput {
   first_name: String!
-  middle_name: String
+  middle_name: String!
   last_name: String!
-  birthday: String
-  contact_number: String
+  birthday: String!
+  contact_number: String!
   email: String!
+  LRN: String!
+}
+
+input updateStudentParentInfo {
+  mother: StudentParentGuardianInput
+  father: StudentParentGuardianInput
+  guardian: StudentParentGuardianInput
 }
 
 type Mutation {
   updateStudentBasicInfo(
     input: updateStudentBasicInfoInput!
-    SID: String!
+    ID: String!
+  ): Student
+  updateStudentAddressInfo(input: StudentAddressInput!, ID: String!): Student
+  updateStudentRequirementInfo(
+    input: StudentRequirementsInput!
+    ID: String!
+  ): Student
+  updateStudentParentInfo(input: updateStudentParentInfo!, ID: String!): Student
+  updateStudentAcademicRecords(
+    input: [StudentSchoolRecordInput]!
+    ID: String!
   ): Student
   addStudent(input: StudentInput!): Student
 }

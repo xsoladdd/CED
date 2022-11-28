@@ -1,12 +1,57 @@
 import { FormikProps } from "formik";
 import React from "react";
+import LRNInput from "../../../../../../../components/LRNInput/LRNInput";
 import { IselectedStudentState } from "../../../../../../../store/useStore/slices/student/types";
+import { joinClass } from "../../../../../../../utils/joinClass";
 import { generateInput } from "../../../../Shared/Components/StudentDetails/Components/helper";
 
 const BasicInfoForm: React.FC<{ formik: FormikProps<IselectedStudentState> }> =
   ({ formik }) => {
     return (
       <div>
+        <div className="flex gap-3">
+          <div className={joinClass(`form-control w-1/2`)}>
+            <LRNInput
+              LRN={formik.values.basicInfo.LRN}
+              error={formik.errors.basicInfo?.LRN}
+              formikHandleChange={formik.handleChange}
+              id={`basicInfo.LRN`}
+              setFieldError={formik.setFieldError}
+            />
+            {/* <label className="label">
+              <span className="label-text ">
+                <RequiredIndicator />
+                LRN :
+              </span>
+            </label>
+            <div className="flex gap-2 place-items-center">
+              <input
+                placeholder={"##############"}
+                className={joinClass(
+                  `input input-bordered  input-sm w-full`,
+                  formik.errors.basicInfo?.LRN ? `input-error` : "",
+                  data?.checkUniqueLRN ? "input-success" : "",
+                  data?.checkUniqueLRN === false ? "input-error" : ""
+                )}
+                value={formik.values.basicInfo.LRN}
+                onChange={formik.handleChange}
+                // onChange={handleLRNValidation}
+                id={`basicInfo.LRN`}
+                name={`basicInfo.LRN`}
+              />
+              {data?.checkUniqueLRN === false && (
+                <Tooltip text="LRN is already registered to a student">
+                  <AiFillWarning className="text-red-500" />
+                </Tooltip>
+              )}
+              {data?.checkUniqueLRN && <FiCheck className="text-green-500" />}
+              {fetchLoading && <FiLoader className="animate-spin" />}
+            </div>
+            <Text variant="error" className="pt-2">
+              {formik.errors.basicInfo?.LRN}
+            </Text> */}
+          </div>
+        </div>
         <div className="flex gap-3">
           {generateInput({
             id: "basicInfo.first_name",
@@ -41,18 +86,7 @@ const BasicInfoForm: React.FC<{ formik: FormikProps<IselectedStudentState> }> =
             className: "w-1/3",
           })}
         </div>
-        <div className="flex gap-3   ">
-          {generateInput({
-            required: true,
-            id: "basicInfo.LRN",
-            label: "LRN :",
-            onChange: formik.handleChange,
-            value: formik.values.basicInfo.LRN,
-            error: formik.errors.basicInfo?.LRN,
-            touched: formik.touched.basicInfo?.LRN,
-            placeholder: "LRN",
-            className: "w-1/3",
-          })}
+        <div className="flex gap-3">
           {generateInput({
             required: true,
             id: "basicInfo.gender",

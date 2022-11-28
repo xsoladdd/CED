@@ -1,0 +1,3 @@
+query checkUniqueLRN($lrn: String!, $currentLrn: String) {
+  checkUniqueLRN(LRN: $lrn, currentLRN: $currentLrn)
+}

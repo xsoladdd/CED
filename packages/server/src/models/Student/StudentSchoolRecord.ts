@@ -13,7 +13,7 @@ import { Student } from "./Student";
 @Entity()
 export class StudentSchoolRecord extends BasicColumns {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id?: string;
 
   @Column()
   sy_graduated: string;
@@ -25,5 +25,5 @@ export class StudentSchoolRecord extends BasicColumns {
   type: string;
 
   @ManyToOne(() => Student, (student) => student.school_records)
-  student: Student;
+  student?: Student;
 }

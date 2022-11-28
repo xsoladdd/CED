@@ -1,0 +1,8 @@
+mutation updateStudentParentInfo(
+  $input: updateStudentParentInfo!
+  $id: String!
+) {
+  updateStudentParentInfo(input: $input, ID: $id) {
+    ...StudentFragment
+  }
+}

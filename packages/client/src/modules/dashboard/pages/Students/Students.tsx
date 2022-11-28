@@ -39,33 +39,13 @@ const Students: React.FC = ({}) => {
       offset: pageOffset,
     },
   });
-  const pageCount = (data?.getStudents?.length as number) / itemsPerPage;
+  const pageCount = Math.ceil(
+    (data?.getStudents?.length as number) / itemsPerPage
+  );
   const studentData = data?.getStudents?.students as Array<Student>;
 
   const filterCard = (
-    <Card
-      className="w-5/6"
-      header={<CardHeader title="Filter" />}
-      // footer={
-      //   <CardFooter
-      //     left={
-      //       <>
-      //         <button
-      //           className="btn btn-sm btn-info"
-      //           onClick={() =>
-      //             pushRoute({
-      //               title: "Add new student",
-      //               route: "students:add-stepper",
-      //             })
-      //           }
-      //         >
-      //           Add student
-      //         </button>
-      //       </>
-      //     }
-      //   />
-      // }
-    >
+    <Card className="w-5/6" header={<CardHeader title="Filter" />}>
       <div className="flex gap-2">
         <label className="input-group input-group-sm">
           <span className="search-identifier">
@@ -86,7 +66,9 @@ const Students: React.FC = ({}) => {
     studentData?.map((props, idx) => (
       <tr key={idx}>
         <td>{props?.LRN}</td>
-        <td>{`${props?.first_name} ${props?.middle_name} ${props?.last_name}`}</td>
+        <td>{`${props?.first_name} ${
+          props?.middle_name ? props?.middle_name : ""
+        } ${props?.last_name}`}</td>
         <td>{formatDateReadable(props?.birthday as string)}</td>
         <td>{props?.contact_number}</td>
         <td>{props?.email}</td>

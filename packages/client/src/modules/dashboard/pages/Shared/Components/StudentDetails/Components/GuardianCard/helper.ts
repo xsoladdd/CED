@@ -43,3 +43,17 @@ export const guardianSchema = Yup.object().shape({
   mother: personProfileSchema,
   guardian: personProfileSchema,
 });
+
+export const cleanString = (value: string | undefined | null): string => {
+  if (!value) {
+    return "";
+  }
+  if (cleanString === null) {
+    return "";
+  }
+  if (typeof value === "undefined") {
+    return "";
+  } else {
+    return value;
+  }
+};

@@ -1,8 +1,10 @@
+import { useMutation } from "@apollo/client";
 import { useFormik } from "formik";
 import React from "react";
 import { FiEdit, FiSave, FiX } from "react-icons/fi";
 import Card, { CardHeader } from "../../../../../../../../components/Card";
 import WarningModal from "../../../../../../../../components/WarningModal";
+import { UpdateStudentRequirementInfoDocument } from "../../../../../../../../graphQL/generated/graphql";
 import useToggle from "../../../../../../../../hooks/useToggle";
 import useStore from "../../../../../../../../store/useStore";
 
@@ -14,9 +16,13 @@ const RequirementCard: React.FC = ({}) => {
   const {
     student: {
       // setSelectedRequirementsInfo,
-      selectedStudent: { requirements },
+      selectedStudent: { requirements, id },
     },
   } = useStore();
+
+  const [updateStudentRequirementInfo] = useMutation(
+    UpdateStudentRequirementInfoDocument
+  );
   const formik = useFormik({
     initialValues: {
       ...requirements,
@@ -25,10 +31,36 @@ const RequirementCard: React.FC = ({}) => {
     onSubmit: (values) => {
       // qwer Fix Submitting with API
       // setSelectedRequirementsInfo(values);
-
-      toggleGreenModalStatus();
-      console.log(values);
-      toggle();
+      updateStudentRequirementInfo({
+        variables: {
+          id: id as string,
+          input: {
+            has_baptismal: values.has_baptismal ? values.has_baptismal : false,
+            has_form_137: values.has_form_137 ? values.has_form_137 : false,
+            has_good_moral: values.has_good_moral
+              ? values.has_good_moral
+              : false,
+            has_parent_marriage_contract: values.has_parent_marriage_contract
+              ? values.has_parent_marriage_contract
+              : false,
+            has_psa: values.has_psa ? values.has_psa : false,
+            has_report_card: values.has_report_card
+              ? values.has_report_card
+              : false,
+            has_report_of_rating: values.has_report_of_rating
+              ? values.has_report_of_rating
+              : false,
+            has_school_government_recognition:
+              values.has_school_government_recognition
+                ? values.has_school_government_recognition
+                : false,
+          },
+        },
+        onCompleted: () => {
+          toggleGreenModalStatus();
+          toggle();
+        },
+      });
     },
   });
   const header = (

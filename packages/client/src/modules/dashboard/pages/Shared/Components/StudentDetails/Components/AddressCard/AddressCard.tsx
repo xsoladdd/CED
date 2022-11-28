@@ -14,6 +14,8 @@ import {
 } from "select-philippines-address";
 import { IBarangay, ICity, Iprovince, IregionType } from "./types";
 import { addressInfoSchema } from "./helper";
+import { useMutation } from "@apollo/client";
+import { UpdateStudentAddressInfoDocument } from "../../../../../../../../graphQL/generated/graphql";
 
 const AddressCard: React.FC = ({}) => {
   const { status: isEditOn, toggle } = useToggle(false);
@@ -26,7 +28,7 @@ const AddressCard: React.FC = ({}) => {
 
   const {
     student: {
-      selectedStudent: { address },
+      selectedStudent: { address, id },
     },
   } = useStore();
   useEffect(() => {
@@ -66,15 +68,34 @@ const AddressCard: React.FC = ({}) => {
     });
   }, [address]);
 
+  const [updateStudentAddressInfo] = useMutation(
+    UpdateStudentAddressInfoDocument
+  );
+
   const formik = useFormik({
     initialValues: { ...address },
     validationSchema: addressInfoSchema,
     enableReinitialize: true,
     onSubmit: (values) => {
       // qwer Fix Submitting with API
-      // setSelectedAddressInfo(values);
-      console.log(values);
-      toggle();
+      const { barangay, city, no, province, region, street, subdiv, zip } =
+        values;
+      updateStudentAddressInfo({
+        variables: {
+          id: id as string,
+          input: {
+            barangay: barangay ? barangay : "",
+            city: city ? city : "",
+            province: province ? province : "",
+            region: region ? region : "",
+            zip: zip ? zip : "",
+            no,
+            street,
+            subdiv,
+          },
+        },
+        onCompleted: () => toggle(),
+      });
     },
   });
   const header = (

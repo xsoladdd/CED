@@ -94,7 +94,11 @@ export type Mutation = {
   disableEmployee?: Maybe<Scalars['String']>;
   enableEmployee?: Maybe<Scalars['String']>;
   resetEmployeePassword?: Maybe<Employee>;
+  updateStudentAcademicRecords?: Maybe<Student>;
+  updateStudentAddressInfo?: Maybe<Student>;
   updateStudentBasicInfo?: Maybe<Student>;
+  updateStudentParentInfo?: Maybe<Student>;
+  updateStudentRequirementInfo?: Maybe<Student>;
 };
 
 
@@ -140,13 +144,38 @@ export type MutationResetEmployeePasswordArgs = {
 };
 
 
+export type MutationUpdateStudentAcademicRecordsArgs = {
+  ID: Scalars['String'];
+  input: Array<InputMaybe<StudentSchoolRecordInput>>;
+};
+
+
+export type MutationUpdateStudentAddressInfoArgs = {
+  ID: Scalars['String'];
+  input: StudentAddressInput;
+};
+
+
 export type MutationUpdateStudentBasicInfoArgs = {
-  SID: Scalars['String'];
+  ID: Scalars['String'];
   input: UpdateStudentBasicInfoInput;
+};
+
+
+export type MutationUpdateStudentParentInfoArgs = {
+  ID: Scalars['String'];
+  input: UpdateStudentParentInfo;
+};
+
+
+export type MutationUpdateStudentRequirementInfoArgs = {
+  ID: Scalars['String'];
+  input: StudentRequirementsInput;
 };
 
 export type Query = {
   __typename?: 'Query';
+  checkUniqueLRN: Scalars['Boolean'];
   getAuditTrails: GetAuditTrailsResponse;
   getEmployee?: Maybe<Employee>;
   getEmployees: GetEmployeesResponse;
@@ -156,6 +185,12 @@ export type Query = {
   getStudents?: Maybe<GetStudentsResponse>;
   meow?: Maybe<Scalars['String']>;
   test?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryCheckUniqueLrnArgs = {
+  LRN: Scalars['String'];
+  currentLRN?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -273,9 +308,10 @@ export type StudentParentGuardianInput = {
   contact_number?: InputMaybe<Scalars['String']>;
   email: Scalars['String'];
   first_name: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
   last_name: Scalars['String'];
   middle_name?: InputMaybe<Scalars['String']>;
-  type: Scalars['String'];
+  type?: InputMaybe<Scalars['String']>;
 };
 
 export type StudentRequirements = {
@@ -311,6 +347,8 @@ export type StudentSchoolRecord = {
 };
 
 export type StudentSchoolRecordInput = {
+  id?: InputMaybe<Scalars['String']>;
+  is_active: Scalars['Boolean'];
   school_name: Scalars['String'];
   sy_graduated: Scalars['String'];
   type: Scalars['String'];
@@ -361,12 +399,19 @@ export type GetStudentsResponse = {
 };
 
 export type UpdateStudentBasicInfoInput = {
-  birthday?: InputMaybe<Scalars['String']>;
-  contact_number?: InputMaybe<Scalars['String']>;
+  LRN: Scalars['String'];
+  birthday: Scalars['String'];
+  contact_number: Scalars['String'];
   email: Scalars['String'];
   first_name: Scalars['String'];
   last_name: Scalars['String'];
-  middle_name?: InputMaybe<Scalars['String']>;
+  middle_name: Scalars['String'];
+};
+
+export type UpdateStudentParentInfo = {
+  father?: InputMaybe<StudentParentGuardianInput>;
+  guardian?: InputMaybe<StudentParentGuardianInput>;
+  mother?: InputMaybe<StudentParentGuardianInput>;
 };
 
 
@@ -472,6 +517,7 @@ export type ResolversTypes = {
   getGlobalVarsResponse: ResolverTypeWrapper<GetGlobalVarsResponse>;
   getStudentsResponse: ResolverTypeWrapper<GetStudentsResponse>;
   updateStudentBasicInfoInput: UpdateStudentBasicInfoInput;
+  updateStudentParentInfo: UpdateStudentParentInfo;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -510,6 +556,7 @@ export type ResolversParentTypes = {
   getGlobalVarsResponse: GetGlobalVarsResponse;
   getStudentsResponse: GetStudentsResponse;
   updateStudentBasicInfoInput: UpdateStudentBasicInfoInput;
+  updateStudentParentInfo: UpdateStudentParentInfo;
 };
 
 export type AuditTrailResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuditTrail'] = ResolversParentTypes['AuditTrail']> = {
@@ -573,10 +620,15 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   disableEmployee?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationDisableEmployeeArgs, 'employee_id'>>;
   enableEmployee?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationEnableEmployeeArgs, 'employee_id'>>;
   resetEmployeePassword?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<MutationResetEmployeePasswordArgs, 'employee_id' | 'password'>>;
-  updateStudentBasicInfo?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<MutationUpdateStudentBasicInfoArgs, 'SID' | 'input'>>;
+  updateStudentAcademicRecords?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<MutationUpdateStudentAcademicRecordsArgs, 'ID' | 'input'>>;
+  updateStudentAddressInfo?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<MutationUpdateStudentAddressInfoArgs, 'ID' | 'input'>>;
+  updateStudentBasicInfo?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<MutationUpdateStudentBasicInfoArgs, 'ID' | 'input'>>;
+  updateStudentParentInfo?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<MutationUpdateStudentParentInfoArgs, 'ID' | 'input'>>;
+  updateStudentRequirementInfo?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<MutationUpdateStudentRequirementInfoArgs, 'ID' | 'input'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  checkUniqueLRN?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QueryCheckUniqueLrnArgs, 'LRN'>>;
   getAuditTrails?: Resolver<ResolversTypes['getAuditTrailsResponse'], ParentType, ContextType, Partial<QueryGetAuditTrailsArgs>>;
   getEmployee?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<QueryGetEmployeeArgs, 'employee_id'>>;
   getEmployees?: Resolver<ResolversTypes['getEmployeesResponse'], ParentType, ContextType, Partial<QueryGetEmployeesArgs>>;

@@ -1,9 +1,15 @@
+import { useMutation } from "@apollo/client";
 import { useFormik } from "formik";
 import React from "react";
 import { FiEdit, FiSave, FiX } from "react-icons/fi";
 import Card, { CardHeader } from "../../../../../../../../components/Card";
+import LRNInput from "../../../../../../../../components/LRNInput/LRNInput";
 import WarningModal from "../../../../../../../../components/WarningModal";
-import { Student } from "../../../../../../../../graphQL/generated/graphql";
+import {
+  Student,
+  UpdateStudentBasicInfoDocument,
+} from "../../../../../../../../graphQL/generated/graphql";
+import useDashboardRouter from "../../../../../../../../hooks/useDashboardRouter";
 import useToggle from "../../../../../../../../hooks/useToggle";
 import useStore from "../../../../../../../../store/useStore";
 import { generateInput } from "../helper";
@@ -13,6 +19,9 @@ const BasicInfoCard: React.FC = ({}) => {
   const { status: isEditOn, toggle } = useToggle(false);
   const { status: modalStatus, toggle: toggleModal } = useToggle(false);
 
+  const [updateStudentBasicInfo] = useMutation(UpdateStudentBasicInfoDocument);
+
+  const { pushRoute } = useDashboardRouter();
   const {
     student: { selectedStudent },
   } = useStore();
@@ -26,8 +35,30 @@ const BasicInfoCard: React.FC = ({}) => {
     onSubmit: (values) => {
       // qwer Fix Submitting with API
       // setSelectedBasicInfo(values);
-      console.log(values);
-      toggle();
+      updateStudentBasicInfo({
+        variables: {
+          id: selectedStudent.id as string,
+          input: {
+            birthday: values.birthday ? values.birthday : "",
+            contact_number: values.contact_number ? values.contact_number : "",
+            email: values.email ? values.email : "",
+            first_name: values.first_name,
+            LRN: values.LRN,
+            last_name: values.last_name,
+            middle_name: values.middle_name ? values.middle_name : "",
+          },
+        },
+        onCompleted: () => {
+          pushRoute(
+            {
+              title: "students",
+              route: "students",
+            },
+            true
+          );
+          toggle();
+        },
+      });
     },
   });
   const header = (
@@ -82,6 +113,17 @@ const BasicInfoCard: React.FC = ({}) => {
       <form className="w-full" onSubmit={formik.handleSubmit}>
         <Card className="w-full overflow-visible" header={header}>
           <div className="flex gap-3">
+            <LRNInput
+              LRN={formik.values.LRN}
+              formikHandleChange={formik.handleChange}
+              id="LRN"
+              setFieldError={formik.setFieldError}
+              error={formik.errors.LRN}
+              currentLRN={selectedStudent.LRN}
+              disabled={!isEditOn}
+            />
+          </div>
+          <div className="flex gap-3">
             {generateInput({
               disabled: !isEditOn,
               id: "first_name",
@@ -119,18 +161,6 @@ const BasicInfoCard: React.FC = ({}) => {
             })}
           </div>
           <div className="flex gap-3">
-            {generateInput({
-              disabled: !isEditOn,
-              required: true,
-              id: "LRN",
-              label: "LRN :",
-              onChange: formik.handleChange,
-              error: formik.errors.LRN,
-              touched: formik.touched.LRN,
-              value: formik.values.LRN,
-              placeholder: "LRN",
-              className: "w-1/3",
-            })}
             {generateInput({
               disabled: !isEditOn,
               required: true,
