@@ -1,6 +1,6 @@
 export interface IdataID {
   label: string;
-  value: string;
+  value?: string;
 }
 export interface returnGenerateBorder {
   borderTopWidth: string;

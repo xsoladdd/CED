@@ -3,6 +3,6 @@ mutation updateStudentRequirementInfo(
   $id: String!
 ) {
   updateStudentRequirementInfo(input: $input, ID: $id) {
-    ...StudentFragment
+    ...Student
   }
 }

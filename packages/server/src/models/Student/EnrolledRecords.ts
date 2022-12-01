@@ -16,6 +16,12 @@ export class EnrolledRecords extends BasicColumns {
   @PrimaryGeneratedColumn("uuid")
   id?: string;
 
+  @Column({
+    generated: "rowid",
+    nullable: true,
+  })
+  increment_id?: string;
+
   @Column()
   SY: string;
 
@@ -25,9 +31,9 @@ export class EnrolledRecords extends BasicColumns {
   @Column()
   section_id: string;
 
-  // FP, PP, NP
+  // FP, PP, NP, D
   @Column({ default: "NP" })
-  payment_status?: string;
+  status?: string;
 
   @ManyToOne(() => Student, (student) => student.enrollment_records)
   student?: Student;

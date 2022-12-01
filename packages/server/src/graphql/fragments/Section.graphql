@@ -3,3 +3,9 @@ type Section {
   name: String!
   year_level: String!
 }
+
+input SectionInput {
+  id: String
+  name: String!
+  year_level: String!
+}

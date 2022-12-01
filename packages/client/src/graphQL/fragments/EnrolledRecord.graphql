@@ -1,0 +1,11 @@
+fragment EnrolledRecord on EnrolledRecord {
+  SY
+  grade_level_id
+  id
+  SID
+  status
+  section_id
+  student {
+    ...Student
+  }
+}

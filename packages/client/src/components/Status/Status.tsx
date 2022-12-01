@@ -2,7 +2,7 @@ import React from "react";
 import { joinClass } from "../../utils/joinClass";
 
 interface IStatusProps {
-  color?: "red" | "blue" | "green" | "grey";
+  color?: "red" | "blue" | "green" | "grey" | "yellow";
 }
 
 const Status: React.FC<IStatusProps> = ({ color = "green" }) => {
@@ -16,6 +16,9 @@ const Status: React.FC<IStatusProps> = ({ color = "green" }) => {
       break;
     case "red":
       colorClass = "bg-red-500";
+      break;
+    case "yellow":
+      colorClass = "bg-yellow-500";
       break;
     default:
       colorClass = "bg-green-500";

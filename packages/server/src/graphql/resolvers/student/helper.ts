@@ -21,3 +21,7 @@ export const addStudentValidationSchema = yup.object().shape({
 export const mapUndefined = <T = string>(param: any): T | undefined => {
   return param ? param : undefined;
 };
+
+export function addLeadingZeros(num: number, totalLength: number) {
+  return String(num).padStart(totalLength, "0");
+}

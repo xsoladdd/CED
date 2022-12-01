@@ -172,6 +172,9 @@ export const employeeResolver: Resolvers = {
             employee_id: employee_id,
             status: 1,
           },
+          relations: {
+            profile: true,
+          },
         });
         if (!selectedEmployee) {
           throw new GraphQLError("No employee found. Invalid employee_id", {
@@ -182,8 +185,8 @@ export const employeeResolver: Resolvers = {
         }
 
         selectedEmployee.status = 0;
-        await employeeRepo.save(selectedEmployee);
-        return "Succesfully disabled account";
+        const savedRecord = await employeeRepo.save(selectedEmployee);
+        return savedRecord;
       } catch (error) {
         throw new GraphQLError(error, {
           extensions: {
@@ -201,6 +204,9 @@ export const employeeResolver: Resolvers = {
             employee_id: employee_id,
             status: 0,
           },
+          relations: {
+            profile: true,
+          },
         });
         if (!selectedEmployee) {
           throw new GraphQLError("No employee found. Invalid employee_id", {
@@ -211,8 +217,8 @@ export const employeeResolver: Resolvers = {
         }
 
         selectedEmployee.status = 1;
-        await employeeRepo.save(selectedEmployee);
-        return "Succesfully enabled account";
+        const savedRecord = await employeeRepo.save(selectedEmployee);
+        return savedRecord;
       } catch (error) {
         throw new GraphQLError(error, {
           extensions: {
@@ -230,6 +236,9 @@ export const employeeResolver: Resolvers = {
           where: {
             employee_id: employee_id,
             status: 1,
+          },
+          relations: {
+            profile: true,
           },
         });
         if (!selectedEmployee) {
@@ -261,6 +270,9 @@ export const employeeResolver: Resolvers = {
           where: {
             employee_id: employee_id,
             status: 1,
+          },
+          relations: {
+            profile: true,
           },
         });
         if (!selectedEmployee) {

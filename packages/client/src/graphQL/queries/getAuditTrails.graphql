@@ -15,7 +15,7 @@ query getAuditTrails(
       action_type
       description
       employee {
-        ...EmployeeFragment
+        ...Employee
       }
       timestamp
       id

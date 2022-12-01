@@ -31,33 +31,9 @@ export const useEmployee = () => {
     }
   };
 
-  const enableAccountMutation = useMutation(EnableEmployeeDocument, {
-    refetchQueries: [
-      {
-        query: GetEmployeesDocument,
-        variables: {
-          limit: pagination.itemsPerPage,
-          offset: pagination.pageOffset,
-          search: "",
-          filter: {},
-        },
-      },
-    ],
-  });
+  const enableAccountMutation = useMutation(EnableEmployeeDocument);
 
-  const disableAccountMutation = useMutation(DisableEmployeeDocument, {
-    refetchQueries: [
-      {
-        query: GetEmployeesDocument,
-        variables: {
-          limit: pagination.itemsPerPage,
-          offset: pagination.pageOffset,
-          search: "",
-          filter: {},
-        },
-      },
-    ],
-  });
+  const disableAccountMutation = useMutation(DisableEmployeeDocument);
 
   return {
     handleRefetch,

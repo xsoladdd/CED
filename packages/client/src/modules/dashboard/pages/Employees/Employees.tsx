@@ -203,11 +203,11 @@ const Employees: React.FC = ({}) => {
           const { employee_id, status } = employeeRef.current;
           if (employee_id) {
             if (status === 1) {
-              console.log(`disableAccount`);
+              // console.log(`disableAccount`);
               disableAccount({ variables: { employeeId: employee_id } });
             }
             if (status === 0) {
-              console.log(`enableAccount`);
+              // console.log(`enableAccount`);
               enableAccount({ variables: { employeeId: employee_id } });
             }
           }

@@ -1,0 +1,5 @@
+mutation DropEnrollmentRecord($input: [String]) {
+  dropEnrollmentRecord(input: $input) {
+    ...EnrolledRecord
+  }
+}

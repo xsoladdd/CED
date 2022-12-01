@@ -37,22 +37,21 @@ DATE FORMAT
     viewing format January 01 2021 ("MMMM dd yyyy")
 
 
-
-
-
-
 school_system CED 20140023
-
-
-
-
 
 pm2 start --name instance-name -- command
 pm2 start --name instance-name -- start
 
 
 
+BUGS
+    - Error handling in adding employee.
 
+TODO
+    - Fix return of activate/decativate account
 
-QNA
-    -
+- Not Paid, Installment, Fully Paid, Dropped
+
+- Enrollment Info Card
+    Change Section
+    Change Status

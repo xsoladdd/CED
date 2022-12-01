@@ -42,8 +42,8 @@ type Query {
 
 type Mutation {
   addEmployee(input: addEmployeeInput!): Employee
-  disableEmployee(employee_id: String!): String
-  enableEmployee(employee_id: String!): String
+  disableEmployee(employee_id: String!): Employee
+  enableEmployee(employee_id: String!): Employee
   resetEmployeePassword(employee_id: String!, password: String!): Employee
   changeEmployeePassword(employee_id: String!, password: String!): Employee
 }

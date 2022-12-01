@@ -1,5 +1,8 @@
 import { GraphQLError } from "graphql";
+import { In } from "typeorm";
 import { conn } from "../../../config/db";
+import { GlobalVars } from "../../../models/GlobalVars";
+import { EnrolledRecords } from "../../../models/Student/EnrolledRecords";
 import { Student } from "../../../models/Student/Student";
 import { StudentAddress } from "../../../models/Student/StudentAddress";
 import { StudentParentGuardian } from "../../../models/Student/StudentParentGuardian";
@@ -8,8 +11,13 @@ import { StudentSchoolRecord } from "../../../models/Student/StudentSchoolRecord
 import { authorized } from "../../../utils/authorized";
 import { errorType } from "../../../utils/errorType";
 import { getSchoolYear } from "../../../utils/getSchoolYear";
+import { globalVarsType } from "../../../utils/globalVarsType";
 import { Resolvers } from "../../generated";
-import { addStudentValidationSchema, mapUndefined } from "./helper";
+import {
+  addLeadingZeros,
+  addStudentValidationSchema,
+  mapUndefined,
+} from "./helper";
 
 export const studentRersolver: Resolvers = {
   Student: {
@@ -26,6 +34,18 @@ export const studentRersolver: Resolvers = {
         }
       }
       return "NE";
+    },
+  },
+  EnrolledRecord: {
+    SID: async (enrolledRecord, _) => {
+      const { SY, increment_id } = enrolledRecord as EnrolledRecords;
+      if (increment_id) {
+        const [year_id] = SY.split("-");
+        const yearNumber = year_id.slice(-2); // if 2023, will return 23
+        const formatIncrementId = addLeadingZeros(parseInt(increment_id), 6);
+        return `${yearNumber}${formatIncrementId}`;
+      }
+      return ``;
     },
   },
   Query: {
@@ -102,6 +122,82 @@ export const studentRersolver: Resolvers = {
         });
 
         return studentCount === 0;
+      } catch (error) {
+        throw new GraphQLError(error, {
+          extensions: {
+            code: errorType.SERVER_ERROR,
+          },
+        });
+      }
+    },
+    getEnrolledList: async (_, { limit, offset }, ctx) => {
+      try {
+        authorized(ctx);
+
+        const enrolledRepo = conn.getRepository(EnrolledRecords);
+        const globalVarsRepo = conn.getRepository(GlobalVars);
+        const SY = await globalVarsRepo.findOne({
+          where: { identifier: globalVarsType.school_year },
+        });
+        const enrolledRecords = await enrolledRepo.find({
+          where: {
+            SY: SY?.value,
+          },
+          relations: {
+            student: {
+              transfer_records: true,
+              enrollment_records: true,
+              address: true,
+              parent_guardians: true,
+              school_records: true,
+            },
+          },
+          skip: offset ? offset : 0,
+          take: limit ? limit : 10,
+          order: {
+            created_at: "DESC",
+          },
+        });
+        const length = await enrolledRepo.count({
+          where: {
+            SY: SY?.value,
+          },
+        });
+
+        return { enrolledRecords, length };
+      } catch (error) {
+        throw new GraphQLError(error, {
+          extensions: {
+            code: errorType.SERVER_ERROR,
+          },
+        });
+      }
+    },
+    getEnrollmentRecord: async (_, { EID }, ctx) => {
+      try {
+        authorized(ctx);
+        const enrollmentRepo = conn.getRepository(EnrolledRecords);
+        const enrollmentRecord = await enrollmentRepo.findOne({
+          where: { id: EID },
+          relations: {
+            student: {
+              enrollment_records: true,
+              parent_guardians: true,
+              transfer_records: true,
+              school_records: true,
+              requirements: true,
+              address: true,
+            },
+          },
+        });
+        if (!enrollmentRecord || !enrollmentRecord.student) {
+          throw new GraphQLError("No student found", {
+            extensions: {
+              code: errorType.SERVER_ERROR,
+            },
+          });
+        }
+        return enrollmentRecord;
       } catch (error) {
         throw new GraphQLError(error, {
           extensions: {
@@ -564,6 +660,45 @@ export const studentRersolver: Resolvers = {
         });
 
         return reselectStudent;
+      } catch (error) {
+        throw new GraphQLError(error, {
+          extensions: {
+            code: errorType.SERVER_ERROR,
+          },
+        });
+      }
+    },
+    dropEnrollmentRecord: async (_, { input }, ctx) => {
+      try {
+        authorized(ctx);
+        if (!input || input === null || input.length === 0) {
+          throw new GraphQLError("Invalid Student ID", {
+            extensions: {
+              code: errorType.SERVER_ERROR,
+            },
+          });
+        }
+        const enrollmentRecordRepo = conn.getRepository(EnrolledRecords);
+        const records = await enrollmentRecordRepo.find({
+          relations: {
+            student: {
+              enrollment_records: true,
+              parent_guardians: true,
+              transfer_records: true,
+              school_records: true,
+              requirements: true,
+              address: true,
+            },
+          },
+          where: { id: In([...input]) },
+        });
+
+        const refactorRecords = records.map(({ status, ...rest }) => ({
+          ...rest,
+          status: "d",
+        }));
+        const savedRecords = await enrollmentRecordRepo.save(refactorRecords);
+        return savedRecords;
       } catch (error) {
         throw new GraphQLError(error, {
           extensions: {

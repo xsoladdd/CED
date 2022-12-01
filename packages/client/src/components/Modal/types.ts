@@ -3,10 +3,10 @@ import { IcolorVariantTypes, IsizeVariantTypes } from "../../helper/vars/types";
 
 export interface IModalProps {
   status?: boolean;
+  handleClose?: () => void;
   title: string;
   footer?: ReactNode;
   size?: Exclude<IsizeVariantTypes, "xs">;
-  handleClose?: () => void;
 }
 
 export interface ISubmitButtonType {

@@ -1,5 +1,6 @@
+import { EnrolledRecord } from "../../../../../../graphQL/generated/graphql";
 import { IyearLevel } from "../../../../../../store/useStore/slices/global/types";
-import { IenrolledStudent } from "../../../../../../store/useStore/slices/student/types";
+import { formatDateReadable } from "../../../../../../utils/formatDateReadable";
 import { toReadableDate } from "../../../../../../utils/toReadableDate";
 import { generateSectionYear } from "../../helper";
 import { IadditionalData, IdataID, returnGenerateBorder } from "./types";
@@ -21,32 +22,47 @@ export const generateBorder = (
 };
 
 export const generateContentArray = (
-  student_data: IenrolledStudent,
+  student_data: EnrolledRecord,
   year_level: Array<IyearLevel>,
   additional_data: IadditionalData
 ): Array<Array<IdataID>> => {
   const { section, year } = generateSectionYear(
-    student_data.grade_level,
-    student_data.section,
+    student_data.grade_level_id,
+    student_data.section_id,
     year_level
   );
   return [
     [
       {
         label: "Name :",
-        value: `${student_data.student.first_name} ${student_data.student.middle_name} ${student_data.student.last_name}`,
+        value: `${student_data.student?.first_name} ${student_data.student?.middle_name} ${student_data.student?.last_name}`,
       },
-      { label: "Gender :", value: student_data.student.gender },
+      {
+        label: "Gender :",
+        value:
+          student_data.student?.gender.toLowerCase() === "f"
+            ? "Female"
+            : "Male",
+      },
     ],
     [
-      { label: "Birthday :", value: student_data.student.birthday },
-      { label: "LRN :", value: student_data.student.LRN },
+      {
+        label: "Birthday :",
+        value: formatDateReadable(student_data.student?.birthday?.toString()),
+      },
+      { label: "LRN :", value: student_data.student?.LRN },
     ],
     [{ label: "Address :", value: additional_data.addressString }],
     [{ label: "Name of Parent/Guardian :", value: additional_data.parentName }],
     [
-      { label: "Contact No. :", value: student_data.student.contact_number },
-      { label: "Email :", value: student_data.student.email },
+      {
+        label: "Contact No. :",
+        value: student_data.student?.contact_number?.toString(),
+      },
+      {
+        label: "Email :",
+        value: student_data.student?.email ? student_data.student?.email : "",
+      },
     ],
     [
       { label: "Level :", value: year },

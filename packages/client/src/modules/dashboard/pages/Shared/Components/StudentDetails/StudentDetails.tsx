@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import Loading from "../../../../../../components/Loading";
 import Text from "../../../../../../components/Text";
 import {
+  EnrolledRecord,
+  GetEnrollmentRecordDocument,
   GetStudentDocument,
   Student,
 } from "../../../../../../graphQL/generated/graphql";
@@ -11,6 +13,7 @@ import useStore from "../../../../../../store/useStore";
 import AcademicRecordCard from "./Components/AcademicRecordCard";
 import AddressCard from "./Components/AddressCard";
 import BasicInfoCard from "./Components/BasicInfoCard";
+import EnrollmentInfoCard from "./Components/EnrollmentInfoCard";
 import GuardianCard from "./Components/GuardianCard";
 import RequirementCard from "./Components/RequirementCard";
 
@@ -19,11 +22,13 @@ import RequirementCard from "./Components/RequirementCard";
 const StudentDetails: React.FC = ({}) => {
   const [fetchStatus, setFetchStatus] = useState<"0" | "1" | "2">("0");
   const {
-    student: { selectedRecord, enrolledStudentList, setSelectedStudent },
+    student: { selectedRecord, setSelectedStudent },
   } = useStore();
 
   const [getStudent, { loading: getStudentLoading }] =
     useLazyQuery(GetStudentDocument);
+  const [getEnrollmentRecord, { loading: getEnrollmentRecordLoading }] =
+    useLazyQuery(GetEnrollmentRecordDocument);
 
   useEffectOnce(() => {
     if (!selectedRecord.id || !selectedRecord.type) {
@@ -46,15 +51,24 @@ const StudentDetails: React.FC = ({}) => {
       return;
     }
     if (selectedRecord.type === "enrollment-record") {
-      const getStudentDataArr = enrolledStudentList.filter(
-        ({ id }) => id === selectedRecord.id
-      );
-      if (getStudentDataArr.length === 0) {
+      if (!selectedRecord.id || !selectedRecord.type) {
         setFetchStatus("2");
         return;
       }
+      getEnrollmentRecord({
+        variables: {
+          eid: selectedRecord.id,
+        },
+        onCompleted: (value) => {
+          const typedValue =
+            value.getEnrollmentRecord as unknown as EnrolledRecord;
+          if (typedValue && typedValue.student) {
+            setSelectedStudent(typedValue.student);
+            setFetchStatus("1");
+          }
+        },
+      });
       setFetchStatus("1");
-
       return;
     }
     return () => {};
@@ -63,12 +77,13 @@ const StudentDetails: React.FC = ({}) => {
   if (fetchStatus === "2") {
     return <Text>Something went wrong</Text>;
   }
-  if (fetchStatus === "0" || getStudentLoading) {
+  if (fetchStatus === "0" || getStudentLoading || getEnrollmentRecordLoading) {
     return <Loading />;
   }
 
   return (
     <div className="flex flex-col gap-5">
+      {selectedRecord.type === "enrollment-record" && <EnrollmentInfoCard />}
       <BasicInfoCard />
       <AddressCard />
       <GuardianCard />

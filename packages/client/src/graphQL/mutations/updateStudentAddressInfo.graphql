@@ -1,5 +1,5 @@
 mutation updateStudentAddressInfo($input: StudentAddressInput!, $id: String!) {
   updateStudentAddressInfo(input: $input, ID: $id) {
-    ...StudentFragment
+    ...Student
   }
 }

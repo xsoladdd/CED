@@ -1,0 +1,12 @@
+query getYearLevelSections {
+  getYearLevelSections {
+    id
+    name
+    value
+    sections {
+      id
+      name
+      year_level
+    }
+  }
+}

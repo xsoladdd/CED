@@ -12,13 +12,22 @@ const LegendCard: React.FC = ({}) => {
       >
         <ul className="flex flex-col gap-[3px]">
           <li className="text-xs flex gap-2">
+            <Status color="red" />
+            <span>Not Paid</span>
+          </li>
+
+          <li className="text-xs flex gap-2">
+            <Status color="yellow" />
+            <span>Installment</span>
+          </li>
+          <li className="text-xs flex gap-2">
             <Status color="green" />
-            <span>Enrolled</span>
+            <span>Fully Paid</span>
           </li>
 
           <li className="text-xs flex gap-2">
             <Status color="grey" />
-            <span>Not-Enrolled</span>
+            <span>Dropped</span>
           </li>
         </ul>
       </Card>

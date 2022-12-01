@@ -1,0 +1,8 @@
+query getEnrolledList($limit: Int, $offset: Int) {
+  getEnrolledList(limit: $limit, offset: $offset) {
+    length
+    enrolledRecords {
+      ...EnrolledRecord
+    }
+  }
+}

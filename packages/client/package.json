@@ -8,7 +8,7 @@
     "node": ">=16"
   },
   "scripts": {
-    "dev": "next",
+    "dev": "next -p 4050",
     "build": "next build",
     "start": "next start",
     "type-check": "tsc",

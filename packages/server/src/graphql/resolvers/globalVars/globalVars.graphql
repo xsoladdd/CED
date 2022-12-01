@@ -1,0 +1,22 @@
+type getGlobalVarsResponse {
+  school_year: String!
+  audit_trail_types: [String]!
+}
+
+type yearLevelSection {
+  id: String
+  name: String!
+  value: String!
+  sections: [Section]
+}
+
+type Query {
+  getGlobalVars: getGlobalVarsResponse
+  getSections(yearLevel: String!): [Section]
+  getYearLevelSections: [yearLevelSection]
+}
+
+type Mutation {
+  deleteSection(id: String!): String
+  addEditSection(input: SectionInput!): Section
+}

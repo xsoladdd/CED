@@ -16,4 +16,5 @@ export interface IgenerateInput {
   inputType?: "select" | "input" | "date";
   selectValues?: Array<{ value: string | number; text: string; id?: string }>;
   className?: string;
+  isHorizontal?: boolean;
 }

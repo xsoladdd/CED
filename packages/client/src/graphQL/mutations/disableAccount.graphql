@@ -1,3 +1,5 @@
-mutation disableEmployee($employeeId: String!) {
-  disableEmployee(employee_id: $employeeId)
+mutation EnableEmployee($employeeId: String!) {
+  enableEmployee(employee_id: $employeeId) {
+    ...Employee
+  }
 }

@@ -1,9 +1,11 @@
 export interface ISection {
-  value: string;
+  id: string;
   title: string;
+  year_level: string;
 }
 
 export interface IyearLevel {
+  id: string;
   title: string;
   value: string;
   sections?: Array<ISection>;
@@ -24,6 +26,10 @@ export interface IglobalSlice {
     year_level: Array<IyearLevel>;
     roles: Array<Iroles>;
     audit_trail_type: Array<string>;
+    setYearLevelSection: (params: Array<IyearLevel>) => void;
+    insertNewSection: (params: ISection) => void;
+    editNewSection: (params: ISection) => void;
+    deleteSection: (id: string, yearLevel: string) => void;
     setSchoolYear: (school_year: string) => void;
     setAuditTrailType: (audit_trail_type: Array<string>) => void;
   };

@@ -130,8 +130,8 @@ const ExportEnrolledCard: React.FC = ({}) => {
           >
             <option value="">Select Section</option>
             {sectionArray.length !== 0 &&
-              sectionArray[0].sections?.map(({ title, value }, idx) => (
-                <option key={idx} value={value}>
+              sectionArray[0].sections?.map(({ title, id }, idx) => (
+                <option key={idx} value={id}>
                   {title}
                 </option>
               ))}

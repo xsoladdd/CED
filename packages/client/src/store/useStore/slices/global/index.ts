@@ -1,128 +1,98 @@
-import { IglobalSlice } from "./types";
+import { IglobalSlice, ISection } from "./types";
+import produce from "immer";
+import { WritableDraft } from "immer/dist/internal";
 
 export const globalSlice: StoreSlice<IglobalSlice> = (set) => ({
   globalVars: {
     school_year: "",
-    year_level: [
-      {
-        title: "Kinder",
-        value: "K",
-        sections: [
-          { title: "section 1", value: "K01" },
-          { title: "section 2", value: "K02" },
-        ],
-      },
-      {
-        title: "Preparatory",
-        value: "P",
-        sections: [
-          { title: "section 1", value: "P01" },
-          { title: "section 2", value: "P02" },
-        ],
-      },
-      {
-        title: "Grade 1",
-        value: "1",
-        sections: [
-          { title: "section 1", value: "101" },
-          { title: "section 2", value: "102" },
-        ],
-      },
-      {
-        title: "Grade 2",
-        value: "2",
-        sections: [
-          { title: "section 1", value: "201" },
-          { title: "section 2", value: "202" },
-        ],
-      },
-      {
-        title: "Grade 3",
-        value: "3",
-        sections: [
-          { title: "section 1", value: "301" },
-          { title: "section 2", value: "302" },
-        ],
-      },
-      {
-        title: "Grade 4",
-        value: "4",
-        sections: [
-          { title: "section 1", value: "401" },
-          { title: "section 2", value: "402" },
-        ],
-      },
-      {
-        title: "Grade 5",
-        value: "5",
-        sections: [
-          { title: "section 1", value: "501" },
-          { title: "section 2", value: "502" },
-        ],
-      },
-      {
-        title: "Grade 6",
-        value: "6",
-        sections: [
-          { title: "section 1", value: "601" },
-          { title: "section 2", value: "602" },
-        ],
-      },
-      {
-        title: "Grade 7",
-        value: "7",
-        sections: [
-          { title: "section 1", value: "701" },
-          { title: "section 2", value: "702" },
-        ],
-      },
-      {
-        title: "Grade 8",
-        value: "8",
-        sections: [
-          { title: "section 1", value: "801" },
-          { title: "section 2", value: "802" },
-        ],
-      },
-      {
-        title: "Grade 9",
-        value: "9",
-        sections: [
-          { title: "section 1", value: "901" },
-          { title: "section 2", value: "902" },
-        ],
-      },
-      {
-        title: "Grade 10",
-        value: "10",
-        sections: [
-          { title: "section 1", value: "1001" },
-          { title: "section 2", value: "1002" },
-        ],
-      },
-      {
-        title: "Grade 11",
-        value: "11",
-        sections: [
-          { title: "section 1", value: "1101" },
-          { title: "section 2", value: "1102" },
-        ],
-      },
-      {
-        title: "Grade 12",
-        value: "12",
-        sections: [
-          { title: "section 1", value: "1201" },
-          { title: "section 2", value: "1202" },
-        ],
-      },
-    ],
+    year_level: [],
     roles: [
       { title: "System Administrator", value: "SA" },
       { title: "Registrar Account", value: "RT" },
       // { title: "BA", value: "Backdoor Account" },
     ],
     audit_trail_type: [],
+
+    setYearLevelSection: (params) =>
+      set(({ globalVars }: IglobalSlice): IglobalSlice => {
+        return {
+          globalVars: {
+            ...globalVars,
+            year_level: [...params],
+          },
+        };
+      }),
+    editNewSection: (params) =>
+      set(({ globalVars }: IglobalSlice): IglobalSlice => {
+        const selectedYearLevel = globalVars.year_level.findIndex(
+          (val) => val.value === params.year_level
+        );
+
+        const selectedSection = globalVars.year_level[
+          selectedYearLevel
+        ].sections?.findIndex((val) => val.id === params.id);
+        if (!selectedSection) {
+          return {
+            globalVars: {
+              ...globalVars,
+            },
+          };
+        }
+        const year_levels = produce(globalVars.year_level, (draft) => {
+          (
+            (
+              draft[selectedYearLevel]
+                .sections as unknown as WritableDraft<ISection>[]
+            )[selectedSection] as unknown as ISection
+          ).title = params.title;
+        });
+        // console.log(`should be new value`, year_levels);
+        return {
+          globalVars: {
+            ...globalVars,
+            year_level: [...year_levels],
+          },
+        };
+      }),
+    insertNewSection: (params) =>
+      set(({ globalVars }: IglobalSlice): IglobalSlice => {
+        const selectedYearLevel = globalVars.year_level.findIndex(
+          (val) => val.value === params.year_level
+        );
+        const year_levels = produce(globalVars.year_level, (draft) => {
+          draft[selectedYearLevel].sections?.push({
+            id: params.id,
+            title: params.title,
+            year_level: params.year_level,
+          });
+        });
+        // console.log(`should be new value`, year_levels);
+        return {
+          globalVars: {
+            ...globalVars,
+            year_level: [...year_levels],
+          },
+        };
+      }),
+    deleteSection: (id, yearLevel) =>
+      set(({ globalVars }: IglobalSlice): IglobalSlice => {
+        // Get index of year level
+        const selectedYearLevel = globalVars.year_level.findIndex(
+          (val) => val.value === yearLevel
+        );
+        const year_levels = produce(globalVars.year_level, (draft) => {
+          draft[selectedYearLevel].sections = globalVars.year_level[
+            selectedYearLevel
+          ].sections?.filter((val) => val.id !== id);
+        });
+
+        return {
+          globalVars: {
+            ...globalVars,
+            year_level: [...year_levels],
+          },
+        };
+      }),
     setSchoolYear: (school_year) =>
       set(({ globalVars }: IglobalSlice): IglobalSlice => {
         return {

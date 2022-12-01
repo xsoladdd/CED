@@ -1,4 +1,4 @@
-fragment EmployeeFragment on Employee {
+fragment Employee on Employee {
   employee_id
   id
   partial_password

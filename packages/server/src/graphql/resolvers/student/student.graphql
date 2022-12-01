@@ -1,12 +1,11 @@
-type getStudentsResponse {
-  students: [Student]
+type getEnrolledListResponse {
+  enrolledRecords: [EnrolledRecord]
   length: Int
 }
 
-type Query {
-  getStudents(limit: Int, offset: Int, search: String): getStudentsResponse
-  getStudent(SID: String!): Student
-  checkUniqueLRN(LRN: String!, currentLRN: String): Boolean!
+type getStudentsResponse {
+  students: [Student]
+  length: Int
 }
 
 input updateStudentBasicInfoInput {
@@ -25,6 +24,18 @@ input updateStudentParentInfo {
   guardian: StudentParentGuardianInput
 }
 
+type Query {
+  getStudents(limit: Int, offset: Int, search: String): getStudentsResponse
+  getStudent(SID: String!): Student
+  getEnrollmentRecord(EID: String!): EnrolledRecord!
+  getEnrolledList(
+    limit: Int
+    offset: Int
+    search: String
+  ): getEnrolledListResponse
+  checkUniqueLRN(LRN: String!, currentLRN: String): Boolean!
+}
+
 type Mutation {
   updateStudentBasicInfo(
     input: updateStudentBasicInfoInput!
@@ -41,4 +52,5 @@ type Mutation {
     ID: String!
   ): Student
   addStudent(input: StudentInput!): Student
+  dropEnrollmentRecord(input: [String]): [EnrolledRecord]
 }

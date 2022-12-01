@@ -1,0 +1,5 @@
+query GetEnrollmentRecord($eid: String!) {
+  getEnrollmentRecord(EID: $eid) {
+    ...EnrolledRecord
+  }
+}

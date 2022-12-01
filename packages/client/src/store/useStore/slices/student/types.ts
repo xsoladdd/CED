@@ -99,9 +99,6 @@ export interface IStudentSlice {
     setSelectedGuardianInfo: (params: IStudentGuardianInfo) => void;
     setSelectedAddressInfo: (params: IStudentAddressInfo) => void;
     setSelectedRequirementsInfo: (params: IStudentRequirementsInfo) => void;
-    setSelectedAcademicRecordInfo: (
-      params: Array<IStudentAcademicInfo>
-    ) => void;
     resetSelectedStudent: () => void;
   };
 }

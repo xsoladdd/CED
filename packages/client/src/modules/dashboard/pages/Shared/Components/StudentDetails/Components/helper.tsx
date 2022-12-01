@@ -19,68 +19,77 @@ export const generateInput = ({
   touched,
   selectValues = [],
   className,
+  isHorizontal = false,
 }: IgenerateInput) => (
-  <div className={joinClass(`form-control max-w-sm`, className)}>
+  <div
+    className={joinClass(
+      `form-control max-w-lg`,
+      isHorizontal ? "flex flex-row gap-3" : "",
+      className
+    )}
+  >
     <label className="label">
-      <span className="label-text ">
+      <span className="label-text block whitespace-nowrap">
         {!disabled && required ? <RequiredIndicator /> : " "}
         {` ${label}`}
       </span>
     </label>
-    {inputType === "input" && (
-      <input
-        type={type}
-        placeholder={placeholder}
-        className={joinClass(
-          `input input-bordered  input-sm w-full`,
-          error && touched ? `input-error` : ""
-        )}
-        value={value && value.toString()}
-        onChange={onChange}
-        id={id}
-        name={id}
-        disabled={disabled}
-      />
-    )}
-    {inputType === "select" && (
-      <select
-        className={joinClass(
-          `select select-bordered select-sm w-full`,
-          error && touched ? `select-error` : ""
-        )}
-        value={value && value.toString()}
-        onChange={onChange}
-        id={id}
-        name={id}
-        disabled={disabled}
-      >
-        <option value="" disabled>
-          {placeholder ? placeholder : "Pick one"}
-        </option>
-        {selectValues.map(({ text, value: optValue, id: optionId }, idx) => (
-          <option value={optValue} key={idx} id={optionId}>
-            {text}
+    <div className="w-10/12">
+      {inputType === "input" && (
+        <input
+          type={type}
+          placeholder={placeholder}
+          className={joinClass(
+            `input input-bordered  input-sm w-full`,
+            error && touched ? `input-error` : ""
+          )}
+          value={value && value.toString()}
+          onChange={onChange}
+          id={id}
+          name={id}
+          disabled={disabled}
+        />
+      )}
+      {inputType === "select" && (
+        <select
+          className={joinClass(
+            `select select-bordered select-sm w-full`,
+            error && touched ? `select-error` : ""
+          )}
+          value={value && value.toString()}
+          onChange={onChange}
+          id={id}
+          name={id}
+          disabled={disabled}
+        >
+          <option value="" disabled>
+            {placeholder ? placeholder : "Pick one"}
           </option>
-        ))}
-      </select>
-    )}
-    {inputType === "date" && (
-      <Datepicker
-        placeholder={placeholder}
-        className={joinClass(
-          `input input-bordered  input-sm w-full`,
-          error && touched ? `input-error` : ""
-        )}
-        value={typeof value !== "string" ? value : new Date(value)}
-        onChange={(date) => onDateChange(date)}
-        id={id}
-        disabled={disabled}
-      />
-    )}
-    {error && touched && (
-      <Text variant="error" className="pt-2">
-        {error}
-      </Text>
-    )}
+          {selectValues.map(({ text, value: optValue, id: optionId }, idx) => (
+            <option value={optValue} key={idx} id={optionId}>
+              {text}
+            </option>
+          ))}
+        </select>
+      )}
+      {inputType === "date" && (
+        <Datepicker
+          placeholder={placeholder}
+          className={joinClass(
+            `input input-bordered  input-sm w-full`,
+            error && touched ? `input-error` : ""
+          )}
+          value={typeof value !== "string" ? value : new Date(value)}
+          onChange={(date) => onDateChange(date)}
+          id={id}
+          disabled={disabled}
+        />
+      )}
+      {error && touched && (
+        <Text variant="error" className="pt-2">
+          {error}
+        </Text>
+      )}
+    </div>
   </div>
 );

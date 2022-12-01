@@ -8,7 +8,7 @@ type Student {
   birthday: String
   contact_number: String
   email: String
-  enrollment_records: [EnrolledRecords]
+  enrollment_records: [EnrolledRecord]
   address: StudentAddress
   parent_guardians: [StudentParentGuardian]
   requirements: StudentRequirements

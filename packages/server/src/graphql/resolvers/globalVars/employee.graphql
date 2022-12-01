@@ -1,8 +1,0 @@
-type getGlobalVarsResponse {
-  school_year: String!
-  audit_trail_types: [String]!
-}
-
-type Query {
-  getGlobalVars: getGlobalVarsResponse
-}

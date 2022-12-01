@@ -1,0 +1,3 @@
+mutation deleteSection($deleteSectionId: String!) {
+  deleteSection(id: $deleteSectionId)
+}

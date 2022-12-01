@@ -1,0 +1,7 @@
+mutation addEditSection($input: SectionInput!) {
+  addEditSection(input: $input) {
+    year_level
+    name
+    id
+  }
+}

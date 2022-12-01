@@ -1,20 +1,57 @@
 import { Document, Page, Text, View } from "@react-pdf/renderer";
 import React from "react";
+import { EnrolledRecord } from "../../../../../../graphQL/generated/graphql";
 import { IyearLevel } from "../../../../../../store/useStore/slices/global/types";
-import { IenrolledStudent } from "../../../../../../store/useStore/slices/student/types";
 import { generateBorder, generateContentArray } from "./helper";
 import { IadditionalData } from "./types";
 
 const RegCardPDF: React.FC<{
-  studentData: IenrolledStudent;
+  data: EnrolledRecord;
   year_level: Array<IyearLevel>;
-}> = ({ studentData, year_level }) => {
+}> = ({ data, year_level }) => {
+  const generateParentName = (): string => {
+    if (
+      !data.student?.parent_guardians &&
+      data.student?.parent_guardians?.length !== 0
+    ) {
+      return "No Record";
+    } else {
+      const motherData = data.student.parent_guardians.filter(
+        (props) => props?.type.toLowerCase() === "m"
+      );
+      if (motherData.length !== 0) {
+        return `${motherData[0]?.first_name} ${motherData[0]?.middle_name} ${motherData[0]?.last_name}`;
+      }
+
+      const fatherData = data.student.parent_guardians.filter(
+        (props) => props?.type.toLowerCase() === "f"
+      );
+      if (fatherData.length !== 0) {
+        return `${fatherData[0]?.first_name} ${fatherData[0]?.middle_name} ${fatherData[0]?.last_name}`;
+      }
+
+      const guardianData = data.student.parent_guardians.filter(
+        (props) => props?.type.toLowerCase() === "g"
+      );
+      if (guardianData.length !== 0) {
+        return `${guardianData[0]?.first_name} ${guardianData[0]?.middle_name} ${guardianData[0]?.last_name}`;
+      }
+      return "No Record";
+    }
+  };
   const additionalData: IadditionalData = {
-    addressString: "shouldFetch",
-    parentName: "shouldFetch",
+    addressString:
+      data.student?.address?.province &&
+      data.student?.address?.zip &&
+      data.student?.address?.city &&
+      data.student?.address?.barangay &&
+      data.student?.address?.region
+        ? `${data.student?.address?.no} ${data.student?.address?.street} ${data.student?.address?.subdiv} ${data.student?.address?.barangay}, ${data.student?.address?.city}, ${data.student?.address?.province}, ${data.student?.address?.region}, ${data.student?.address?.zip} `
+        : "No Record",
+    parentName: generateParentName(),
   };
 
-  const content = generateContentArray(studentData, year_level, additionalData);
+  const content = generateContentArray(data, year_level, additionalData);
 
   const headerArea = (
     <>
@@ -97,7 +134,7 @@ const RegCardPDF: React.FC<{
               ...generateBorder(0, 0, 1, 0),
             }}
           >
-            <Text style={{ fontSize: "14px" }}>{studentData.SID}</Text>
+            <Text style={{ fontSize: "14px" }}>{data.SID}</Text>
           </View>
           <View
             style={{

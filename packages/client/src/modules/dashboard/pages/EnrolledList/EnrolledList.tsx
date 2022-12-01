@@ -1,11 +1,20 @@
-import React, { useEffect, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
+import React, { useEffect, useRef, useState } from "react";
 import { FaEdit, FaRegAddressCard, FaTrash } from "react-icons/fa";
 import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
 import Card, { CardFooter, CardHeader } from "../../../../components/Card";
 import Status from "../../../../components/Status";
+import TableLoading from "../../../../components/Table/Loading";
 import Tooltip from "../../../../components/Tooltip";
 import WarningModal from "../../../../components/WarningModal";
+import {
+  DropEnrollmentRecordDocument,
+  EnrolledRecord,
+  GetEnrolledListDocument,
+  Student,
+} from "../../../../graphQL/generated/graphql";
 import useDashboardRouter from "../../../../hooks/useDashboardRouter";
+import { usePagination } from "../../../../hooks/usePagination";
 import useToggle from "../../../../hooks/useToggle";
 import useStore from "../../../../store/useStore";
 import LegendCard from "./Components/LegendCard";
@@ -15,15 +24,19 @@ import { column, generateSectionYear } from "./helper";
 const EnrolledList: React.FC = ({}) => {
   const { pushRoute } = useDashboardRouter();
   const { status: toggleStatus, toggle } = useToggle(false);
+  const { status: bulkStatus, toggle: bulkToggle } = useToggle(false);
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
+  const [selectedStudent, setSelectedStudent] = useState<
+    Array<{ id: string; name: string }>
+  >([]);
   const { status: regFormModalStatus, toggle: toggleRegFormModalStatus } =
     useToggle(false);
-
+  // const [deletedId, setDeletedId] = useState("");
+  const deletedId = useRef("");
   const {
     student: {
       resetSelectedStudent,
-      enrolledStudentList,
       setSelectedRecord,
       // setSelectedGuardianInfo,
     },
@@ -36,6 +49,25 @@ const EnrolledList: React.FC = ({}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const { handleBack, handleNext, page, itemsPerPage, pageOffset } =
+    usePagination();
+
+  const { data, loading, error } = useQuery(GetEnrolledListDocument, {
+    variables: {
+      limit: itemsPerPage,
+      offset: pageOffset,
+    },
+  });
+
+  const [dropEnrollmentRecord] = useMutation(DropEnrollmentRecordDocument);
+
+  const pageCount = Math.ceil(
+    (data?.getEnrolledList?.length as number) / itemsPerPage
+  );
+
+  const enrolledRecords = data?.getEnrolledList
+    ?.enrolledRecords as Array<EnrolledRecord>;
+
   const sectionArray = year_level.filter(({ value }) => value === selectedYear);
 
   const filterCard = (
@@ -44,24 +76,6 @@ const EnrolledList: React.FC = ({}) => {
       header={<CardHeader title="Filter" />}
       footer={
         <CardFooter
-          left={
-            <div className="flex gap-2">
-              <button
-                className="btn btn-sm btn-primary"
-                onClick={() =>
-                  pushRoute({
-                    title: "Add new student",
-                    route: "enrolledList:add",
-                  })
-                }
-              >
-                Enroll student
-              </button>
-              <button className="btn btn-sm btn-error" disabled={true}>
-                Drop Students
-              </button>
-            </div>
-          }
           right={
             <div className="flex gap-2">
               <button
@@ -133,8 +147,8 @@ const EnrolledList: React.FC = ({}) => {
             >
               <option value="">Select Section</option>
               {sectionArray.length !== 0 &&
-                sectionArray[0].sections?.map(({ title, value }, idx) => (
-                  <option key={idx} value={value}>
+                sectionArray[0].sections?.map(({ title, id }, idx) => (
+                  <option key={idx} value={id}>
                     {title}
                   </option>
                 ))}
@@ -145,7 +159,7 @@ const EnrolledList: React.FC = ({}) => {
     </Card>
   );
 
-  const actionButtons = ({ id }: { id: string }) => (
+  const actionButtons = ({ id, status }: { id: string; status: string }) => (
     <div className="flex gap-2 place-content-center">
       <Tooltip text="Registration card" direction="top">
         <button
@@ -173,104 +187,207 @@ const EnrolledList: React.FC = ({}) => {
         </button>
       </Tooltip>
       <Tooltip text="Drop Student" direction="top">
-        <button className="btn btn-xs btn-error " onClick={() => toggle()}>
+        <button
+          className="btn btn-xs btn-error "
+          onClick={() => {
+            deletedId.current = id;
+            toggle();
+          }}
+          disabled={status === "d"}
+        >
           <FaTrash size="12" />
         </button>
       </Tooltip>
     </div>
   );
 
-  const tableCard = (
-    <Card className="w-full">
-      <div className="overflow-x-auto">
-        <table className="table w-full table-compact table-zebra">
-          <thead>
-            <tr className="text-center">
-              {column.map((name, idx) => (
-                <th key={idx}>{name}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="text-center">
-            {enrolledStudentList.map(
-              (
-                {
-                  SID,
-                  grade_level,
-                  id,
-                  section,
-                  status,
-                  student: {
-                    first_name,
-                    middle_name,
-                    last_name,
-                    email,
-                    contact_number,
-                  },
-                },
-                idx
-              ) => {
-                const { section: sectionString, year } = generateSectionYear(
-                  grade_level,
-                  section,
-                  year_level
-                );
-                return (
-                  <tr key={idx}>
-                    <td>
-                      <input type="checkbox" className="checkbox checkbox-xs" />
-                    </td>
-                    <td>{SID}</td>
-                    <td>{`${first_name} ${middle_name} ${last_name}`}</td>
-                    {/* <td>{birthday}</td> */}
-                    <td>{email}</td>
-                    <td>{contact_number}</td>
-                    <td>{`${year} - ${sectionString}`}</td>
-                    <td>
-                      <Status color={status === "E" ? "green" : "grey"} />
-                    </td>
-                    <td>{actionButtons({ id })}</td>
-                  </tr>
-                );
-              }
-            )}
-          </tbody>
-        </table>
-      </div>
-      <div className="w-full flex justify-end mt-[20px]">
-        <div className="flex gap-3 place-items-center">
-          <span>
-            <FiArrowLeft size="15" />
-          </span>
-          <span className="text-sm">Page 3 out of 24</span>
-          <span>
-            <FiArrowRight size="15" />
-          </span>
-        </div>
-      </div>
-    </Card>
-  );
+  const tableData =
+    enrolledRecords &&
+    enrolledRecords.map(
+      ({ grade_level_id, section_id, id, status, student, SID }, idx) => {
+        const { first_name, middle_name, last_name, contact_number, email } =
+          student as Student;
+        const { section: sectionString, year } = generateSectionYear(
+          grade_level_id,
+          section_id,
+          year_level
+        );
+        return (
+          <tr key={idx}>
+            <td>
+              <input
+                type="checkbox"
+                className="checkbox checkbox-xs"
+                disabled={status === "d"}
+                checked={
+                  selectedStudent.filter(
+                    ({ id: arrID }) => arrID === (id as string)
+                  ).length !== 0
+                }
+                onChange={() => {
+                  if (status !== "d") {
+                    const selectedID = id as string;
+                    if (
+                      selectedStudent.filter(
+                        ({ id: arrID }) => arrID === selectedID
+                      ).length !== 0
+                    ) {
+                      setSelectedStudent((old) => [
+                        ...old.filter(({ id: arrID }) => arrID !== selectedID),
+                      ]);
+                    } else {
+                      setSelectedStudent((old) => [
+                        ...old,
+                        {
+                          id: selectedID,
+                          name: `${first_name} ${middle_name} ${last_name}`,
+                        },
+                      ]);
+                    }
+                  }
+                }}
+              />
+            </td>
+            <td>{SID}</td>
+            <td>{`${first_name} ${middle_name} ${last_name}`}</td>
+            {/* <td>{birthday}</td> */}
+            <td>{email}</td>
+            <td>{contact_number}</td>
+            <td>{`${year} - ${sectionString}`}</td>
+            <td>
+              {status?.toUpperCase() === "NP" && <Status color={"red"} />}
+              {status?.toUpperCase() === "FP" && <Status color={"green"} />}
+              {status?.toUpperCase() === "PP" && <Status color={"yellow"} />}
+              {status?.toUpperCase() === "D" && <Status color={"grey"} />}
+            </td>
+            <td>
+              {actionButtons({
+                id: id as string,
+                status: status ? status : "",
+              })}
+            </td>
+          </tr>
+        );
+      }
+    );
 
   return (
     <>
-      <RegCardModal
-        status={regFormModalStatus}
-        handleClose={() => toggleRegFormModalStatus()}
-        handleProceed={() => toggleRegFormModalStatus()}
-      />
-      <WarningModal
-        status={toggleStatus}
-        handleClose={() => toggle()}
-        handleProceed={() => toggle()}
-      >
-        Are you sure that you want to delete?
-      </WarningModal>
+      {regFormModalStatus && (
+        <RegCardModal
+          status={regFormModalStatus}
+          handleClose={() => toggleRegFormModalStatus()}
+          handleProceed={() => toggleRegFormModalStatus()}
+        />
+      )}
+      {toggleStatus && (
+        <WarningModal
+          status={toggleStatus}
+          handleClose={() => toggle()}
+          handleProceed={() => {
+            if (deletedId.current) {
+              dropEnrollmentRecord({
+                variables: { input: [deletedId.current] },
+                onCompleted: () => {
+                  toggle();
+                  deletedId.current = "";
+                  setSelectedStudent([]);
+                },
+              });
+            }
+          }}
+        >
+          Are you sure that you want to delete?
+        </WarningModal>
+      )}
+      {bulkStatus && (
+        <WarningModal
+          status={bulkStatus}
+          handleClose={() => bulkToggle()}
+          handleProceed={() => {
+            if (selectedStudent.length !== 0) {
+              dropEnrollmentRecord({
+                variables: { input: [...selectedStudent.map(({ id }) => id)] },
+                onCompleted: () => {
+                  console.log("success");
+                  setSelectedStudent([]);
+                  bulkToggle();
+                },
+              });
+            }
+          }}
+        >
+          Are you sure that you want to drop the following record?
+          <ul className=" text-sm list-disc pl-6">
+            {selectedStudent.map(({ name }, idx) => (
+              <li key={idx}>{name}</li>
+            ))}
+          </ul>
+        </WarningModal>
+      )}
       <div className="flex flex-col gap-[10px]">
         <div className="flex gap-[10px] flex-col xl:flex-row">
           {filterCard}
           <LegendCard />
         </div>
-        {tableCard}
+
+        <Card className="w-full">
+          <div className="w-full flex justify-between mb-[20px]">
+            <div className="flex gap-5">
+              <button
+                className="btn btn-sm btn-info"
+                onClick={() =>
+                  pushRoute({
+                    title: "Add new student",
+                    route: "enrolledList:add",
+                  })
+                }
+              >
+                Enroll student
+              </button>
+              <button
+                className="btn btn-sm btn-error"
+                disabled={selectedStudent.length === 0}
+                onClick={() => bulkToggle()}
+              >
+                Drop Students
+              </button>
+            </div>
+            <div className="flex gap-3 place-items-center">
+              <span>
+                <FiArrowLeft size="15" onClick={() => handleBack()} />
+              </span>
+              <span className="text-sm">
+                Page {page} out of {pageCount}{" "}
+              </span>
+              <span>
+                <FiArrowRight size="15" onClick={() => handleNext(pageCount)} />
+              </span>
+            </div>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="table w-full table-compact table-zebra">
+              <thead>
+                <tr className="text-center">
+                  {column.map((name, idx) => (
+                    <th key={idx}>{name}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="text-center">
+                {loading ? <TableLoading>loading</TableLoading> : tableData}
+                {/* {data?.getEmployees?.length === 0 ? (
+              <TableLoading>No data found</TableLoading>
+            ) : null} */}
+                {error && (
+                  <TableLoading>
+                    Something went wrong fetching the table
+                  </TableLoading>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </Card>
       </div>
     </>
   );

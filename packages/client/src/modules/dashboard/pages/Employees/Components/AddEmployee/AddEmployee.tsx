@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import Card, {
   CardFooter,
   CardHeader,
@@ -23,6 +23,7 @@ const AddEmployee: React.FC = ({}) => {
   } = useStore();
 
   const { pushRoute } = useDashboardRouter();
+  const [serverError, setServerError] = useState("");
 
   const [addEmployee, { loading }] = useMutation(AddEmployeeDocument, {
     refetchQueries: [
@@ -53,6 +54,9 @@ const AddEmployee: React.FC = ({}) => {
     onCompleted: () => {
       pushRoute({ title: "employees", route: "employees" }, true);
     },
+    onError: (error) => {
+      setServerError(error.message);
+    },
   });
 
   const formik = useFormik<EmployeeInput>({
@@ -80,7 +84,14 @@ const AddEmployee: React.FC = ({}) => {
   const cardFooter = (
     <CardFooter
       right={
-        <div className="flex gap-2">
+        <div className="flex gap-5">
+          {serverError && (
+            <>
+              <p className="text-red-500 text-sm flex place-items-center capitalize">
+                {serverError}
+              </p>
+            </>
+          )}
           <button
             className={joinClass(`btn btn-sm`, "btn-success")}
             type="submit"

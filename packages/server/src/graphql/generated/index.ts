@@ -66,13 +66,14 @@ export type EmployeeProfileInput = {
   middle_name?: InputMaybe<Scalars['String']>;
 };
 
-export type EnrolledRecords = {
-  __typename?: 'EnrolledRecords';
+export type EnrolledRecord = {
+  __typename?: 'EnrolledRecord';
+  SID?: Maybe<Scalars['String']>;
   SY: Scalars['String'];
   grade_level_id: Scalars['String'];
   id?: Maybe<Scalars['String']>;
-  payment_status?: Maybe<Scalars['String']>;
   section_id: Scalars['String'];
+  status?: Maybe<Scalars['String']>;
   student?: Maybe<Student>;
 };
 
@@ -86,19 +87,27 @@ export type GlobalVars = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addEditSection?: Maybe<Section>;
   addEmployee?: Maybe<Employee>;
   addStudent?: Maybe<Student>;
   auth?: Maybe<AuthResponse>;
   changeEmployeePassword?: Maybe<Employee>;
   changeMyPassword?: Maybe<Employee>;
-  disableEmployee?: Maybe<Scalars['String']>;
-  enableEmployee?: Maybe<Scalars['String']>;
+  deleteSection?: Maybe<Scalars['String']>;
+  disableEmployee?: Maybe<Employee>;
+  dropEnrollmentRecord?: Maybe<Array<Maybe<EnrolledRecord>>>;
+  enableEmployee?: Maybe<Employee>;
   resetEmployeePassword?: Maybe<Employee>;
   updateStudentAcademicRecords?: Maybe<Student>;
   updateStudentAddressInfo?: Maybe<Student>;
   updateStudentBasicInfo?: Maybe<Student>;
   updateStudentParentInfo?: Maybe<Student>;
   updateStudentRequirementInfo?: Maybe<Student>;
+};
+
+
+export type MutationAddEditSectionArgs = {
+  input: SectionInput;
 };
 
 
@@ -128,8 +137,18 @@ export type MutationChangeMyPasswordArgs = {
 };
 
 
+export type MutationDeleteSectionArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDisableEmployeeArgs = {
   employee_id: Scalars['String'];
+};
+
+
+export type MutationDropEnrollmentRecordArgs = {
+  input?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 
@@ -179,10 +198,14 @@ export type Query = {
   getAuditTrails: GetAuditTrailsResponse;
   getEmployee?: Maybe<Employee>;
   getEmployees: GetEmployeesResponse;
+  getEnrolledList?: Maybe<GetEnrolledListResponse>;
+  getEnrollmentRecord: EnrolledRecord;
   getGlobalVars?: Maybe<GetGlobalVarsResponse>;
   getMe?: Maybe<Employee>;
+  getSections?: Maybe<Array<Maybe<Section>>>;
   getStudent?: Maybe<Student>;
   getStudents?: Maybe<GetStudentsResponse>;
+  getYearLevelSections?: Maybe<Array<Maybe<YearLevelSection>>>;
   meow?: Maybe<Scalars['String']>;
   test?: Maybe<Scalars['String']>;
 };
@@ -215,6 +238,23 @@ export type QueryGetEmployeesArgs = {
 };
 
 
+export type QueryGetEnrolledListArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  search?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryGetEnrollmentRecordArgs = {
+  EID: Scalars['String'];
+};
+
+
+export type QueryGetSectionsArgs = {
+  yearLevel: Scalars['String'];
+};
+
+
 export type QueryGetStudentArgs = {
   SID: Scalars['String'];
 };
@@ -233,6 +273,12 @@ export type Section = {
   year_level: Scalars['String'];
 };
 
+export type SectionInput = {
+  id?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  year_level: Scalars['String'];
+};
+
 export type Student = {
   __typename?: 'Student';
   LRN: Scalars['String'];
@@ -240,7 +286,7 @@ export type Student = {
   birthday?: Maybe<Scalars['String']>;
   contact_number?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  enrollment_records?: Maybe<Array<Maybe<EnrolledRecords>>>;
+  enrollment_records?: Maybe<Array<Maybe<EnrolledRecord>>>;
   first_name: Scalars['String'];
   gender: Scalars['String'];
   id?: Maybe<Scalars['String']>;
@@ -386,6 +432,12 @@ export type GetEmployeesResponse = {
   length?: Maybe<Scalars['Int']>;
 };
 
+export type GetEnrolledListResponse = {
+  __typename?: 'getEnrolledListResponse';
+  enrolledRecords?: Maybe<Array<Maybe<EnrolledRecord>>>;
+  length?: Maybe<Scalars['Int']>;
+};
+
 export type GetGlobalVarsResponse = {
   __typename?: 'getGlobalVarsResponse';
   audit_trail_types: Array<Maybe<Scalars['String']>>;
@@ -412,6 +464,14 @@ export type UpdateStudentParentInfo = {
   father?: InputMaybe<StudentParentGuardianInput>;
   guardian?: InputMaybe<StudentParentGuardianInput>;
   mother?: InputMaybe<StudentParentGuardianInput>;
+};
+
+export type YearLevelSection = {
+  __typename?: 'yearLevelSection';
+  id?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  sections?: Maybe<Array<Maybe<Section>>>;
+  value: Scalars['String'];
 };
 
 
@@ -491,12 +551,13 @@ export type ResolversTypes = {
   EmployeeInput: EmployeeInput;
   EmployeeProfile: ResolverTypeWrapper<EmployeeProfile>;
   EmployeeProfileInput: EmployeeProfileInput;
-  EnrolledRecords: ResolverTypeWrapper<EnrolledRecords>;
+  EnrolledRecord: ResolverTypeWrapper<EnrolledRecord>;
   GlobalVars: ResolverTypeWrapper<GlobalVars>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   Section: ResolverTypeWrapper<Section>;
+  SectionInput: SectionInput;
   String: ResolverTypeWrapper<Scalars['String']>;
   Student: ResolverTypeWrapper<Student>;
   StudentAddress: ResolverTypeWrapper<StudentAddress>;
@@ -514,10 +575,12 @@ export type ResolversTypes = {
   employeesFilter: EmployeesFilter;
   getAuditTrailsResponse: ResolverTypeWrapper<GetAuditTrailsResponse>;
   getEmployeesResponse: ResolverTypeWrapper<GetEmployeesResponse>;
+  getEnrolledListResponse: ResolverTypeWrapper<GetEnrolledListResponse>;
   getGlobalVarsResponse: ResolverTypeWrapper<GetGlobalVarsResponse>;
   getStudentsResponse: ResolverTypeWrapper<GetStudentsResponse>;
   updateStudentBasicInfoInput: UpdateStudentBasicInfoInput;
   updateStudentParentInfo: UpdateStudentParentInfo;
+  yearLevelSection: ResolverTypeWrapper<YearLevelSection>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -530,12 +593,13 @@ export type ResolversParentTypes = {
   EmployeeInput: EmployeeInput;
   EmployeeProfile: EmployeeProfile;
   EmployeeProfileInput: EmployeeProfileInput;
-  EnrolledRecords: EnrolledRecords;
+  EnrolledRecord: EnrolledRecord;
   GlobalVars: GlobalVars;
   Int: Scalars['Int'];
   Mutation: {};
   Query: {};
   Section: Section;
+  SectionInput: SectionInput;
   String: Scalars['String'];
   Student: Student;
   StudentAddress: StudentAddress;
@@ -553,10 +617,12 @@ export type ResolversParentTypes = {
   employeesFilter: EmployeesFilter;
   getAuditTrailsResponse: GetAuditTrailsResponse;
   getEmployeesResponse: GetEmployeesResponse;
+  getEnrolledListResponse: GetEnrolledListResponse;
   getGlobalVarsResponse: GetGlobalVarsResponse;
   getStudentsResponse: GetStudentsResponse;
   updateStudentBasicInfoInput: UpdateStudentBasicInfoInput;
   updateStudentParentInfo: UpdateStudentParentInfo;
+  yearLevelSection: YearLevelSection;
 };
 
 export type AuditTrailResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuditTrail'] = ResolversParentTypes['AuditTrail']> = {
@@ -593,12 +659,13 @@ export type EmployeeProfileResolvers<ContextType = any, ParentType extends Resol
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type EnrolledRecordsResolvers<ContextType = any, ParentType extends ResolversParentTypes['EnrolledRecords'] = ResolversParentTypes['EnrolledRecords']> = {
+export type EnrolledRecordResolvers<ContextType = any, ParentType extends ResolversParentTypes['EnrolledRecord'] = ResolversParentTypes['EnrolledRecord']> = {
+  SID?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   SY?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   grade_level_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  payment_status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   section_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   student?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -612,13 +679,16 @@ export type GlobalVarsResolvers<ContextType = any, ParentType extends ResolversP
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  addEditSection?: Resolver<Maybe<ResolversTypes['Section']>, ParentType, ContextType, RequireFields<MutationAddEditSectionArgs, 'input'>>;
   addEmployee?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<MutationAddEmployeeArgs, 'input'>>;
   addStudent?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<MutationAddStudentArgs, 'input'>>;
   auth?: Resolver<Maybe<ResolversTypes['AuthResponse']>, ParentType, ContextType, RequireFields<MutationAuthArgs, 'input'>>;
   changeEmployeePassword?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<MutationChangeEmployeePasswordArgs, 'employee_id' | 'password'>>;
   changeMyPassword?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<MutationChangeMyPasswordArgs, 'password'>>;
-  disableEmployee?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationDisableEmployeeArgs, 'employee_id'>>;
-  enableEmployee?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationEnableEmployeeArgs, 'employee_id'>>;
+  deleteSection?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationDeleteSectionArgs, 'id'>>;
+  disableEmployee?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<MutationDisableEmployeeArgs, 'employee_id'>>;
+  dropEnrollmentRecord?: Resolver<Maybe<Array<Maybe<ResolversTypes['EnrolledRecord']>>>, ParentType, ContextType, Partial<MutationDropEnrollmentRecordArgs>>;
+  enableEmployee?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<MutationEnableEmployeeArgs, 'employee_id'>>;
   resetEmployeePassword?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<MutationResetEmployeePasswordArgs, 'employee_id' | 'password'>>;
   updateStudentAcademicRecords?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<MutationUpdateStudentAcademicRecordsArgs, 'ID' | 'input'>>;
   updateStudentAddressInfo?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<MutationUpdateStudentAddressInfoArgs, 'ID' | 'input'>>;
@@ -632,10 +702,14 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getAuditTrails?: Resolver<ResolversTypes['getAuditTrailsResponse'], ParentType, ContextType, Partial<QueryGetAuditTrailsArgs>>;
   getEmployee?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<QueryGetEmployeeArgs, 'employee_id'>>;
   getEmployees?: Resolver<ResolversTypes['getEmployeesResponse'], ParentType, ContextType, Partial<QueryGetEmployeesArgs>>;
+  getEnrolledList?: Resolver<Maybe<ResolversTypes['getEnrolledListResponse']>, ParentType, ContextType, Partial<QueryGetEnrolledListArgs>>;
+  getEnrollmentRecord?: Resolver<ResolversTypes['EnrolledRecord'], ParentType, ContextType, RequireFields<QueryGetEnrollmentRecordArgs, 'EID'>>;
   getGlobalVars?: Resolver<Maybe<ResolversTypes['getGlobalVarsResponse']>, ParentType, ContextType>;
   getMe?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType>;
+  getSections?: Resolver<Maybe<Array<Maybe<ResolversTypes['Section']>>>, ParentType, ContextType, RequireFields<QueryGetSectionsArgs, 'yearLevel'>>;
   getStudent?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<QueryGetStudentArgs, 'SID'>>;
   getStudents?: Resolver<Maybe<ResolversTypes['getStudentsResponse']>, ParentType, ContextType, Partial<QueryGetStudentsArgs>>;
+  getYearLevelSections?: Resolver<Maybe<Array<Maybe<ResolversTypes['yearLevelSection']>>>, ParentType, ContextType>;
   meow?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   test?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
@@ -653,7 +727,7 @@ export type StudentResolvers<ContextType = any, ParentType extends ResolversPare
   birthday?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   contact_number?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  enrollment_records?: Resolver<Maybe<Array<Maybe<ResolversTypes['EnrolledRecords']>>>, ParentType, ContextType>;
+  enrollment_records?: Resolver<Maybe<Array<Maybe<ResolversTypes['EnrolledRecord']>>>, ParentType, ContextType>;
   first_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   gender?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -733,6 +807,12 @@ export type GetEmployeesResponseResolvers<ContextType = any, ParentType extends 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type GetEnrolledListResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['getEnrolledListResponse'] = ResolversParentTypes['getEnrolledListResponse']> = {
+  enrolledRecords?: Resolver<Maybe<Array<Maybe<ResolversTypes['EnrolledRecord']>>>, ParentType, ContextType>;
+  length?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type GetGlobalVarsResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['getGlobalVarsResponse'] = ResolversParentTypes['getGlobalVarsResponse']> = {
   audit_trail_types?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>;
   school_year?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -745,12 +825,20 @@ export type GetStudentsResponseResolvers<ContextType = any, ParentType extends R
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type YearLevelSectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['yearLevelSection'] = ResolversParentTypes['yearLevelSection']> = {
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  sections?: Resolver<Maybe<Array<Maybe<ResolversTypes['Section']>>>, ParentType, ContextType>;
+  value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = any> = {
   AuditTrail?: AuditTrailResolvers<ContextType>;
   AuthResponse?: AuthResponseResolvers<ContextType>;
   Employee?: EmployeeResolvers<ContextType>;
   EmployeeProfile?: EmployeeProfileResolvers<ContextType>;
-  EnrolledRecords?: EnrolledRecordsResolvers<ContextType>;
+  EnrolledRecord?: EnrolledRecordResolvers<ContextType>;
   GlobalVars?: GlobalVarsResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
@@ -763,7 +851,9 @@ export type Resolvers<ContextType = any> = {
   StudentTransferRecord?: StudentTransferRecordResolvers<ContextType>;
   getAuditTrailsResponse?: GetAuditTrailsResponseResolvers<ContextType>;
   getEmployeesResponse?: GetEmployeesResponseResolvers<ContextType>;
+  getEnrolledListResponse?: GetEnrolledListResponseResolvers<ContextType>;
   getGlobalVarsResponse?: GetGlobalVarsResponseResolvers<ContextType>;
   getStudentsResponse?: GetStudentsResponseResolvers<ContextType>;
+  yearLevelSection?: YearLevelSectionResolvers<ContextType>;
 };
 

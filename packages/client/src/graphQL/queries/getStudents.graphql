@@ -2,7 +2,7 @@ query getStudents($limit: Int, $search: String, $offset: Int) {
   getStudents(limit: $limit, search: $search, offset: $offset) {
     length
     students {
-      ...StudentFragment
+      ...Student
     }
   }
 }

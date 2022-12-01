@@ -24,7 +24,7 @@ export const generateSectionYear = (
   }
   const yearLevel = getYearLevelArr[0];
   const getSectionArr = yearLevel.sections?.filter(
-    ({ value }) => value === sectionCode
+    ({ id }) => id === sectionCode
   );
   if (!getSectionArr || getSectionArr?.length === 0) {
     return { year: yearLevel.title, section: "" };
