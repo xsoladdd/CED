@@ -14,6 +14,7 @@ import AcademicRecordCard from "./Components/AcademicRecordCard";
 import AddressCard from "./Components/AddressCard";
 import BasicInfoCard from "./Components/BasicInfoCard";
 import EnrollmentInfoCard from "./Components/EnrollmentInfoCard";
+import EnrollmentRecordCard from "./Components/EnrollmentRecordCard";
 import GuardianCard from "./Components/GuardianCard";
 import RequirementCard from "./Components/RequirementCard";
 
@@ -67,6 +68,8 @@ const StudentDetails: React.FC = ({}) => {
             setFetchStatus("1");
           }
         },
+        notifyOnNetworkStatusChange: true,
+        fetchPolicy: "network-only",
       });
       setFetchStatus("1");
       return;
@@ -84,6 +87,7 @@ const StudentDetails: React.FC = ({}) => {
   return (
     <div className="flex flex-col gap-5">
       {selectedRecord.type === "enrollment-record" && <EnrollmentInfoCard />}
+      {selectedRecord.type === "student-record" && <EnrollmentRecordCard />}
       <BasicInfoCard />
       <AddressCard />
       <GuardianCard />

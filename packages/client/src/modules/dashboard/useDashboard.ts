@@ -62,6 +62,7 @@ const useDashboard = () => {
                     title: sectionVars?.name ? sectionVars?.name : "",
                     id: sectionVars?.id ? sectionVars?.id : "",
                     year_level: vars?.value,
+                    status: true,
                   }))
                 : [],
             }));

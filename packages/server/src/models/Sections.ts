@@ -11,4 +11,7 @@ export class Sections extends BasicColumns {
 
   @Column()
   year_level: string;
+
+  @Column({ default: true })
+  status: boolean;
 }

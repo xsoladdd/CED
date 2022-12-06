@@ -1,5 +1,5 @@
 import { GraphQLError } from "graphql";
-import { In } from "typeorm";
+import { In, Not } from "typeorm";
 import { conn } from "../../../config/db";
 import { GlobalVars } from "../../../models/GlobalVars";
 import { EnrolledRecords } from "../../../models/Student/EnrolledRecords";
@@ -143,6 +143,50 @@ export const studentRersolver: Resolvers = {
           where: {
             SY: SY?.value,
           },
+          relations: {
+            student: {
+              transfer_records: true,
+              enrollment_records: true,
+              address: true,
+              parent_guardians: true,
+              school_records: true,
+            },
+          },
+          skip: offset ? offset : 0,
+          take: limit ? limit : 10,
+          order: {
+            created_at: "DESC",
+          },
+        });
+        const length = await enrolledRepo.count({
+          where: {
+            SY: SY?.value,
+          },
+        });
+
+        return { enrolledRecords, length };
+      } catch (error) {
+        throw new GraphQLError(error, {
+          extensions: {
+            code: errorType.SERVER_ERROR,
+          },
+        });
+      }
+    },
+    getEnrolledArchiveList: async (_, { limit, offset, filter }, ctx) => {
+      try {
+        authorized(ctx);
+
+        const enrolledRepo = conn.getRepository(EnrolledRecords);
+        const globalVarsRepo = conn.getRepository(GlobalVars);
+        const SY = await globalVarsRepo.findOne({
+          where: { identifier: globalVarsType.school_year },
+        });
+        const enrolledRecords = await enrolledRepo.find({
+          where: [
+            { SY: Not(SY?.value as string) },
+            { SY: filter.SY ? filter.SY : undefined },
+          ],
           relations: {
             student: {
               transfer_records: true,
@@ -699,6 +743,45 @@ export const studentRersolver: Resolvers = {
         }));
         const savedRecords = await enrollmentRecordRepo.save(refactorRecords);
         return savedRecords;
+      } catch (error) {
+        throw new GraphQLError(error, {
+          extensions: {
+            code: errorType.SERVER_ERROR,
+          },
+        });
+      }
+    },
+    updateStudentEnrollmentInfo: async (_, { EID, input }, ctx) => {
+      try {
+        authorized(ctx);
+        const enrollmentRecordRepo = conn.getRepository(EnrolledRecords);
+        const enrollmentRecord = await enrollmentRecordRepo.findOne({
+          where: {
+            id: EID,
+          },
+          relations: {
+            student: {
+              enrollment_records: true,
+              parent_guardians: true,
+              transfer_records: true,
+              school_records: true,
+              requirements: true,
+              address: true,
+            },
+          },
+        });
+        if (!enrollmentRecord) {
+          throw new GraphQLError("Invalid Student ID", {
+            extensions: {
+              code: errorType.SERVER_ERROR,
+            },
+          });
+        }
+
+        enrollmentRecord.section_id = input.section_id;
+        enrollmentRecord.status = input.status;
+        const savedRecord = await enrollmentRecordRepo.save(enrollmentRecord);
+        return savedRecord;
       } catch (error) {
         throw new GraphQLError(error, {
           extensions: {

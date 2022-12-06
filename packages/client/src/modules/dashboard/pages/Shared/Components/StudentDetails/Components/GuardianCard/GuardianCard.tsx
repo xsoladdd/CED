@@ -17,6 +17,7 @@ const GuardianCard: React.FC = ({}) => {
   const {
     student: {
       selectedStudent: { parent_guardians, id },
+      checkStudentEditStatus,
     },
   } = useStore();
 
@@ -114,33 +115,37 @@ const GuardianCard: React.FC = ({}) => {
         title={`Parent/Guardian Information`}
         subTitle={isEditOn ? "Edit" : ""}
       />
-      {!isEditOn ? (
-        <div className="flex gap-2">
-          <button
-            className="btn btn-xs btn-info"
-            onClick={(e) => {
-              e.preventDefault();
-              toggle();
-            }}
-          >
-            <FiEdit />
-          </button>
-        </div>
-      ) : (
-        <div className="flex gap-2">
-          <button className="btn btn-xs btn-success" type="submit">
-            <FiSave />
-          </button>
-          <button
-            className="btn btn-xs btn-error"
-            onClick={(e) => {
-              e.preventDefault();
-              toggleModal();
-            }}
-          >
-            <FiX />
-          </button>
-        </div>
+      {checkStudentEditStatus && (
+        <>
+          {!isEditOn ? (
+            <div className="flex gap-2">
+              <button
+                className="btn btn-xs btn-info"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggle();
+                }}
+              >
+                <FiEdit />
+              </button>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <button className="btn btn-xs btn-success" type="submit">
+                <FiSave />
+              </button>
+              <button
+                className="btn btn-xs btn-error"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleModal();
+                }}
+              >
+                <FiX />
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

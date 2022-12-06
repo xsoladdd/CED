@@ -64,6 +64,7 @@ export const globalSlice: StoreSlice<IglobalSlice> = (set) => ({
             id: params.id,
             title: params.title,
             year_level: params.year_level,
+            status: params.status,
           });
         });
         // console.log(`should be new value`, year_levels);
@@ -74,16 +75,15 @@ export const globalSlice: StoreSlice<IglobalSlice> = (set) => ({
           },
         };
       }),
-    deleteSection: (id, yearLevel) =>
+    deleteSection: (newSectionArray: Array<ISection>, yearLevel) =>
       set(({ globalVars }: IglobalSlice): IglobalSlice => {
         // Get index of year level
         const selectedYearLevel = globalVars.year_level.findIndex(
           (val) => val.value === yearLevel
         );
+
         const year_levels = produce(globalVars.year_level, (draft) => {
-          draft[selectedYearLevel].sections = globalVars.year_level[
-            selectedYearLevel
-          ].sections?.filter((val) => val.id !== id);
+          draft[selectedYearLevel].sections = newSectionArray;
         });
 
         return {

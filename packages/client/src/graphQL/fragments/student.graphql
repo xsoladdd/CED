@@ -11,6 +11,7 @@ fragment Student on Student {
   enrollment_records {
     id
     SY
+    SID
     grade_level_id
     section_id
     status

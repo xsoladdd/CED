@@ -18,10 +18,19 @@ input updateStudentBasicInfoInput {
   LRN: String!
 }
 
+input updateStudentEnrollmentInfo {
+  section_id: String!
+  status: String!
+}
+
 input updateStudentParentInfo {
   mother: StudentParentGuardianInput
   father: StudentParentGuardianInput
   guardian: StudentParentGuardianInput
+}
+
+input getEnrolledArchiveListFilter {
+  SY: String
 }
 
 type Query {
@@ -33,6 +42,12 @@ type Query {
     offset: Int
     search: String
   ): getEnrolledListResponse
+  getEnrolledArchiveList(
+    limit: Int!
+    offset: Int!
+    search: String
+    filter: getEnrolledArchiveListFilter!
+  ): getEnrolledListResponse
   checkUniqueLRN(LRN: String!, currentLRN: String): Boolean!
 }
 
@@ -41,6 +56,10 @@ type Mutation {
     input: updateStudentBasicInfoInput!
     ID: String!
   ): Student
+  updateStudentEnrollmentInfo(
+    input: updateStudentEnrollmentInfo!
+    EID: String!
+  ): EnrolledRecord
   updateStudentAddressInfo(input: StudentAddressInput!, ID: String!): Student
   updateStudentRequirementInfo(
     input: StudentRequirementsInput!

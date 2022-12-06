@@ -22,6 +22,7 @@ const AcademicRecordCard: React.FC = ({}) => {
   const {
     student: {
       selectedStudent: { school_records, id },
+      checkStudentEditStatus,
     },
   } = useStore();
 
@@ -88,61 +89,42 @@ const AcademicRecordCard: React.FC = ({}) => {
   const header = (
     <div className="w-full flex justify-between ">
       <CardHeader title={`Academic Record`} subTitle={isEditOn ? "Edit" : ""} />
-      {isEditOn ? (
-        <div className="flex gap-2">
-          <button
-            className="btn btn-xs btn-success"
-            type="button"
-            onClick={() => saveModalStatusToggle()}
-          >
-            <FiSave />
-          </button>
-          <button
-            className="btn btn-xs btn-error"
-            type="button"
-            onClick={() => {
-              toggleModal();
-            }}
-          >
-            <FiX />
-          </button>
-        </div>
-      ) : (
-        <div className="flex gap-2">
-          <button
-            className="btn btn-xs btn-info"
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              // formik.setValues([
-              //   ...(school_records &&
-              //     school_records.length !== 0 &&
-              //     school_records.map((props) => ({
-              //       academicLevel: props?.sy_graduated,
-              //       school: props?.school_name,
-              //       schoolYear: props?.sy_graduated,
-              //       isActive: true,
-              //       isActive: true,
-              //     }))),
-              //   {
-              //     academicLevel: "Junior High",
-              //     school: "",
-              //     schoolYear: "",
-              //     isActive: false,
-              //   },
-              //   {
-              //     academicLevel: "Junior High",
-              //     school: "",
-              //     schoolYear: "",
-              //     isActive: false,
-              //   },
-              // ]);
-              toggle();
-            }}
-          >
-            <FiEdit />
-          </button>
-        </div>
+      {checkStudentEditStatus && (
+        <>
+          {isEditOn ? (
+            <div className="flex gap-2">
+              <button
+                className="btn btn-xs btn-success"
+                type="button"
+                onClick={() => saveModalStatusToggle()}
+              >
+                <FiSave />
+              </button>
+              <button
+                className="btn btn-xs btn-error"
+                type="button"
+                onClick={() => {
+                  toggleModal();
+                }}
+              >
+                <FiX />
+              </button>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <button
+                className="btn btn-xs btn-info"
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggle();
+                }}
+              >
+                <FiEdit />
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

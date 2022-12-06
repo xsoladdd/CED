@@ -1,0 +1,6 @@
+query getSchoolYears {
+  getSchoolYears {
+    name
+    isActive
+  }
+}

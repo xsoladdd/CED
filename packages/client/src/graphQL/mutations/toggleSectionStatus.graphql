@@ -1,0 +1,8 @@
+mutation ToggleSectionStatus($deleteSectionId: String!) {
+  toggleSectionStatus(id: $deleteSectionId) {
+    id
+    name
+    year_level
+    status
+  }
+}

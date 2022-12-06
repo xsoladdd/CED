@@ -51,12 +51,14 @@ const AddEditModal: React.FC<{
               id: ret.addEditSection?.id as string,
               title: ret.addEditSection?.name as string,
               year_level: ret.addEditSection?.year_level as string,
+              status: true,
             });
           } else {
             editNewSection({
               id: ret.addEditSection?.id as string,
               title: ret.addEditSection?.name as string,
               year_level: ret.addEditSection?.year_level as string,
+              status: true,
             });
           }
           if (handleClose) handleClose();

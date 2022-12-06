@@ -1,3 +1,5 @@
+import { useLazyQuery } from "@apollo/client";
+import { format } from "date-fns";
 import React, { useRef } from "react";
 import { FaSyncAlt, FaUserAlt, FaUserAltSlash } from "react-icons/fa";
 import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
@@ -6,14 +8,19 @@ import Status from "../../../../components/Status";
 import TableLoading from "../../../../components/Table/Loading";
 import Tooltip from "../../../../components/Tooltip";
 import WarningModal from "../../../../components/WarningModal";
-import { Employee } from "../../../../graphQL/generated/graphql";
+import {
+  Employee,
+  GetEmployeesDocument,
+} from "../../../../graphQL/generated/graphql";
 import useDashboardRouter from "../../../../hooks/useDashboardRouter";
 import useToggle from "../../../../hooks/useToggle";
 import useStore from "../../../../store/useStore";
+import { exportExcel } from "../../../../utils/exportToExcel";
 import { joinClass } from "../../../../utils/joinClass";
 import LegendCard from "./Components/LegendCard";
 import { column, generateRoleTitle } from "./helper";
 import { useEmployee } from "./useEmployee";
+import _ from "lodash";
 
 const Employees: React.FC = ({}) => {
   const { pushRoute } = useDashboardRouter();
@@ -48,6 +55,42 @@ const Employees: React.FC = ({}) => {
   const {
     globalVars: { roles },
   } = useStore();
+
+  const [getLazyEmployeesDocument] = useLazyQuery(GetEmployeesDocument, {});
+
+  const handleExcelExport = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+
+    getLazyEmployeesDocument({
+      onCompleted: ({ getEmployees }) => {
+        const timeStamp = format(new Date(), "ddMMhhmmss");
+        if (getEmployees && getEmployees.employees) {
+          exportExcel(
+            [
+              ...getEmployees.employees.map((props) => {
+                const structuredData = props as Employee;
+                const dataStructured = {
+                  "Employee ID": structuredData.employee_id,
+                  Role: generateRoleTitle(
+                    structuredData?.role as "SA" | "RT" | "BD",
+                    roles
+                  ),
+                  Name: `${structuredData.profile?.first_name} ${structuredData.profile?.middle_name} ${structuredData.profile?.last_name}`,
+                  Email: structuredData.status ? "Activated" : "Deactivated",
+                };
+
+                const trimmedData = _.omitBy(dataStructured, _.isNil);
+                return trimmedData;
+              }),
+            ],
+            `enrolled-list-${timeStamp}`
+          );
+        }
+      },
+    });
+  };
 
   const filterCard = (
     <form
@@ -233,17 +276,26 @@ const Employees: React.FC = ({}) => {
         </div>
         <Card className="w-full">
           <div className="w-full flex justify-between mb-[20px]">
-            <button
-              className="btn btn-sm btn-info"
-              onClick={() =>
-                pushRoute({
-                  title: "Add new employee",
-                  route: "employees:add",
-                })
-              }
-            >
-              Add employee
-            </button>
+            <div className="flex gap-2">
+              <button
+                className="btn btn-sm btn-info"
+                onClick={() =>
+                  pushRoute({
+                    title: "Add new employee",
+                    route: "employees:add",
+                  })
+                }
+              >
+                Add employee
+              </button>
+              <button
+                className="btn btn-sm btn-success"
+                onClick={handleExcelExport}
+                type="button"
+              >
+                Export List
+              </button>
+            </div>
             <div className="flex gap-3 place-items-center">
               <span>
                 <FiArrowLeft size="15" onClick={() => handleBack()} />

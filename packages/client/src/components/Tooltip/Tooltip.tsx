@@ -30,9 +30,16 @@ const Tooltip: React.FC<ITooltipProps> = ({
 
   return (
     <>
-      <div className={joinClass(`tooltip `, twDirectionClass)} data-tip={text}>
-        {children}
-      </div>
+      {text ? (
+        <div
+          className={joinClass(`tooltip `, twDirectionClass)}
+          data-tip={text}
+        >
+          {children}
+        </div>
+      ) : (
+        <>{children}</>
+      )}
     </>
   );
 };

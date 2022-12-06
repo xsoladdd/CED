@@ -1,42 +1,34 @@
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { format } from "date-fns";
 import React, { useEffect, useRef, useState } from "react";
-import { FaEdit, FaRegAddressCard, FaTrash } from "react-icons/fa";
-import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiArrowRight,
+  FiExternalLink,
+  FiSearch,
+} from "react-icons/fi";
 import Card, { CardFooter, CardHeader } from "../../../../components/Card";
 import Status from "../../../../components/Status";
 import TableLoading from "../../../../components/Table/Loading";
 import Tooltip from "../../../../components/Tooltip";
-import WarningModal from "../../../../components/WarningModal";
 import {
-  DropEnrollmentRecordDocument,
   EnrolledRecord,
-  GetEnrolledListDocument,
+  GetEnrolledArchiveListDocument,
   Student,
 } from "../../../../graphQL/generated/graphql";
 import useDashboardRouter from "../../../../hooks/useDashboardRouter";
 import { usePagination } from "../../../../hooks/usePagination";
-import useToggle from "../../../../hooks/useToggle";
 import useStore from "../../../../store/useStore";
 import { exportExcel } from "../../../../utils/exportToExcel";
+import { generateSectionYear } from "../EnrolledList/helper";
 import LegendCard from "./Components/LegendCard";
-import RegCardModal from "./Components/RegCardModal";
-import { column, generateSectionYear } from "./helper";
+import { column } from "./helper";
 import _ from "lodash";
 
-const EnrolledList: React.FC = ({}) => {
+const Archive: React.FC = ({}) => {
   const { pushRoute } = useDashboardRouter();
-  const { status: toggleStatus, toggle } = useToggle(false);
-  const { status: bulkStatus, toggle: bulkToggle } = useToggle(false);
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
-  const [selectedStudent, setSelectedStudent] = useState<
-    Array<{ id: string; name: string }>
-  >([]);
-  const { status: regFormModalStatus, toggle: toggleRegFormModalStatus } =
-    useToggle(false);
-  // const [deletedId, setDeletedId] = useState("");
-  const deletedId = useRef("");
   const {
     student: {
       resetSelectedStudent,
@@ -46,6 +38,7 @@ const EnrolledList: React.FC = ({}) => {
     },
     globalVars: { year_level },
   } = useStore();
+  const SYFilterRef = useRef<HTMLSelectElement>(null);
 
   useEffect(() => {
     resetSelectedStudent();
@@ -56,43 +49,48 @@ const EnrolledList: React.FC = ({}) => {
   const { handleBack, handleNext, page, itemsPerPage, pageOffset } =
     usePagination();
 
-  const { data, loading, error } = useQuery(GetEnrolledListDocument, {
+  const { data, loading, error } = useQuery(GetEnrolledArchiveListDocument, {
     variables: {
       limit: itemsPerPage,
       offset: pageOffset,
+      filter: {
+        SY: SYFilterRef.current !== null ? SYFilterRef.current.value : "",
+      },
     },
   });
 
-  const [dropEnrollmentRecord] = useMutation(DropEnrollmentRecordDocument);
-
   const pageCount = Math.ceil(
-    (data?.getEnrolledList?.length as number) / itemsPerPage
+    (data?.getEnrolledArchiveList?.length as number) / itemsPerPage
   );
 
-  const enrolledRecords = data?.getEnrolledList
+  const enrolledRecords = data?.getEnrolledArchiveList
     ?.enrolledRecords as Array<EnrolledRecord>;
 
   const sectionArray = year_level.filter(({ value }) => value === selectedYear);
 
-  const [getLazyGetEnrolledList] = useLazyQuery(GetEnrolledListDocument, {
-    variables: {
-      limit: 1000,
-      offset: 0,
-    },
-  });
+  const [getLazyEnrolledArchiveList] = useLazyQuery(
+    GetEnrolledArchiveListDocument,
+    {
+      variables: {
+        limit: 1000,
+        offset: 0,
+        filter: {},
+      },
+    }
+  );
 
   const handleExcelExport = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
 
-    getLazyGetEnrolledList({
-      onCompleted: ({ getEnrolledList }) => {
+    getLazyEnrolledArchiveList({
+      onCompleted: ({ getEnrolledArchiveList }) => {
         const timeStamp = format(new Date(), "ddMMhhmmss");
-        if (getEnrolledList && getEnrolledList.enrolledRecords) {
+        if (getEnrolledArchiveList && getEnrolledArchiveList.enrolledRecords) {
           exportExcel(
             [
-              ...getEnrolledList.enrolledRecords.map((props) => {
+              ...getEnrolledArchiveList.enrolledRecords.map((props) => {
                 const structuredData = props as EnrolledRecord;
                 const { section, year } = generateSectionYear(
                   structuredData.grade_level_id,
@@ -100,12 +98,13 @@ const EnrolledList: React.FC = ({}) => {
                   year_level
                 );
                 const dataStructured = {
-                  "School ID": structuredData.SID,
+                  "School Number": structuredData.SID,
                   Name: `${structuredData.student?.first_name} ${structuredData.student?.middle_name} ${structuredData.student?.last_name}`,
                   Email: structuredData.student?.email,
                   "Contact Number": structuredData.student?.contact_number,
-                  "Year - Section": `${year} - ${section}`,
-                  status: structuredData.status,
+                  "Section - Year": `${year} - ${section}`,
+                  Status: structuredData.status,
+                  "School Year": structuredData.SY,
                 };
 
                 const trimmedData = _.omitBy(dataStructured, _.isNil);
@@ -208,44 +207,22 @@ const EnrolledList: React.FC = ({}) => {
     </Card>
   );
 
-  const actionButtons = ({ id, status }: { id: string; status: string }) => (
+  const actionButtons = ({ id }: { id: string; status: string }) => (
     <div className="flex gap-2 place-content-center">
-      <Tooltip text="Registration card" direction="top">
-        <button
-          className="btn btn-xs btn-info "
-          onClick={() => {
-            setSelectedRecord(id, "reg-card");
-            toggleRegFormModalStatus();
-          }}
-        >
-          <FaRegAddressCard size="12" />
-        </button>
-      </Tooltip>
-      <Tooltip text="View/Edit student" direction="top">
+      <Tooltip text="View Enrollment Record" direction="left">
         <button
           className="btn btn-xs btn-success"
           onClick={() => {
             setSelectedRecord(id, "enrollment-record");
-            setCheckStudentEditStatus(true);
+
+            setCheckStudentEditStatus(false);
             pushRoute({
               title: `Student Info `,
               route: "enrolledList:studentDetails",
             });
           }}
         >
-          <FaEdit size="12" />
-        </button>
-      </Tooltip>
-      <Tooltip text="Drop Student" direction="top">
-        <button
-          className="btn btn-xs btn-error "
-          onClick={() => {
-            deletedId.current = id;
-            toggle();
-          }}
-          disabled={status === "d"}
-        >
-          <FaTrash size="12" />
+          <FiExternalLink size="12" />
         </button>
       </Tooltip>
     </div>
@@ -254,7 +231,7 @@ const EnrolledList: React.FC = ({}) => {
   const tableData =
     enrolledRecords &&
     enrolledRecords.map(
-      ({ grade_level_id, section_id, id, status, student, SID }, idx) => {
+      ({ grade_level_id, section_id, id, status, student, SID, SY }, idx) => {
         const { first_name, middle_name, last_name, contact_number, email } =
           student as Student;
         const { section: sectionString, year } = generateSectionYear(
@@ -264,46 +241,13 @@ const EnrolledList: React.FC = ({}) => {
         );
         return (
           <tr key={idx}>
-            <td>
-              <input
-                type="checkbox"
-                className="checkbox checkbox-xs"
-                disabled={status === "d"}
-                checked={
-                  selectedStudent.filter(
-                    ({ id: arrID }) => arrID === (id as string)
-                  ).length !== 0
-                }
-                onChange={() => {
-                  if (status !== "d") {
-                    const selectedID = id as string;
-                    if (
-                      selectedStudent.filter(
-                        ({ id: arrID }) => arrID === selectedID
-                      ).length !== 0
-                    ) {
-                      setSelectedStudent((old) => [
-                        ...old.filter(({ id: arrID }) => arrID !== selectedID),
-                      ]);
-                    } else {
-                      setSelectedStudent((old) => [
-                        ...old,
-                        {
-                          id: selectedID,
-                          name: `${first_name} ${middle_name} ${last_name}`,
-                        },
-                      ]);
-                    }
-                  }
-                }}
-              />
-            </td>
             <td>{SID}</td>
             <td>{`${first_name} ${middle_name} ${last_name}`}</td>
             {/* <td>{birthday}</td> */}
             <td>{email}</td>
             <td>{contact_number}</td>
             <td>{`${year} - ${sectionString}`}</td>
+            <td>{SY}</td>
             <td>
               {status?.toUpperCase() === "NP" && <Status color={"red"} />}
               {status?.toUpperCase() === "FP" && <Status color={"green"} />}
@@ -323,58 +267,6 @@ const EnrolledList: React.FC = ({}) => {
 
   return (
     <>
-      {regFormModalStatus && (
-        <RegCardModal
-          status={regFormModalStatus}
-          handleClose={() => toggleRegFormModalStatus()}
-          handleProceed={() => toggleRegFormModalStatus()}
-        />
-      )}
-      {toggleStatus && (
-        <WarningModal
-          status={toggleStatus}
-          handleClose={() => toggle()}
-          handleProceed={() => {
-            if (deletedId.current) {
-              dropEnrollmentRecord({
-                variables: { input: [deletedId.current] },
-                onCompleted: () => {
-                  toggle();
-                  deletedId.current = "";
-                  setSelectedStudent([]);
-                },
-              });
-            }
-          }}
-        >
-          Are you sure that you want to delete?
-        </WarningModal>
-      )}
-      {bulkStatus && (
-        <WarningModal
-          status={bulkStatus}
-          handleClose={() => bulkToggle()}
-          handleProceed={() => {
-            if (selectedStudent.length !== 0) {
-              dropEnrollmentRecord({
-                variables: { input: [...selectedStudent.map(({ id }) => id)] },
-                onCompleted: () => {
-                  console.log("success");
-                  setSelectedStudent([]);
-                  bulkToggle();
-                },
-              });
-            }
-          }}
-        >
-          Are you sure that you want to drop the following record?
-          <ul className=" text-sm list-disc pl-6">
-            {selectedStudent.map(({ name }, idx) => (
-              <li key={idx}>{name}</li>
-            ))}
-          </ul>
-        </WarningModal>
-      )}
       <div className="flex flex-col gap-[10px]">
         <div className="flex gap-[10px] flex-col xl:flex-row">
           {filterCard}
@@ -384,24 +276,6 @@ const EnrolledList: React.FC = ({}) => {
         <Card className="w-full">
           <div className="w-full flex justify-between mb-[20px]">
             <div className="flex gap-2">
-              <button
-                className="btn btn-sm btn-info"
-                onClick={() =>
-                  pushRoute({
-                    title: "Add new student",
-                    route: "enrolledList:add",
-                  })
-                }
-              >
-                Enroll student
-              </button>
-              <button
-                className="btn btn-sm btn-error"
-                disabled={selectedStudent.length === 0}
-                onClick={() => bulkToggle()}
-              >
-                Drop Students
-              </button>
               <button
                 className="btn btn-sm btn-success"
                 onClick={handleExcelExport}
@@ -433,9 +307,6 @@ const EnrolledList: React.FC = ({}) => {
               </thead>
               <tbody className="text-center">
                 {loading ? <TableLoading>loading</TableLoading> : tableData}
-                {/* {data?.getEmployees?.length === 0 ? (
-              <TableLoading>No data found</TableLoading>
-            ) : null} */}
                 {error && (
                   <TableLoading>
                     Something went wrong fetching the table
@@ -449,4 +320,4 @@ const EnrolledList: React.FC = ({}) => {
     </>
   );
 };
-export default EnrolledList;
+export default Archive;

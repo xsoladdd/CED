@@ -92,6 +92,8 @@ export interface IStudentSlice {
       id: string | undefined;
       type: selectedType;
     };
+    checkStudentEditStatus: boolean;
+    setCheckStudentEditStatus: (status: boolean) => void;
     setSelectedRecord: (id: string, type: selectedType) => void;
     selectedStudent: Student;
     setSelectedStudent: (params: Student) => void;

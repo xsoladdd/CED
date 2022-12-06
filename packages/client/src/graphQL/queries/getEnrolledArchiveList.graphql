@@ -1,0 +1,12 @@
+query GetEnrolledArchiveList(
+  $limit: Int!
+  $offset: Int!
+  $filter: getEnrolledArchiveListFilter!
+) {
+  getEnrolledArchiveList(limit: $limit, offset: $offset, filter: $filter) {
+    length
+    enrolledRecords {
+      ...EnrolledRecord
+    }
+  }
+}

@@ -1,0 +1,9 @@
+query getDashboardCardInfo {
+  getDashboardCardInfo {
+    elem_count
+    pre_elem_count
+    hs_count
+    shs_count
+    total_count
+  }
+}

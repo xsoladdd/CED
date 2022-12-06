@@ -2,6 +2,7 @@ import { GraphQLError } from "graphql";
 import { conn } from "../../../config/db";
 import { GlobalVars } from "../../../models/GlobalVars";
 import { Sections } from "../../../models/Sections";
+import { EnrolledRecords } from "../../../models/Student/EnrolledRecords";
 import { authorized } from "../../../utils/authorized";
 import { errorType } from "../../../utils/errorType";
 import { globalVarsType } from "../../../utils/globalVarsType";
@@ -92,20 +93,60 @@ export const globalVarResolver: Resolvers = {
         });
       }
     },
+
+    getSchoolYears: async (_, __, ctx) => {
+      try {
+        authorized(ctx);
+        const enrollmentRecordRepo = conn.getRepository(EnrolledRecords);
+        const repo = conn.getRepository(GlobalVars);
+        const school_year = await repo.findOne({
+          where: {
+            identifier: globalVarsType.school_year,
+          },
+        });
+        const yearLevelArr = await enrollmentRecordRepo
+          .createQueryBuilder("enrolled_records")
+          .distinctOn(["enrolled_records.SY"])
+          .orderBy("enrolled_records.SY", "DESC")
+          .getMany();
+        const SYArray = [...yearLevelArr.map((props) => props.SY)];
+        return [
+          ...SYArray.map((name) => ({
+            name,
+            isActive: name === school_year?.value,
+          })),
+        ];
+      } catch (error) {
+        throw new GraphQLError(error, {
+          extensions: {
+            code: errorType.SERVER_ERROR,
+          },
+        });
+      }
+    },
   },
   Mutation: {
-    deleteSection: async (_, { id }, ctx) => {
+    toggleSectionStatus: async (_, { id }, ctx) => {
       try {
         authorized(ctx);
         const sectionRepo = conn.getRepository(Sections);
 
-        const deleteSection = await sectionRepo.softDelete({ id });
-
-        console.log(`deleteSection`, deleteSection);
-        if (deleteSection.affected !== 0) {
-          return "Fail";
+        const section = await sectionRepo.findOneBy({ id });
+        if (!section) {
+          throw new GraphQLError("No ID found", {
+            extensions: {
+              code: errorType.SERVER_ERROR,
+            },
+          });
         }
-        return "Success";
+        section.status = !section.status;
+        await sectionRepo.save(section);
+        const sections = await sectionRepo.find({
+          where: {
+            year_level: section.year_level,
+          },
+        });
+        return sections;
       } catch (error) {
         throw new GraphQLError(error, {
           extensions: {
@@ -141,6 +182,34 @@ export const globalVarResolver: Resolvers = {
             year_level: input.year_level,
           });
         }
+      } catch (error) {
+        throw new GraphQLError(error, {
+          extensions: {
+            code: errorType.SERVER_ERROR,
+          },
+        });
+      }
+    },
+    activateSchoolYear: async (_, { SY }, ctx) => {
+      try {
+        authorized(ctx);
+        const globalVarsRepo = conn.getRepository(GlobalVars);
+
+        const school_year = await globalVarsRepo.findOne({
+          where: {
+            identifier: globalVarsType.school_year,
+          },
+        });
+        if (!school_year) {
+          throw new GraphQLError("No school year detected", {
+            extensions: {
+              code: errorType.SERVER_ERROR,
+            },
+          });
+        }
+        school_year.title = SY;
+        school_year.value = SY;
+        return await globalVarsRepo.save(school_year);
       } catch (error) {
         throw new GraphQLError(error, {
           extensions: {

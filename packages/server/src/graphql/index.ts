@@ -1,6 +1,7 @@
 import { readFileSync } from "fs";
 import glob from "glob";
 import { authResolver } from "./resolvers/auth/authResolver";
+import { dashboardResolver } from "./resolvers/dashboard/dashboardResolver";
 import { employeeResolver } from "./resolvers/employee/employeeResolver";
 import { globalVarResolver } from "./resolvers/globalVars/globalVarResolver";
 import { meowResolver } from "./resolvers/meow/meowResolver";
@@ -27,6 +28,7 @@ export const generateTypeDefs = async (): Promise<string> => {
 };
 
 export const resolvers = [
+  dashboardResolver,
   meowResolver,
   authResolver,
   employeeResolver,

@@ -1,0 +1,6 @@
+mutation ActivateSchoolYear($sy: String!) {
+  activateSchoolYear(SY: $sy) {
+    identifier
+    value
+  }
+}

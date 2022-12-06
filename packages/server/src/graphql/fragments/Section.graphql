@@ -2,6 +2,7 @@ type Section {
   id: String
   name: String!
   year_level: String!
+  status: Boolean!
 }
 
 input SectionInput {

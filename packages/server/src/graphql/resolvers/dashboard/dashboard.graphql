@@ -1,0 +1,11 @@
+type getCardInfoResponse {
+  elem_count: Int!
+  hs_count: Int!
+  shs_count: Int!
+  pre_elem_count: Int!
+  total_count: Int!
+}
+
+type Query {
+  getDashboardCardInfo: getCardInfoResponse
+}

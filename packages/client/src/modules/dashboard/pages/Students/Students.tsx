@@ -1,4 +1,5 @@
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { format } from "date-fns";
 import React, { useEffect } from "react";
 import { FaEdit } from "react-icons/fa";
 import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
@@ -13,15 +14,21 @@ import {
 import useDashboardRouter from "../../../../hooks/useDashboardRouter";
 import { usePagination } from "../../../../hooks/usePagination";
 import useStore from "../../../../store/useStore";
+import { exportExcel } from "../../../../utils/exportToExcel";
 import { formatDateReadable } from "../../../../utils/formatDateReadable";
 import LegendCard from "./Components/LegendCard";
 import { column } from "./helper";
+import _ from "lodash";
 
 const Students: React.FC = ({}) => {
   const { pushRoute } = useDashboardRouter();
 
   const {
-    student: { setSelectedRecord, resetSelectedStudent },
+    student: {
+      setSelectedRecord,
+      resetSelectedStudent,
+      setCheckStudentEditStatus,
+    },
   } = useStore();
 
   useEffect(() => {
@@ -43,6 +50,45 @@ const Students: React.FC = ({}) => {
     (data?.getStudents?.length as number) / itemsPerPage
   );
   const studentData = data?.getStudents?.students as Array<Student>;
+
+  const [getLazyGetStudents] = useLazyQuery(GetStudentsDocument, {
+    variables: {
+      limit: 1000,
+      offset: 0,
+    },
+  });
+
+  const handleExcelExport = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+
+    getLazyGetStudents({
+      onCompleted: ({ getStudents }) => {
+        const timeStamp = format(new Date(), "ddMMhhmmss");
+        if (getStudents && getStudents.students) {
+          exportExcel(
+            [
+              ...getStudents.students.map((props) => {
+                const student = props as Student;
+                const dataStructured = {
+                  LRN: student.LRN,
+                  Name: `${student?.first_name} ${student?.middle_name} ${student?.last_name}`,
+                  Birthday: student.birthday,
+                  Email: student?.email,
+                  "Contact Number": student?.contact_number,
+                };
+
+                const trimmedData = _.omitBy(dataStructured, _.isNil);
+                return trimmedData;
+              }),
+            ],
+            `student-list-${timeStamp}`
+          );
+        }
+      },
+    });
+  };
 
   const filterCard = (
     <Card className="w-5/6" header={<CardHeader title="Filter" />}>
@@ -85,6 +131,7 @@ const Students: React.FC = ({}) => {
                   className="btn btn-xs btn-success"
                   onClick={() => {
                     setSelectedRecord(props.id as string, "student-record");
+                    setCheckStudentEditStatus(true);
                     pushRoute({
                       title: `Student Info - ${props?.LRN}`,
                       route: "students:view",
@@ -109,17 +156,26 @@ const Students: React.FC = ({}) => {
         </div>
         <Card className="w-full">
           <div className="w-full flex justify-between mb-[20px]">
-            <button
-              className="btn btn-sm btn-info"
-              onClick={() =>
-                pushRoute({
-                  title: "Add new student",
-                  route: "students:add-stepper",
-                })
-              }
-            >
-              Add student
-            </button>
+            <div className="flex gap-2">
+              <button
+                className="btn btn-sm btn-info"
+                onClick={() =>
+                  pushRoute({
+                    title: "Add new student",
+                    route: "students:add-stepper",
+                  })
+                }
+              >
+                Add student
+              </button>
+              <button
+                className="btn btn-sm btn-success"
+                onClick={handleExcelExport}
+                type="button"
+              >
+                Export List
+              </button>
+            </div>
             <div className="flex gap-3 place-items-center">
               <span>
                 <FiArrowLeft size="15" onClick={() => handleBack()} />

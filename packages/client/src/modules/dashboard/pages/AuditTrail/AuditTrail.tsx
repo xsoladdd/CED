@@ -1,4 +1,5 @@
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { format } from "date-fns";
 import React, { useRef } from "react";
 import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
 import Card, { CardFooter, CardHeader } from "../../../../components/Card";
@@ -9,8 +10,10 @@ import {
 } from "../../../../graphQL/generated/graphql";
 import { usePagination } from "../../../../hooks/usePagination";
 import useStore from "../../../../store/useStore";
+import { exportExcel } from "../../../../utils/exportToExcel";
 import { formatDateReadable } from "../../../../utils/formatDateReadable";
 import { column } from "./helper";
+import _ from "lodash";
 
 const AuditTrail: React.FC = ({}) => {
   const searchRef = useRef<HTMLInputElement>(null);
@@ -40,6 +43,64 @@ const AuditTrail: React.FC = ({}) => {
       },
     },
   });
+
+  const [getAuditTrails] = useLazyQuery(GetAuditTrailsDocument, {});
+
+  const handleExcelExport = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+
+    getAuditTrails({
+      variables: {
+        limit: 1000,
+        offset: 0,
+        search:
+          typeof searchRef.current?.value === "undefined"
+            ? ""
+            : searchRef.current?.value,
+        filter: {
+          // type: typeRef.current?.value,
+          type:
+            typeRef.current?.value === "" ||
+            typeof typeRef.current?.value === "undefined"
+              ? ""
+              : (typeRef.current?.value as string),
+        },
+      },
+      onCompleted: (props) => {
+        const timeStamp = format(new Date(), "ddMMhhmmss");
+        if (
+          props.getAuditTrails &&
+          props.getAuditTrails &&
+          props.getAuditTrails.audit_trail
+        ) {
+          exportExcel(
+            [
+              ...props.getAuditTrails.audit_trail.map((val) => {
+                const trail = val as AuditTrail;
+                const dataStructured = {
+                  TID: trail.id,
+                  // Name: trail?.employee.profile?.first_name,
+                  Name: `${trail?.employee.profile?.first_name} ${trail?.employee.profile?.middle_name} ${trail?.employee.profile?.last_name}`,
+                  Description: trail.description,
+                  Timestamp: formatDateReadable(
+                    trail?.timestamp,
+                    "MMMM dd yyyy - hh:mm aa"
+                  ),
+                  "Action Type": trail.action_type,
+                };
+
+                const trimmedData = _.omitBy(dataStructured, _.isNil);
+                return trimmedData;
+              }),
+            ],
+            `Audit-Trail-List-${timeStamp}`
+          );
+        }
+      },
+    });
+  };
 
   const pageCount = (data?.getAuditTrails?.length as number) / itemsPerPage;
 
@@ -158,7 +219,15 @@ const AuditTrail: React.FC = ({}) => {
 
   const tableActions = (
     <div className="w-full flex justify-between mb-[20px]">
-      <div className=""></div>
+      <div className="flex gap-2">
+        <button
+          className="btn btn-sm btn-success"
+          onClick={handleExcelExport}
+          type="button"
+        >
+          Export List
+        </button>
+      </div>
       <div className="flex gap-3 place-items-center">
         <span>
           <FiArrowLeft size="15" onClick={() => handleBack()} />

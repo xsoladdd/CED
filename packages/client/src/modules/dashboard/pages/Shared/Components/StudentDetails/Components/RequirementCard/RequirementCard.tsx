@@ -17,6 +17,7 @@ const RequirementCard: React.FC = ({}) => {
     student: {
       // setSelectedRequirementsInfo,
       selectedStudent: { requirements, id },
+      checkStudentEditStatus,
     },
   } = useStore();
 
@@ -66,37 +67,41 @@ const RequirementCard: React.FC = ({}) => {
   const header = (
     <div className="w-full flex justify-between ">
       <CardHeader title={`Requirements`} subTitle={isEditOn ? "Edit" : ""} />
-      {!isEditOn ? (
-        <div className="flex gap-2">
-          <button
-            className="btn btn-xs btn-info"
-            onClick={(e) => {
-              e.preventDefault();
-              toggle();
-            }}
-          >
-            <FiEdit />
-          </button>
-        </div>
-      ) : (
-        <div className="flex gap-2">
-          <button
-            className="btn btn-xs btn-success"
-            type="button"
-            onClick={() => toggleGreenModalStatus()}
-          >
-            <FiSave />
-          </button>
-          <button
-            className="btn btn-xs btn-error"
-            onClick={(e) => {
-              e.preventDefault();
-              toggleModal();
-            }}
-          >
-            <FiX />
-          </button>
-        </div>
+      {checkStudentEditStatus && (
+        <>
+          {!isEditOn ? (
+            <div className="flex gap-2">
+              <button
+                className="btn btn-xs btn-info"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggle();
+                }}
+              >
+                <FiEdit />
+              </button>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <button
+                className="btn btn-xs btn-success"
+                type="button"
+                onClick={() => toggleGreenModalStatus()}
+              >
+                <FiSave />
+              </button>
+              <button
+                className="btn btn-xs btn-error"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleModal();
+                }}
+              >
+                <FiX />
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

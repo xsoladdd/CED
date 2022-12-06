@@ -10,13 +10,21 @@ type yearLevelSection {
   sections: [Section]
 }
 
+type getSchoolYearsResponse {
+  name: String!
+  isActive: Boolean!
+}
+
 type Query {
   getGlobalVars: getGlobalVarsResponse
   getSections(yearLevel: String!): [Section]
   getYearLevelSections: [yearLevelSection]
+  getSchoolYears: [getSchoolYearsResponse]
+  # isValidateSchoolYear(SY: String!): Boolean
 }
 
 type Mutation {
-  deleteSection(id: String!): String
+  toggleSectionStatus(id: String!): [Section]
   addEditSection(input: SectionInput!): Section
+  activateSchoolYear(SY: String!): GlobalVars
 }

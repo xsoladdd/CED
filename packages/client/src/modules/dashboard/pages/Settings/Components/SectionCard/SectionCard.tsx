@@ -4,14 +4,16 @@ import { FiEdit, FiTrash } from "react-icons/fi";
 import Card, { CardHeader } from "../../../../../../components/Card";
 import TableLoading from "../../../../../../components/Table/Loading";
 import WarningModal from "../../../../../../components/WarningModal";
-import { DeleteSectionDocument } from "../../../../../../graphQL/generated/graphql";
+import { ToggleSectionStatusDocument } from "../../../../../../graphQL/generated/graphql";
 import useToggle from "../../../../../../hooks/useToggle";
 import useStore from "../../../../../../store/useStore";
+import { ISection } from "../../../../../../store/useStore/slices/global/types";
 import { joinClass } from "../../../../../../utils/joinClass";
 import AddEditModal from "./AddEditModal";
+
 const SectionCard: React.FC = () => {
   const {
-    globalVars: { year_level, deleteSection: deleteStoreSection },
+    globalVars: { year_level, deleteSection },
   } = useStore();
   const [selectedYear, setSelectedYear] = useState("");
   const { status: deleteWarningStatus, toggle: deleteWarningToggle } =
@@ -27,7 +29,7 @@ const SectionCard: React.FC = () => {
   });
   const deleteSectionId = useRef("");
 
-  const [deleteSection] = useMutation(DeleteSectionDocument);
+  const [toggleSectionStatus] = useMutation(ToggleSectionStatusDocument);
 
   const filterCard = (
     <>
@@ -75,6 +77,7 @@ const SectionCard: React.FC = () => {
         <tr>
           <th className="w-1/5">ID</th>
           <th className="w-3/5">SECTION</th>
+          <th className="w-3/5">STATUS</th>
           <th className="w-1/5">ACTION</th>
         </tr>
       </thead>
@@ -86,10 +89,11 @@ const SectionCard: React.FC = () => {
           <TableLoading>No data found</TableLoading>
         )}
         {selectedYearLevel &&
-          selectedYearLevel.sections?.map(({ title, id }, idx) => (
+          selectedYearLevel.sections?.map(({ title, id, status }, idx) => (
             <tr key={idx}>
               <td>{id}</td>
               <td>{title}</td>
+              <td>{status ? "Active" : "Not-Active"}</td>
               <td className="flex gap-1">
                 <button
                   className="btn btn-success btn-xs"
@@ -133,13 +137,23 @@ const SectionCard: React.FC = () => {
         status={deleteWarningStatus}
         handleClose={() => deleteWarningToggle()}
         handleProceed={() => {
-          deleteSection({
+          toggleSectionStatus({
             variables: {
               deleteSectionId: deleteSectionId.current,
             },
-            onCompleted: () => {
+            onCompleted: (returnValue) => {
               deleteWarningToggle();
-              deleteStoreSection(deleteSectionId.current, selectedYear);
+              if (returnValue && returnValue.toggleSectionStatus) {
+                const mappedValue: ISection[] = [
+                  ...returnValue.toggleSectionStatus.map((props) => ({
+                    id: props?.id as string,
+                    status: props?.status as boolean,
+                    title: props?.name as string,
+                    year_level: props?.year_level as string,
+                  })),
+                ];
+                deleteSection(mappedValue, selectedYear);
+              }
             },
           });
         }}

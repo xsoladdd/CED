@@ -23,7 +23,7 @@ const BasicInfoCard: React.FC = ({}) => {
 
   const { pushRoute } = useDashboardRouter();
   const {
-    student: { selectedStudent },
+    student: { selectedStudent, checkStudentEditStatus },
   } = useStore();
 
   const formik = useFormik<Student>({
@@ -67,32 +67,36 @@ const BasicInfoCard: React.FC = ({}) => {
         title={`Basic Information`}
         subTitle={isEditOn ? "Edit" : ""}
       />
-      {isEditOn ? (
-        <div className="flex gap-2">
-          <button className="btn btn-xs btn-success" type="submit">
-            <FiSave />
-          </button>
-          <button
-            className="btn btn-xs btn-error"
-            type="button"
-            onClick={() => toggleModal()}
-          >
-            <FiX />
-          </button>
-        </div>
-      ) : (
-        <div className="flex gap-2">
-          <button
-            className="btn btn-xs btn-info"
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              toggle();
-            }}
-          >
-            <FiEdit />
-          </button>
-        </div>
+      {checkStudentEditStatus && (
+        <>
+          {isEditOn ? (
+            <div className="flex gap-2">
+              <button className="btn btn-xs btn-success" type="submit">
+                <FiSave />
+              </button>
+              <button
+                className="btn btn-xs btn-error"
+                type="button"
+                onClick={() => toggleModal()}
+              >
+                <FiX />
+              </button>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <button
+                className="btn btn-xs btn-info"
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggle();
+                }}
+              >
+                <FiEdit />
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

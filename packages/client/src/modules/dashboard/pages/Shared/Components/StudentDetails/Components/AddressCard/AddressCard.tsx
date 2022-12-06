@@ -29,6 +29,7 @@ const AddressCard: React.FC = ({}) => {
   const {
     student: {
       selectedStudent: { address, id },
+      checkStudentEditStatus,
     },
   } = useStore();
   useEffect(() => {
@@ -104,32 +105,36 @@ const AddressCard: React.FC = ({}) => {
         title={`Address Information`}
         subTitle={isEditOn ? "Edit" : ""}
       />
-      {isEditOn ? (
-        <div className="flex gap-2">
-          <button className="btn btn-xs btn-success" type="submit">
-            <FiSave />
-          </button>
-          <button
-            className="btn btn-xs btn-error"
-            type="button"
-            onClick={() => toggleModal()}
-          >
-            <FiX />
-          </button>
-        </div>
-      ) : (
-        <div className="flex gap-2">
-          <button
-            className="btn btn-xs btn-info"
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              toggle();
-            }}
-          >
-            <FiEdit />
-          </button>
-        </div>
+      {checkStudentEditStatus && (
+        <>
+          {isEditOn ? (
+            <div className="flex gap-2">
+              <button className="btn btn-xs btn-success" type="submit">
+                <FiSave />
+              </button>
+              <button
+                className="btn btn-xs btn-error"
+                type="button"
+                onClick={() => toggleModal()}
+              >
+                <FiX />
+              </button>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <button
+                className="btn btn-xs btn-info"
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggle();
+                }}
+              >
+                <FiEdit />
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

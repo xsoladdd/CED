@@ -477,19 +477,19 @@ export default class StudentSeeder implements Seeder {
       const generateEnrollmentRecord = () => {
         const enrollmentList: Array<EnrolledRecords> = [
           {
-            grade_level_id: "01",
+            grade_level_id: "K",
             SY: "2019-2020",
-            section_id: "01",
+            section_id: "1",
           },
           {
-            grade_level_id: "02",
+            grade_level_id: "K",
             SY: "2020-2021",
-            section_id: "01",
+            section_id: "1",
           },
           {
-            grade_level_id: "03",
+            grade_level_id: "K",
             SY: "2022-2023",
-            section_id: "01",
+            section_id: "1",
           },
         ];
         return enrollmentList;

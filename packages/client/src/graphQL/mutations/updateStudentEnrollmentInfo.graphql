@@ -1,0 +1,8 @@
+mutation updateStudentEnrollmentInfo(
+  $input: updateStudentEnrollmentInfo!
+  $eid: String!
+) {
+  updateStudentEnrollmentInfo(input: $input, EID: $eid) {
+    ...EnrolledRecord
+  }
+}
