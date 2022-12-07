@@ -6,7 +6,7 @@ import { EnrolledRecords } from "../../../models/Student/EnrolledRecords";
 import { authorized } from "../../../utils/authorized";
 import { errorType } from "../../../utils/errorType";
 import { globalVarsType } from "../../../utils/globalVarsType";
-import { recordTrailType } from "../../../utils/recordTrail";
+import { recordTrail, recordTrailType } from "../../../utils/recordTrail";
 import { Resolvers } from "../../generated";
 
 export const globalVarResolver: Resolvers = {
@@ -128,7 +128,7 @@ export const globalVarResolver: Resolvers = {
   Mutation: {
     toggleSectionStatus: async (_, { id }, ctx) => {
       try {
-        authorized(ctx);
+        const { employee_id } = authorized(ctx);
         const sectionRepo = conn.getRepository(Sections);
 
         const section = await sectionRepo.findOneBy({ id });
@@ -146,6 +146,8 @@ export const globalVarResolver: Resolvers = {
             year_level: section.year_level,
           },
         });
+        const trailMessage = `Toggle section`;
+        recordTrail(employee_id, trailMessage, "ADDED_STUDENT");
         return sections;
       } catch (error) {
         throw new GraphQLError(error, {
@@ -157,7 +159,7 @@ export const globalVarResolver: Resolvers = {
     },
     addEditSection: async (_, { input }, ctx) => {
       try {
-        authorized(ctx);
+        const { employee_id } = authorized(ctx);
         const sectionRepo = conn.getRepository(Sections);
 
         // If has ID. Means edit
@@ -175,7 +177,10 @@ export const globalVarResolver: Resolvers = {
             });
           }
           selectedSection.name = input.name;
-          return await sectionRepo.save(selectedSection);
+          const saved = await sectionRepo.save(selectedSection);
+          const trailMessage = ` Added/Edited Section ${input.name} `;
+          recordTrail(employee_id, trailMessage, "OTHER");
+          return saved;
         } else {
           return await sectionRepo.save({
             name: input.name,
@@ -192,7 +197,7 @@ export const globalVarResolver: Resolvers = {
     },
     activateSchoolYear: async (_, { SY }, ctx) => {
       try {
-        authorized(ctx);
+        const { employee_id } = authorized(ctx);
         const globalVarsRepo = conn.getRepository(GlobalVars);
 
         const school_year = await globalVarsRepo.findOne({
@@ -209,7 +214,10 @@ export const globalVarResolver: Resolvers = {
         }
         school_year.title = SY;
         school_year.value = SY;
-        return await globalVarsRepo.save(school_year);
+        const saved = await globalVarsRepo.save(school_year);
+        const trailMessage = ` Activate Schoolyear ${SY} `;
+        recordTrail(employee_id, trailMessage, "OTHER");
+        return saved;
       } catch (error) {
         throw new GraphQLError(error, {
           extensions: {

@@ -255,17 +255,16 @@ export type QueryGetEmployeesArgs = {
 
 
 export type QueryGetEnrolledArchiveListArgs = {
-  filter: GetEnrolledArchiveListFilter;
+  filter: FilterGetEnrolledArchiveList;
   limit: Scalars['Int'];
   offset: Scalars['Int'];
-  search?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryGetEnrolledListArgs = {
+  filter: FilterGetEnrolledList;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  search?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -285,9 +284,9 @@ export type QueryGetStudentArgs = {
 
 
 export type QueryGetStudentsArgs = {
+  filter: FilterGetStudents;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  search?: InputMaybe<Scalars['String']>;
 };
 
 export type Section = {
@@ -443,6 +442,26 @@ export type AuditTrailFilter = {
 
 export type EmployeesFilter = {
   status?: InputMaybe<Scalars['Int']>;
+};
+
+export type FilterGetEnrolledArchiveList = {
+  school_year?: InputMaybe<Scalars['String']>;
+  search?: InputMaybe<Scalars['String']>;
+  section?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<Scalars['String']>;
+  year_level?: InputMaybe<Scalars['String']>;
+};
+
+export type FilterGetEnrolledList = {
+  search?: InputMaybe<Scalars['String']>;
+  section?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<Scalars['String']>;
+  year_level?: InputMaybe<Scalars['String']>;
+};
+
+export type FilterGetStudents = {
+  search?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<Scalars['String']>;
 };
 
 export type GetAuditTrailsResponse = {
@@ -622,6 +641,9 @@ export type ResolversTypes = {
   addEmployeeInput: AddEmployeeInput;
   auditTrailFilter: AuditTrailFilter;
   employeesFilter: EmployeesFilter;
+  filterGetEnrolledArchiveList: FilterGetEnrolledArchiveList;
+  filterGetEnrolledList: FilterGetEnrolledList;
+  filterGetStudents: FilterGetStudents;
   getAuditTrailsResponse: ResolverTypeWrapper<GetAuditTrailsResponse>;
   getCardInfoResponse: ResolverTypeWrapper<GetCardInfoResponse>;
   getEmployeesResponse: ResolverTypeWrapper<GetEmployeesResponse>;
@@ -668,6 +690,9 @@ export type ResolversParentTypes = {
   addEmployeeInput: AddEmployeeInput;
   auditTrailFilter: AuditTrailFilter;
   employeesFilter: EmployeesFilter;
+  filterGetEnrolledArchiveList: FilterGetEnrolledArchiveList;
+  filterGetEnrolledList: FilterGetEnrolledList;
+  filterGetStudents: FilterGetStudents;
   getAuditTrailsResponse: GetAuditTrailsResponse;
   getCardInfoResponse: GetCardInfoResponse;
   getEmployeesResponse: GetEmployeesResponse;
@@ -763,14 +788,14 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getEmployee?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<QueryGetEmployeeArgs, 'employee_id'>>;
   getEmployees?: Resolver<ResolversTypes['getEmployeesResponse'], ParentType, ContextType, Partial<QueryGetEmployeesArgs>>;
   getEnrolledArchiveList?: Resolver<Maybe<ResolversTypes['getEnrolledListResponse']>, ParentType, ContextType, RequireFields<QueryGetEnrolledArchiveListArgs, 'filter' | 'limit' | 'offset'>>;
-  getEnrolledList?: Resolver<Maybe<ResolversTypes['getEnrolledListResponse']>, ParentType, ContextType, Partial<QueryGetEnrolledListArgs>>;
+  getEnrolledList?: Resolver<Maybe<ResolversTypes['getEnrolledListResponse']>, ParentType, ContextType, RequireFields<QueryGetEnrolledListArgs, 'filter'>>;
   getEnrollmentRecord?: Resolver<ResolversTypes['EnrolledRecord'], ParentType, ContextType, RequireFields<QueryGetEnrollmentRecordArgs, 'EID'>>;
   getGlobalVars?: Resolver<Maybe<ResolversTypes['getGlobalVarsResponse']>, ParentType, ContextType>;
   getMe?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType>;
   getSchoolYears?: Resolver<Maybe<Array<Maybe<ResolversTypes['getSchoolYearsResponse']>>>, ParentType, ContextType>;
   getSections?: Resolver<Maybe<Array<Maybe<ResolversTypes['Section']>>>, ParentType, ContextType, RequireFields<QueryGetSectionsArgs, 'yearLevel'>>;
   getStudent?: Resolver<Maybe<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<QueryGetStudentArgs, 'SID'>>;
-  getStudents?: Resolver<Maybe<ResolversTypes['getStudentsResponse']>, ParentType, ContextType, Partial<QueryGetStudentsArgs>>;
+  getStudents?: Resolver<Maybe<ResolversTypes['getStudentsResponse']>, ParentType, ContextType, RequireFields<QueryGetStudentsArgs, 'filter'>>;
   getYearLevelSections?: Resolver<Maybe<Array<Maybe<ResolversTypes['yearLevelSection']>>>, ParentType, ContextType>;
   meow?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   test?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

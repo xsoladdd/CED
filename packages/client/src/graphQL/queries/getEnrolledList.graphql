@@ -1,5 +1,9 @@
-query getEnrolledList($limit: Int, $offset: Int) {
-  getEnrolledList(limit: $limit, offset: $offset) {
+query GetEnrolledList(
+  $filter: filterGetEnrolledList!
+  $offset: Int
+  $limit: Int
+) {
+  getEnrolledList(filter: $filter, offset: $offset, limit: $limit) {
     length
     enrolledRecords {
       ...EnrolledRecord

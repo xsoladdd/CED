@@ -46,7 +46,8 @@ export const authResolver: Resolvers = {
             },
           });
         }
-        await recordTrail(user.employee_id, "LOGIN");
+        const trailMessage = `${user.profile?.first_name} ${user.profile?.middle_name} ${user.profile?.last_name} logged in to the system`;
+        await recordTrail(user.employee_id, trailMessage, "LOGIN");
         const token = JWT.generateJWT(user);
         return {
           token,
@@ -82,6 +83,10 @@ export const authResolver: Resolvers = {
         selectedEmployee.password = hashedPassword;
         selectedEmployee.partial_password = "";
         const newEmployee = await employeeRepo.save(selectedEmployee);
+        if (newEmployee?.id) {
+          const trailMessage = `Employee ${newEmployee.profile?.first_name} ${newEmployee.profile?.last_name} has change password`;
+          recordTrail(newEmployee.id, trailMessage, "OTHER");
+        }
         return newEmployee;
       } catch (error) {
         throw new GraphQLError(error, {

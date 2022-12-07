@@ -58,5 +58,19 @@ TODO
 
 
 FILTER
-    - Enrolled List
-        *
+  - Student
+     - SEARCH (NAME, LRN, EMAIL)
+     - STATUS
+  - Enrolled List
+     - SEARCH (NAME, LRN, EMAIL)
+     - STATUS
+     - Year
+     - Section
+     -
+  - Archive
+     - SEARCH (NAME, LRN, EMAIL)
+     - STATUS
+     - Year
+     - Section
+     - School Year
+  -

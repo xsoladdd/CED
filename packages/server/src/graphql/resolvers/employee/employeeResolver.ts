@@ -83,6 +83,7 @@ export const employeeResolver: Resolvers = {
               : (filter?.type as string),
           employee: {
             employee_id: searchString,
+            role: Not("BA"),
           },
         };
         const auditTrails = await auditTrailRepo.find({
@@ -111,7 +112,6 @@ export const employeeResolver: Resolvers = {
     addEmployee: async (_, { input }, ctx) => {
       try {
         const { employee_id: EID } = authorized(ctx);
-        recordTrail(EID, "ADD_EMPLOYEE");
         const { employee } = input;
         await addEmployeeSchema.validate(employee).catch((err) => {
           throw new GraphQLError(err.message, {
@@ -154,6 +154,9 @@ export const employeeResolver: Resolvers = {
           profile: newEmployeeProfile,
         };
         const savedEmployee = await employeeRepo.save(newEmployee);
+
+        const trailMessage = `Added employee ${savedEmployee.id}`;
+        recordTrail(EID, trailMessage, "ADD_EMPLOYEE");
         return savedEmployee;
       } catch (error) {
         throw new GraphQLError(error, {
@@ -165,7 +168,7 @@ export const employeeResolver: Resolvers = {
     },
     disableEmployee: async (_, { employee_id }, ctx) => {
       try {
-        authorized(ctx);
+        const { employee_id: EID } = authorized(ctx);
         const employeeRepo = conn.getRepository(Employee);
         const selectedEmployee = await employeeRepo.findOne({
           where: {
@@ -186,6 +189,8 @@ export const employeeResolver: Resolvers = {
 
         selectedEmployee.status = 0;
         const savedRecord = await employeeRepo.save(selectedEmployee);
+        const trailMessage = `Employee ${savedRecord.profile?.first_name} ${savedRecord.profile?.last_name} account has been disabled`;
+        recordTrail(EID, trailMessage, "EDIT_EMPLOYEE");
         return savedRecord;
       } catch (error) {
         throw new GraphQLError(error, {
@@ -197,7 +202,7 @@ export const employeeResolver: Resolvers = {
     },
     enableEmployee: async (_, { employee_id }, ctx) => {
       try {
-        authorized(ctx);
+        const { employee_id: EID } = authorized(ctx);
         const employeeRepo = conn.getRepository(Employee);
         const selectedEmployee = await employeeRepo.findOne({
           where: {
@@ -218,6 +223,8 @@ export const employeeResolver: Resolvers = {
 
         selectedEmployee.status = 1;
         const savedRecord = await employeeRepo.save(selectedEmployee);
+        const trailMessage = `Employee ${savedRecord.profile?.first_name} ${savedRecord.profile?.last_name} account has been enabled`;
+        recordTrail(EID, trailMessage, "EDIT_EMPLOYEE");
         return savedRecord;
       } catch (error) {
         throw new GraphQLError(error, {
@@ -229,7 +236,7 @@ export const employeeResolver: Resolvers = {
     },
     resetEmployeePassword: async (_, { employee_id, password }, ctx) => {
       try {
-        authorized(ctx);
+        const { employee_id: EID } = authorized(ctx);
         const employeeRepo = conn.getRepository(Employee);
         // Check if employee_id exist
         const selectedEmployee = await employeeRepo.findOne({
@@ -252,6 +259,8 @@ export const employeeResolver: Resolvers = {
         selectedEmployee.password = hashedPassword;
         selectedEmployee.partial_password = password;
         const newEmployee = await employeeRepo.save(selectedEmployee);
+        const trailMessage = `Employee ${newEmployee.profile?.first_name} ${newEmployee.profile?.last_name} password has been reset`;
+        recordTrail(EID, trailMessage, "RESET_EMPLOYEE_PASSWORD");
         return newEmployee;
       } catch (error) {
         throw new GraphQLError(error, {
@@ -263,7 +272,7 @@ export const employeeResolver: Resolvers = {
     },
     changeEmployeePassword: async (_, { employee_id, password }, ctx) => {
       try {
-        authorized(ctx);
+        const { employee_id: EID } = authorized(ctx);
         const employeeRepo = conn.getRepository(Employee);
         // Check if employee_id exist
         const selectedEmployee = await employeeRepo.findOne({
@@ -286,6 +295,8 @@ export const employeeResolver: Resolvers = {
         selectedEmployee.password = hashedPassword;
         selectedEmployee.partial_password = "";
         const newEmployee = await employeeRepo.save(selectedEmployee);
+        const trailMessage = `Employee ${newEmployee.profile?.first_name} ${newEmployee.profile?.last_name} password has been reset`;
+        recordTrail(EID, trailMessage, "EDIT_EMPLOYEE");
         return newEmployee;
       } catch (error) {
         throw new GraphQLError(error, {

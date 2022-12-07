@@ -6,15 +6,18 @@ const AuditTrail = dynamic(() => import(`.`), {
   suspense: true,
 });
 
-const auditTrailRoutes: Array<IRoute> = [
-  {
-    component: AuditTrail,
-    name: `Audit Trail`,
-    path: `auditTrail`,
-    group: `main`,
-    activePath: "auditTrail",
-    logo: (props) => <FiBook {...props} />,
-  },
-];
+const auditTrailRoutes = (role: string): Array<IRoute> =>
+  ["BA", "SA"].includes(role)
+    ? [
+        {
+          component: AuditTrail,
+          name: `Audit Trail`,
+          path: `auditTrail`,
+          group: `main`,
+          activePath: "auditTrail",
+          logo: (props) => <FiBook {...props} />,
+        },
+      ]
+    : [];
 
 export default auditTrailRoutes;

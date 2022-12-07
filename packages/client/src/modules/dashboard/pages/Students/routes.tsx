@@ -18,28 +18,31 @@ const StudentDetails = dynamic(
   }
 );
 
-const studentsRoute: Array<IRoute> = [
-  {
-    component: Students,
-    name: `students`,
-    path: `students`,
-    group: `main`,
-    activePath: "students",
-    logo: (props) => <FiUser {...props} />,
-  },
+const studentsRoute = (role: string): Array<IRoute> =>
+  ["BA", "RT"].includes(role)
+    ? [
+        {
+          component: Students,
+          name: `students`,
+          path: `students`,
+          group: `main`,
+          activePath: "students",
+          logo: (props) => <FiUser {...props} />,
+        },
 
-  {
-    component: AddStudentsStepper,
-    name: `students`,
-    path: `students:add-stepper`,
-    activePath: "students",
-  },
-  {
-    component: StudentDetails,
-    name: `students`,
-    path: `students:view`,
-    activePath: "students",
-  },
-];
+        {
+          component: AddStudentsStepper,
+          name: `students`,
+          path: `students:add-stepper`,
+          activePath: "students",
+        },
+        {
+          component: StudentDetails,
+          name: `students`,
+          path: `students:view`,
+          activePath: "students",
+        },
+      ]
+    : [];
 
 export default studentsRoute;

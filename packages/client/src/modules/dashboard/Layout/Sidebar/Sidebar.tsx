@@ -1,9 +1,16 @@
 import React from "react";
-import routes from "../../routes";
+import useStore from "../../../../store/useStore";
+import generateRoutes from "../../routes";
 import Logo from "./Logo";
 import SidebarNavItem from "./NavItem";
 
 const Sidebar: React.FC = () => {
+  const {
+    user: {
+      data: { role },
+    },
+  } = useStore();
+  const routes = generateRoutes(role);
   return (
     <>
       <div className="h-screen py-[10px] pl-[10px] pr-[5px] bg-transparent">

@@ -2,7 +2,12 @@ import { useLazyQuery } from "@apollo/client";
 import { format } from "date-fns";
 import React, { useRef } from "react";
 import { FaSyncAlt, FaUserAlt, FaUserAltSlash } from "react-icons/fa";
-import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiArrowRight,
+  FiRefreshCcw,
+  FiSearch,
+} from "react-icons/fi";
 import Card, { CardFooter, CardHeader } from "../../../../components/Card";
 import Status from "../../../../components/Status";
 import TableLoading from "../../../../components/Table/Loading";
@@ -39,9 +44,9 @@ const Employees: React.FC = ({}) => {
   });
 
   const {
-    getEmployeeQuery: { data, loading, error },
+    getEmployeeQuery: { data, loading, error, refetch },
     handleRefetch,
-    pagination: { handleBack, handleNext, page, itemsPerPage },
+    pagination: { handleBack, handleNext, page, itemsPerPage, pageOffset },
     enableAccountMutation: [enableAccount, { loading: enableEmployeeLoading }],
     disableAccountMutation: [
       disableAccount,
@@ -294,6 +299,20 @@ const Employees: React.FC = ({}) => {
                 type="button"
               >
                 Export List
+              </button>
+              <button
+                className="btn btn-sm btn-ghost flex gap-2"
+                onClick={() => {
+                  refetch({
+                    limit: itemsPerPage,
+                    offset: pageOffset,
+                    search: "",
+                    filter: {},
+                  });
+                }}
+                type="button"
+              >
+                <FiRefreshCcw /> Refresh
               </button>
             </div>
             <div className="flex gap-3 place-items-center">

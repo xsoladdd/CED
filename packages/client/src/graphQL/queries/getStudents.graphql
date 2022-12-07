@@ -1,5 +1,5 @@
-query getStudents($limit: Int, $search: String, $offset: Int) {
-  getStudents(limit: $limit, search: $search, offset: $offset) {
+query GetStudents($filter: filterGetStudents!, $offset: Int, $limit: Int) {
+  getStudents(filter: $filter, offset: $offset, limit: $limit) {
     length
     students {
       ...Student

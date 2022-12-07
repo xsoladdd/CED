@@ -5,6 +5,7 @@ import {
   FiArrowLeft,
   FiArrowRight,
   FiExternalLink,
+  FiRefreshCcw,
   FiSearch,
 } from "react-icons/fi";
 import Card, { CardFooter, CardHeader } from "../../../../components/Card";
@@ -14,6 +15,7 @@ import Tooltip from "../../../../components/Tooltip";
 import {
   EnrolledRecord,
   GetEnrolledArchiveListDocument,
+  GetSchoolYearsDocument,
   Student,
 } from "../../../../graphQL/generated/graphql";
 import useDashboardRouter from "../../../../hooks/useDashboardRouter";
@@ -38,7 +40,10 @@ const Archive: React.FC = ({}) => {
     },
     globalVars: { year_level },
   } = useStore();
-  const SYFilterRef = useRef<HTMLSelectElement>(null);
+
+  const searchRef = useRef<HTMLInputElement>(null);
+  const statusRef = useRef<HTMLSelectElement>(null);
+  const schoolYearRef = useRef<HTMLSelectElement>(null);
 
   useEffect(() => {
     resetSelectedStudent();
@@ -46,18 +51,28 @@ const Archive: React.FC = ({}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { handleBack, handleNext, page, itemsPerPage, pageOffset } =
-    usePagination();
+  const {
+    handleBack,
+    handleNext,
+    page,
+    itemsPerPage,
+    pageOffset,
+    resetPagination,
+  } = usePagination();
 
-  const { data, loading, error } = useQuery(GetEnrolledArchiveListDocument, {
-    variables: {
-      limit: itemsPerPage,
-      offset: pageOffset,
-      filter: {
-        SY: SYFilterRef.current !== null ? SYFilterRef.current.value : "",
+  const { data, loading, error, refetch } = useQuery(
+    GetEnrolledArchiveListDocument,
+    {
+      variables: {
+        limit: itemsPerPage,
+        offset: pageOffset,
+        filter: {},
       },
-    },
-  });
+      notifyOnNetworkStatusChange: true,
+    }
+  );
+
+  const { data: schoolYearArray } = useQuery(GetSchoolYearsDocument);
 
   const pageCount = Math.ceil(
     (data?.getEnrolledArchiveList?.length as number) / itemsPerPage
@@ -69,14 +84,7 @@ const Archive: React.FC = ({}) => {
   const sectionArray = year_level.filter(({ value }) => value === selectedYear);
 
   const [getLazyEnrolledArchiveList] = useLazyQuery(
-    GetEnrolledArchiveListDocument,
-    {
-      variables: {
-        limit: 1000,
-        offset: 0,
-        filter: {},
-      },
-    }
+    GetEnrolledArchiveListDocument
   );
 
   const handleExcelExport = (
@@ -85,6 +93,17 @@ const Archive: React.FC = ({}) => {
     e.preventDefault();
 
     getLazyEnrolledArchiveList({
+      variables: {
+        limit: 1000,
+        offset: 0,
+        filter: {
+          search: searchRef.current?.value,
+          section: selectedSection ? selectedSection : undefined,
+          status: statusRef.current?.value,
+          year_level: selectedYear ? selectedYear : undefined,
+          school_year: schoolYearRef.current?.value,
+        },
+      },
       onCompleted: ({ getEnrolledArchiveList }) => {
         const timeStamp = format(new Date(), "ddMMhhmmss");
         if (getEnrolledArchiveList && getEnrolledArchiveList.enrolledRecords) {
@@ -132,6 +151,27 @@ const Archive: React.FC = ({}) => {
                 onClick={() => {
                   setSelectedSection("");
                   setSelectedYear("");
+                  if (
+                    searchRef.current &&
+                    statusRef.current &&
+                    schoolYearRef.current
+                  ) {
+                    resetPagination();
+                    searchRef.current.value = "";
+                    statusRef.current.value = "";
+                    schoolYearRef.current.value = "";
+                    refetch({
+                      limit: itemsPerPage,
+                      offset: pageOffset,
+                      filter: {
+                        school_year: undefined,
+                        search: undefined,
+                        section: undefined,
+                        status: undefined,
+                        year_level: undefined,
+                      },
+                    });
+                  }
                 }}
               >
                 Reset
@@ -139,11 +179,28 @@ const Archive: React.FC = ({}) => {
               <button
                 className="btn btn-sm btn-success"
                 type={"button"}
-                disabled={!selectedYear}
+                // disabled={!selectedYear}
                 onClick={() => {
-                  // qwer run query
-                  console.log(selectedYear, selectedSection);
-                  console.log(`execute query with parameters `);
+                  if (
+                    searchRef.current?.value ||
+                    selectedYear ||
+                    statusRef.current?.value ||
+                    schoolYearRef.current?.value
+                  ) {
+                    // Reset Pagination
+                    resetPagination();
+                    refetch({
+                      limit: itemsPerPage,
+                      offset: pageOffset,
+                      filter: {
+                        search: searchRef.current?.value,
+                        section: selectedSection ? selectedSection : undefined,
+                        status: statusRef.current?.value,
+                        year_level: selectedYear ? selectedYear : undefined,
+                        school_year: schoolYearRef.current?.value,
+                      },
+                    });
+                  }
                 }}
               >
                 Filter
@@ -153,23 +210,22 @@ const Archive: React.FC = ({}) => {
         />
       }
     >
-      <div className="flex flex-col xl:flex-row gap-2">
-        <div className="">
-          <label className="input-group input-group-sm">
-            <span className="search-identifier">
-              <FiSearch />
-            </span>
-            <input
-              type="search"
-              placeholder="Search for ID, Name and Email"
-              className="input input-bordered input-sm min-w-[250px]"
-            />
-          </label>
-        </div>
-        <div className=" w-fit">
-          <div className="form-control max-w-xs bg">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+        <label className="input-group w-full">
+          <span className="search-identifier">
+            <FiSearch />
+          </span>
+          <input
+            type="search"
+            ref={searchRef}
+            placeholder="Search for ID, Name and Email"
+            className="input input-bordered input-sm w-full"
+          />
+        </label>
+        <div className="w-full">
+          <div className="form-control">
             <select
-              className="select select-bordered min-w-[250px] select-sm"
+              className="select select-bordered select-sm"
               onChange={(e) => {
                 setSelectedYear(e.target.value);
                 setSelectedSection("");
@@ -185,10 +241,11 @@ const Archive: React.FC = ({}) => {
             </select>
           </div>
         </div>
-        <div className="w-fit">
-          <div className="form-control max-w-xs bg">
+
+        <div className="w-full">
+          <div className="form-control">
             <select
-              className="select select-bordered min-w-[250px] select-sm"
+              className="select select-bordered select-sm"
               disabled={!selectedYear}
               value={selectedSection}
               onChange={(e) => setSelectedSection(e.target.value)}
@@ -198,6 +255,36 @@ const Archive: React.FC = ({}) => {
                 sectionArray[0].sections?.map(({ title, id }, idx) => (
                   <option key={idx} value={id}>
                     {title}
+                  </option>
+                ))}
+            </select>
+          </div>
+        </div>
+        <div className="w-full">
+          <div className="form-control ">
+            <select
+              className="select select-bordered select-sm"
+              ref={statusRef}
+            >
+              <option value="">All Status</option>
+              <option value={"np"}>Not Paid</option>
+              <option value={"pp"}>Partially Paid</option>
+              <option value={"fp"}>Fully Paid</option>
+              <option value={"d"}>Dropped</option>
+            </select>
+          </div>
+        </div>
+        <div className="w-full">
+          <div className="form-control ">
+            <select
+              className="select select-bordered select-sm"
+              ref={schoolYearRef}
+            >
+              <option value="">All School Year</option>
+              {schoolYearArray &&
+                schoolYearArray.getSchoolYears?.map((props, idx) => (
+                  <option value={props?.name} key={idx}>
+                    {props?.name}
                   </option>
                 ))}
             </select>
@@ -283,6 +370,25 @@ const Archive: React.FC = ({}) => {
               >
                 Export List
               </button>
+              <button
+                className="btn btn-sm btn-ghost flex gap-2"
+                onClick={() => {
+                  refetch({
+                    limit: itemsPerPage,
+                    offset: pageOffset,
+                    filter: {
+                      search: searchRef.current?.value,
+                      section: selectedSection ? selectedSection : undefined,
+                      status: statusRef.current?.value,
+                      year_level: selectedYear ? selectedYear : undefined,
+                      school_year: schoolYearRef.current?.value,
+                    },
+                  });
+                }}
+                type="button"
+              >
+                <FiRefreshCcw /> Refresh
+              </button>
             </div>
             <div className="flex gap-3 place-items-center">
               <span>
@@ -307,6 +413,9 @@ const Archive: React.FC = ({}) => {
               </thead>
               <tbody className="text-center">
                 {loading ? <TableLoading>loading</TableLoading> : tableData}
+                {data?.getEnrolledArchiveList?.length === 0 ? (
+                  <TableLoading>No data found</TableLoading>
+                ) : null}
                 {error && (
                   <TableLoading>
                     Something went wrong fetching the table

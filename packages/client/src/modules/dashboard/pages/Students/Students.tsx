@@ -1,9 +1,14 @@
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { format } from "date-fns";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { FaEdit } from "react-icons/fa";
-import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
-import Card, { CardHeader } from "../../../../components/Card";
+import {
+  FiArrowLeft,
+  FiArrowRight,
+  FiRefreshCcw,
+  FiSearch,
+} from "react-icons/fi";
+import Card, { CardFooter, CardHeader } from "../../../../components/Card";
 import Status from "../../../../components/Status";
 import TableLoading from "../../../../components/Table/Loading";
 import Tooltip from "../../../../components/Tooltip";
@@ -37,14 +42,24 @@ const Students: React.FC = ({}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { handleBack, handleNext, page, itemsPerPage, pageOffset } =
-    usePagination();
+  const {
+    handleBack,
+    handleNext,
+    page,
+    itemsPerPage,
+    pageOffset,
+    resetPagination,
+  } = usePagination();
 
-  const { data, loading, error } = useQuery(GetStudentsDocument, {
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  const { data, loading, error, refetch } = useQuery(GetStudentsDocument, {
     variables: {
       limit: itemsPerPage,
       offset: pageOffset,
+      filter: {},
     },
+    notifyOnNetworkStatusChange: true,
   });
   const pageCount = Math.ceil(
     (data?.getStudents?.length as number) / itemsPerPage
@@ -55,6 +70,9 @@ const Students: React.FC = ({}) => {
     variables: {
       limit: 1000,
       offset: 0,
+      filter: {
+        search: searchRef.current?.value,
+      },
     },
   });
 
@@ -91,7 +109,52 @@ const Students: React.FC = ({}) => {
   };
 
   const filterCard = (
-    <Card className="w-5/6" header={<CardHeader title="Filter" />}>
+    <Card
+      className="w-5/6"
+      header={<CardHeader title="Filter" />}
+      footer={
+        <CardFooter
+          right={
+            <div className="flex gap-2">
+              <button
+                className="btn btn-sm btn-link"
+                type={"button"}
+                onClick={() => {
+                  if (searchRef.current?.value) {
+                    searchRef.current.value = "";
+                    refetch({
+                      limit: itemsPerPage,
+                      offset: pageOffset,
+                      filter: {
+                        search: searchRef.current?.value,
+                      },
+                    });
+                  }
+                }}
+              >
+                Reset
+              </button>
+              <button
+                className="btn btn-sm btn-success"
+                type={"button"}
+                onClick={() => {
+                  resetPagination();
+                  refetch({
+                    limit: itemsPerPage,
+                    offset: pageOffset,
+                    filter: {
+                      search: searchRef.current?.value,
+                    },
+                  });
+                }}
+              >
+                Filter
+              </button>
+            </div>
+          }
+        />
+      }
+    >
       <div className="flex gap-2">
         <label className="input-group input-group-sm">
           <span className="search-identifier">
@@ -100,6 +163,7 @@ const Students: React.FC = ({}) => {
           <input
             type="search"
             placeholder="Search for LRN, Name and Email"
+            ref={searchRef}
             className="input input-bordered input-sm min-w-[400px]"
           />
         </label>
@@ -174,6 +238,21 @@ const Students: React.FC = ({}) => {
                 type="button"
               >
                 Export List
+              </button>
+              <button
+                className="btn btn-sm btn-ghost flex gap-2"
+                onClick={() => {
+                  refetch({
+                    limit: itemsPerPage,
+                    offset: pageOffset,
+                    filter: {
+                      search: searchRef.current?.value,
+                    },
+                  });
+                }}
+                type="button"
+              >
+                <FiRefreshCcw /> Refresh
               </button>
             </div>
             <div className="flex gap-3 place-items-center">

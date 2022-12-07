@@ -33,20 +33,43 @@ input getEnrolledArchiveListFilter {
   SY: String
 }
 
+input filterGetStudents {
+  search: String
+  status: String
+}
+
+input filterGetEnrolledList {
+  search: String
+  status: String
+  year_level: String
+  section: String
+}
+
+input filterGetEnrolledArchiveList {
+  search: String
+  status: String
+  year_level: String
+  section: String
+  school_year: String
+}
+
 type Query {
-  getStudents(limit: Int, offset: Int, search: String): getStudentsResponse
+  getStudents(
+    limit: Int
+    offset: Int
+    filter: filterGetStudents!
+  ): getStudentsResponse
   getStudent(SID: String!): Student
   getEnrollmentRecord(EID: String!): EnrolledRecord!
   getEnrolledList(
     limit: Int
     offset: Int
-    search: String
+    filter: filterGetEnrolledList!
   ): getEnrolledListResponse
   getEnrolledArchiveList(
     limit: Int!
     offset: Int!
-    search: String
-    filter: getEnrolledArchiveListFilter!
+    filter: filterGetEnrolledArchiveList!
   ): getEnrolledListResponse
   checkUniqueLRN(LRN: String!, currentLRN: String): Boolean!
 }

@@ -17,27 +17,30 @@ const EnrollStudent = dynamic(() => import(`./Components/EnrollStudent`), {
   suspense: true,
 });
 
-const enrolledListRoute: Array<IRoute> = [
-  {
-    component: EnrolledList,
-    name: `Enrolled List`,
-    path: `enrolledList`,
-    group: `main`,
-    activePath: "enrolledList",
-    logo: (props) => <FiList {...props} />,
-  },
-  {
-    component: EnrollStudent,
-    name: `Enroll Student`,
-    path: `enrolledList:add`,
-    activePath: "enrolledList",
-  },
-  {
-    component: StudentDetails,
-    name: `Student Details`,
-    path: `enrolledList:studentDetails`,
-    activePath: "enrolledList",
-  },
-];
+const enrolledListRoute = (role: string): Array<IRoute> =>
+  ["BA", "RT"].includes(role)
+    ? [
+        {
+          component: EnrolledList,
+          name: `Enrolled List`,
+          path: `enrolledList`,
+          group: `main`,
+          activePath: "enrolledList",
+          logo: (props) => <FiList {...props} />,
+        },
+        {
+          component: EnrollStudent,
+          name: `Enroll Student`,
+          path: `enrolledList:add`,
+          activePath: "enrolledList",
+        },
+        {
+          component: StudentDetails,
+          name: `Student Details`,
+          path: `enrolledList:studentDetails`,
+          activePath: "enrolledList",
+        },
+      ]
+    : [];
 
 export default enrolledListRoute;

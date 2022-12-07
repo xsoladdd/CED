@@ -1,16 +1,5 @@
 import { IyearLevel } from "../../../../store/useStore/slices/global/types";
 
-export const column = [
-  "",
-  "StudentID",
-  "Full Name",
-  "Email",
-  "Contact Number",
-  "Section Year",
-  "Status",
-  "Actions",
-];
-
 export const generateSectionYear = (
   yearCode: string,
   sectionCode: string,

@@ -10,30 +10,32 @@ module.exports = {
         light: {
           ...require("daisyui/src/colors/themes")["[data-theme=bumblebee]"],
 
-          primary: "#263272",
+          primary: "#022289",
+          "primary-content": "white",
 
-          secondary: "#df93b9",
+          secondary: "#ff82d3",
 
           accent: "#a3c3d0",
 
-          neutral: "#22252F"
+          neutral: "#22252F",
 
           // "base-100": "#fff",
           // "base-200": "#EBEBEB",
           // "base-300": "#DEDEDE",
           // "base-content": "#111827",
 
-          // error: "#ef4444",
-          // "error-content": "#ffffff",
+          error: "#f87171",
+          "error-content": "black",
+          // "error-content": "#ffffff"
 
-          // info: "#3b82f6",
-          // "info-content": "#ffffff",
+          info: "#00d1ff",
+          "info-content": "black",
 
-          // success: "#10b981",
-          // "success-content": "#ffffff",
+          success: "#34d399",
+          "success-content": "black",
 
           // warning: "#eab308",
-          // "warning-content": "#ffffff",
+          "warning-content": "black"
         }
       }
       // "dark",

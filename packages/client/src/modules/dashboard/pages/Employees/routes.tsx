@@ -9,21 +9,24 @@ const AddEmployee = dynamic(() => import(`./Components/AddEmployee`), {
   suspense: true,
 });
 
-const employeesRoutes: Array<IRoute> = [
-  {
-    component: Employees,
-    name: `employees`,
-    path: `employees`,
-    group: `main`,
-    activePath: "employees",
-    logo: (props) => <FiDatabase {...props} />,
-  },
-  {
-    component: AddEmployee,
-    name: `Add Employee`,
-    path: `employees:add`,
-    activePath: "employees",
-  },
-];
+const employeesRoutes = (role: string): Array<IRoute> =>
+  ["BA", "SA"].includes(role)
+    ? [
+        {
+          component: Employees,
+          name: `employees`,
+          path: `employees`,
+          group: `main`,
+          activePath: "employees",
+          logo: (props) => <FiDatabase {...props} />,
+        },
+        {
+          component: AddEmployee,
+          name: `Add Employee`,
+          path: `employees:add`,
+          activePath: "employees",
+        },
+      ]
+    : [];
 
 export default employeesRoutes;

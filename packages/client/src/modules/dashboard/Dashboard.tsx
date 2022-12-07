@@ -2,9 +2,10 @@ import { NextPage } from "next";
 import React, { Suspense } from "react";
 import useAuth from "../../hooks/useAuth";
 import useDashboardRouter from "../../hooks/useDashboardRouter";
+import useStore from "../../store/useStore";
 import DashboardLayout from "./Layout";
 import PageLoading from "./Layout/PageLoading";
-import routes from "./routes";
+import generateRoutes from "./routes";
 import useDashboard from "./useDashboard";
 
 interface DashboardProps {
@@ -15,6 +16,14 @@ const Dashboard: NextPage<DashboardProps> = ({}) => {
   const { loading } = useAuth();
   const { activeRoute } = useDashboardRouter();
   const { loading: useDashboardLoading } = useDashboard();
+
+  const {
+    user: {
+      data: { role },
+    },
+  } = useStore();
+
+  const routes = generateRoutes(role);
 
   return loading || useDashboardLoading ? (
     <div className="h-screen w-screen">

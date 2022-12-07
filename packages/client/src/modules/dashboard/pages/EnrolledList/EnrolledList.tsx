@@ -1,8 +1,16 @@
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { format } from "date-fns";
+import _ from "lodash";
 import React, { useEffect, useRef, useState } from "react";
-import { FaEdit, FaRegAddressCard, FaTrash } from "react-icons/fa";
-import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiArrowRight,
+  FiDownload,
+  FiEdit,
+  FiRefreshCcw,
+  FiSearch,
+  FiTrash,
+} from "react-icons/fi";
 import Card, { CardFooter, CardHeader } from "../../../../components/Card";
 import Status from "../../../../components/Status";
 import TableLoading from "../../../../components/Table/Loading";
@@ -21,8 +29,7 @@ import useStore from "../../../../store/useStore";
 import { exportExcel } from "../../../../utils/exportToExcel";
 import LegendCard from "./Components/LegendCard";
 import RegCardModal from "./Components/RegCardModal";
-import { column, generateSectionYear } from "./helper";
-import _ from "lodash";
+import { generateSectionYear } from "./helper";
 
 const EnrolledList: React.FC = ({}) => {
   const { pushRoute } = useDashboardRouter();
@@ -30,6 +37,8 @@ const EnrolledList: React.FC = ({}) => {
   const { status: bulkStatus, toggle: bulkToggle } = useToggle(false);
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
+  const searchRef = useRef<HTMLInputElement>(null);
+  const statusRef = useRef<HTMLSelectElement>(null);
   const [selectedStudent, setSelectedStudent] = useState<
     Array<{ id: string; name: string }>
   >([]);
@@ -53,14 +62,22 @@ const EnrolledList: React.FC = ({}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { handleBack, handleNext, page, itemsPerPage, pageOffset } =
-    usePagination();
+  const {
+    handleBack,
+    handleNext,
+    page,
+    itemsPerPage,
+    pageOffset,
+    resetPagination,
+  } = usePagination();
 
-  const { data, loading, error } = useQuery(GetEnrolledListDocument, {
+  const { data, loading, error, refetch } = useQuery(GetEnrolledListDocument, {
     variables: {
       limit: itemsPerPage,
       offset: pageOffset,
+      filter: {},
     },
+    notifyOnNetworkStatusChange: true,
   });
 
   const [dropEnrollmentRecord] = useMutation(DropEnrollmentRecordDocument);
@@ -74,12 +91,7 @@ const EnrolledList: React.FC = ({}) => {
 
   const sectionArray = year_level.filter(({ value }) => value === selectedYear);
 
-  const [getLazyGetEnrolledList] = useLazyQuery(GetEnrolledListDocument, {
-    variables: {
-      limit: 1000,
-      offset: 0,
-    },
-  });
+  const [getLazyGetEnrolledList] = useLazyQuery(GetEnrolledListDocument);
 
   const handleExcelExport = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -87,6 +99,16 @@ const EnrolledList: React.FC = ({}) => {
     e.preventDefault();
 
     getLazyGetEnrolledList({
+      variables: {
+        limit: 1000,
+        offset: 0,
+        filter: {
+          search: searchRef.current?.value,
+          section: selectedSection ? selectedSection : undefined,
+          status: statusRef.current?.value,
+          year_level: selectedYear ? selectedYear : undefined,
+        },
+      },
       onCompleted: ({ getEnrolledList }) => {
         const timeStamp = format(new Date(), "ddMMhhmmss");
         if (getEnrolledList && getEnrolledList.enrolledRecords) {
@@ -133,6 +155,16 @@ const EnrolledList: React.FC = ({}) => {
                 onClick={() => {
                   setSelectedSection("");
                   setSelectedYear("");
+                  if (searchRef.current && statusRef.current) {
+                    resetPagination();
+                    searchRef.current.value = "";
+                    statusRef.current.value = "";
+                    refetch({
+                      limit: itemsPerPage,
+                      offset: pageOffset,
+                      filter: {},
+                    });
+                  }
                 }}
               >
                 Reset
@@ -140,11 +172,25 @@ const EnrolledList: React.FC = ({}) => {
               <button
                 className="btn btn-sm btn-success"
                 type={"button"}
-                disabled={!selectedYear}
                 onClick={() => {
-                  // qwer run query
-                  console.log(selectedYear, selectedSection);
-                  console.log(`execute query with parameters `);
+                  if (
+                    searchRef.current?.value ||
+                    selectedYear ||
+                    statusRef.current?.value
+                  ) {
+                    // Reset Pagination
+                    resetPagination();
+                    refetch({
+                      limit: itemsPerPage,
+                      offset: pageOffset,
+                      filter: {
+                        search: searchRef.current?.value,
+                        section: selectedSection ? selectedSection : undefined,
+                        status: statusRef.current?.value,
+                        year_level: selectedYear ? selectedYear : undefined,
+                      },
+                    });
+                  }
                 }}
               >
                 Filter
@@ -154,23 +200,22 @@ const EnrolledList: React.FC = ({}) => {
         />
       }
     >
-      <div className="flex flex-col xl:flex-row gap-2">
-        <div className="">
-          <label className="input-group input-group-sm">
-            <span className="search-identifier">
-              <FiSearch />
-            </span>
-            <input
-              type="search"
-              placeholder="Search for ID, Name and Email"
-              className="input input-bordered input-sm min-w-[250px]"
-            />
-          </label>
-        </div>
-        <div className=" w-fit">
-          <div className="form-control max-w-xs bg">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4  gap-2">
+        <label className="input-group w-full">
+          <span className="search-identifier">
+            <FiSearch />
+          </span>
+          <input
+            type="search"
+            ref={searchRef}
+            placeholder="Search for ID, Name and Email"
+            className="input input-bordered input-sm w-full"
+          />
+        </label>
+        <div className="w-full">
+          <div className="form-control">
             <select
-              className="select select-bordered min-w-[250px] select-sm"
+              className="select select-bordered select-sm"
               onChange={(e) => {
                 setSelectedYear(e.target.value);
                 setSelectedSection("");
@@ -186,10 +231,11 @@ const EnrolledList: React.FC = ({}) => {
             </select>
           </div>
         </div>
-        <div className="w-fit">
-          <div className="form-control max-w-xs bg">
+
+        <div className="w-full">
+          <div className="form-control">
             <select
-              className="select select-bordered min-w-[250px] select-sm"
+              className="select select-bordered select-sm"
               disabled={!selectedYear}
               value={selectedSection}
               onChange={(e) => setSelectedSection(e.target.value)}
@@ -201,6 +247,20 @@ const EnrolledList: React.FC = ({}) => {
                     {title}
                   </option>
                 ))}
+            </select>
+          </div>
+        </div>
+        <div className="w-full">
+          <div className="form-control ">
+            <select
+              className="select select-bordered select-sm"
+              ref={statusRef}
+            >
+              <option value="">All Status</option>
+              <option value={"np"}>Not Paid</option>
+              <option value={"pp"}>Partially Paid</option>
+              <option value={"fp"}>Fully Paid</option>
+              <option value={"d"}>Dropped</option>
             </select>
           </div>
         </div>
@@ -218,7 +278,7 @@ const EnrolledList: React.FC = ({}) => {
             toggleRegFormModalStatus();
           }}
         >
-          <FaRegAddressCard size="12" />
+          <FiDownload size="12" />
         </button>
       </Tooltip>
       <Tooltip text="View/Edit student" direction="top">
@@ -233,7 +293,7 @@ const EnrolledList: React.FC = ({}) => {
             });
           }}
         >
-          <FaEdit size="12" />
+          <FiEdit size="12" />
         </button>
       </Tooltip>
       <Tooltip text="Drop Student" direction="top">
@@ -245,7 +305,7 @@ const EnrolledList: React.FC = ({}) => {
           }}
           disabled={status === "d"}
         >
-          <FaTrash size="12" />
+          <FiTrash size="12" />
         </button>
       </Tooltip>
     </div>
@@ -302,7 +362,7 @@ const EnrolledList: React.FC = ({}) => {
             <td>{`${first_name} ${middle_name} ${last_name}`}</td>
             {/* <td>{birthday}</td> */}
             <td>{email}</td>
-            <td>{contact_number}</td>
+            <td className="hidden xl:table-cell">{contact_number}</td>
             <td>{`${year} - ${sectionString}`}</td>
             <td>
               {status?.toUpperCase() === "NP" && <Status color={"red"} />}
@@ -409,6 +469,24 @@ const EnrolledList: React.FC = ({}) => {
               >
                 Export List
               </button>
+              <button
+                className="btn btn-sm btn-ghost flex gap-2"
+                onClick={() => {
+                  refetch({
+                    limit: itemsPerPage,
+                    offset: pageOffset,
+                    filter: {
+                      search: searchRef.current?.value,
+                      section: selectedSection ? selectedSection : undefined,
+                      status: statusRef.current?.value,
+                      year_level: selectedYear ? selectedYear : undefined,
+                    },
+                  });
+                }}
+                type="button"
+              >
+                <FiRefreshCcw /> Refresh
+              </button>
             </div>
             <div className="flex gap-3 place-items-center">
               <span>
@@ -422,20 +500,25 @@ const EnrolledList: React.FC = ({}) => {
               </span>
             </div>
           </div>
-          <div className="overflow-x-auto">
-            <table className="table w-full table-compact table-zebra">
+          <div className="overflow-x-auto ">
+            <table className="table w-full table-compact table-zebra table-auto">
               <thead>
                 <tr className="text-center">
-                  {column.map((name, idx) => (
-                    <th key={idx}>{name}</th>
-                  ))}
+                  <th className="w-[30px]"></th>
+                  <th className="w-[100px]">StudentID</th>
+                  <th className="w-[150px]">Full Name</th>
+                  <th className="">Email</th>
+                  <th className="hidden xl:table-cell">Contact Number</th>
+                  <th className="w-[120px] ">Section Year</th>
+                  <th className="w-[30px]">Status</th>
+                  <th className="w-[120px]">Actions</th>
                 </tr>
               </thead>
               <tbody className="text-center">
                 {loading ? <TableLoading>loading</TableLoading> : tableData}
-                {/* {data?.getEmployees?.length === 0 ? (
-              <TableLoading>No data found</TableLoading>
-            ) : null} */}
+                {data?.getEnrolledList?.length === 0 ? (
+                  <TableLoading>No data found</TableLoading>
+                ) : null}
                 {error && (
                   <TableLoading>
                     Something went wrong fetching the table

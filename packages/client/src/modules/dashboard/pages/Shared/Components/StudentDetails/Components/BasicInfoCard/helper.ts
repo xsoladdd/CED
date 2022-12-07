@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+export const mobile_number_regex = /^(09|\+639)\d{9}$/;
 
 export const basicInfoSchema = Yup.object().shape({
   first_name: Yup.string()
@@ -23,5 +24,6 @@ export const basicInfoSchema = Yup.object().shape({
   contact_number: Yup.string()
     .min(11, "Field Too Short!")
     .max(14, "Too Long!")
+    .matches(mobile_number_regex, "Invalid Format")
     .required("Required"),
 });

@@ -1,7 +1,6 @@
 import { GraphQLError } from "graphql";
-import { In, Not } from "typeorm";
+import { FindOptionsWhere, ILike, In } from "typeorm";
 import { conn } from "../../../config/db";
-import { GlobalVars } from "../../../models/GlobalVars";
 import { EnrolledRecords } from "../../../models/Student/EnrolledRecords";
 import { Student } from "../../../models/Student/Student";
 import { StudentAddress } from "../../../models/Student/StudentAddress";
@@ -11,7 +10,7 @@ import { StudentSchoolRecord } from "../../../models/Student/StudentSchoolRecord
 import { authorized } from "../../../utils/authorized";
 import { errorType } from "../../../utils/errorType";
 import { getSchoolYear } from "../../../utils/getSchoolYear";
-import { globalVarsType } from "../../../utils/globalVarsType";
+import { recordTrail } from "../../../utils/recordTrail";
 import { Resolvers } from "../../generated";
 import {
   addLeadingZeros,
@@ -49,12 +48,14 @@ export const studentRersolver: Resolvers = {
     },
   },
   Query: {
-    getStudents: async (_, { limit, offset }, ctx) => {
+    getStudents: async (_, { limit, offset, filter }, ctx) => {
       try {
         authorized(ctx);
         const studentRepo = conn.getRepository(Student);
+        const searchString = filter.search
+          ? ILike(`%${filter.search}%`)
+          : undefined;
         const students = await studentRepo.find({
-          where: {},
           relations: {
             transfer_records: true,
             enrollment_records: true,
@@ -62,13 +63,37 @@ export const studentRersolver: Resolvers = {
             parent_guardians: true,
             school_records: true,
           },
+          // where,
+          where: filter.search
+            ? [
+                { first_name: searchString },
+                { middle_name: searchString },
+                { last_name: searchString },
+                { LRN: searchString },
+                { email: searchString },
+              ]
+            : {
+                // ...filterStatus,
+              },
           skip: offset ? offset : 0,
           take: limit ? limit : 10,
           order: {
             created_at: "DESC",
           },
         });
-        const length = await studentRepo.count();
+        const length = await studentRepo.count({
+          where: filter.search
+            ? [
+                { first_name: searchString },
+                { middle_name: searchString },
+                { last_name: searchString },
+                { LRN: searchString },
+                { email: searchString },
+              ]
+            : {
+                // ...filterStatus,
+              },
+        });
 
         return { students, length };
       } catch (error) {
@@ -130,19 +155,58 @@ export const studentRersolver: Resolvers = {
         });
       }
     },
-    getEnrolledList: async (_, { limit, offset }, ctx) => {
+    getEnrolledList: async (_, { limit, offset, filter }, ctx) => {
       try {
         authorized(ctx);
 
         const enrolledRepo = conn.getRepository(EnrolledRecords);
-        const globalVarsRepo = conn.getRepository(GlobalVars);
-        const SY = await globalVarsRepo.findOne({
-          where: { identifier: globalVarsType.school_year },
-        });
+        const SY = await getSchoolYear();
+        const searchString = filter.search
+          ? ILike(`%${filter.search}%`)
+          : undefined;
+
+        const commonFilter: FindOptionsWhere<EnrolledRecords> = {
+          SY: SY,
+          status: filter.status ? ILike(`%${filter.status}%`) : undefined,
+          section_id: filter.section ? ILike(`%${filter.section}%`) : undefined,
+          grade_level_id: filter.year_level
+            ? ILike(`%${filter.year_level}%`)
+            : undefined,
+        };
+
+        const where = filter.search
+          ? [
+              {
+                student: {
+                  first_name: searchString,
+                },
+                ...commonFilter,
+              },
+              {
+                student: {
+                  middle_name: searchString,
+                },
+                ...commonFilter,
+              },
+              {
+                student: {
+                  last_name: searchString,
+                },
+                ...commonFilter,
+              },
+              // {
+              //   increment_id: searchString,
+              //   ...commonFilter,
+              // },
+              {
+                student: {
+                  email: searchString,
+                },
+                ...commonFilter,
+              },
+            ]
+          : [{ ...commonFilter }];
         const enrolledRecords = await enrolledRepo.find({
-          where: {
-            SY: SY?.value,
-          },
           relations: {
             student: {
               transfer_records: true,
@@ -152,6 +216,7 @@ export const studentRersolver: Resolvers = {
               school_records: true,
             },
           },
+          where,
           skip: offset ? offset : 0,
           take: limit ? limit : 10,
           order: {
@@ -159,9 +224,7 @@ export const studentRersolver: Resolvers = {
           },
         });
         const length = await enrolledRepo.count({
-          where: {
-            SY: SY?.value,
-          },
+          where,
         });
 
         return { enrolledRecords, length };
@@ -176,17 +239,52 @@ export const studentRersolver: Resolvers = {
     getEnrolledArchiveList: async (_, { limit, offset, filter }, ctx) => {
       try {
         authorized(ctx);
-
+        const searchString = filter.search
+          ? ILike(`%${filter.search}%`)
+          : undefined;
         const enrolledRepo = conn.getRepository(EnrolledRecords);
-        const globalVarsRepo = conn.getRepository(GlobalVars);
-        const SY = await globalVarsRepo.findOne({
-          where: { identifier: globalVarsType.school_year },
-        });
+        const commonFilter: FindOptionsWhere<EnrolledRecords> = {
+          status: filter.status ? ILike(`%${filter.status}%`) : undefined,
+          section_id: filter.section ? ILike(`%${filter.section}%`) : undefined,
+          grade_level_id: filter.year_level
+            ? ILike(`%${filter.year_level}%`)
+            : undefined,
+          SY: filter.school_year ? ILike(`%${filter.school_year}%`) : undefined,
+        };
+
+        const where = filter.search
+          ? [
+              {
+                student: {
+                  first_name: searchString,
+                },
+                ...commonFilter,
+              },
+              {
+                student: {
+                  middle_name: searchString,
+                },
+                ...commonFilter,
+              },
+              {
+                student: {
+                  last_name: searchString,
+                },
+                ...commonFilter,
+              },
+              // {
+              //   increment_id: searchString,
+              //   ...commonFilter,
+              // },
+              {
+                student: {
+                  email: searchString,
+                },
+                ...commonFilter,
+              },
+            ]
+          : { ...commonFilter };
         const enrolledRecords = await enrolledRepo.find({
-          where: [
-            { SY: Not(SY?.value as string) },
-            { SY: filter.SY ? filter.SY : undefined },
-          ],
           relations: {
             student: {
               transfer_records: true,
@@ -196,6 +294,7 @@ export const studentRersolver: Resolvers = {
               school_records: true,
             },
           },
+          where,
           skip: offset ? offset : 0,
           take: limit ? limit : 10,
           order: {
@@ -203,9 +302,7 @@ export const studentRersolver: Resolvers = {
           },
         });
         const length = await enrolledRepo.count({
-          where: {
-            SY: SY?.value,
-          },
+          where,
         });
 
         return { enrolledRecords, length };
@@ -222,7 +319,7 @@ export const studentRersolver: Resolvers = {
         authorized(ctx);
         const enrollmentRepo = conn.getRepository(EnrolledRecords);
         const enrollmentRecord = await enrollmentRepo.findOne({
-          where: { id: EID },
+          where: [{ id: EID }],
           relations: {
             student: {
               enrollment_records: true,
@@ -254,7 +351,7 @@ export const studentRersolver: Resolvers = {
   Mutation: {
     updateStudentBasicInfo: async (_, { input, ID }, ctx) => {
       try {
-        authorized(ctx);
+        const { employee_id } = authorized(ctx);
         const studentRepo = conn.getRepository(Student);
         const selectedStudent = await studentRepo.findOne({
           where: { id: ID },
@@ -282,6 +379,8 @@ export const studentRersolver: Resolvers = {
         selectedStudent.contact_number = input.contact_number;
         selectedStudent.LRN = input.LRN;
         const savedStudent = await studentRepo.save(selectedStudent);
+        const trailMessage = `Student ${savedStudent.first_name} ${savedStudent.last_name} basic info has been modified`;
+        recordTrail(employee_id, trailMessage, "MANAGE_STUDENT_INFO");
         return savedStudent;
       } catch (error) {
         throw new GraphQLError(error, {
@@ -293,7 +392,7 @@ export const studentRersolver: Resolvers = {
     },
     addStudent: async (_, { input }, ctx) => {
       try {
-        authorized(ctx);
+        const { employee_id } = authorized(ctx);
         const studentRepo = conn.getRepository(Student);
         await addStudentValidationSchema.validate(input).catch((err) => {
           throw new GraphQLError(err.message, {
@@ -342,6 +441,8 @@ export const studentRersolver: Resolvers = {
         };
 
         const savedStudent = await studentRepo.save(newStudent);
+        const trailMessage = `Student ${savedStudent.first_name} ${savedStudent.last_name} has been added to student list`;
+        recordTrail(employee_id, trailMessage, "ADDED_STUDENT");
         return savedStudent;
       } catch (error) {
         throw new GraphQLError(error, {
@@ -353,7 +454,7 @@ export const studentRersolver: Resolvers = {
     },
     updateStudentAddressInfo: async (_, { ID, input }, ctx) => {
       try {
-        authorized(ctx);
+        const { employee_id } = authorized(ctx);
         const studentRepo = conn.getRepository(Student);
         const selectedStudent = await studentRepo.findOne({
           where: { id: ID },
@@ -400,6 +501,8 @@ export const studentRersolver: Resolvers = {
           selectedStudent.address = newAddress;
         }
         const savedStudent = await studentRepo.save(selectedStudent);
+        const trailMessage = `Student ${savedStudent.first_name} ${savedStudent.last_name} address info has been modified`;
+        recordTrail(employee_id, trailMessage, "ADDED_STUDENT");
         return savedStudent;
       } catch (error) {
         throw new GraphQLError(error, {
@@ -411,7 +514,7 @@ export const studentRersolver: Resolvers = {
     },
     updateStudentParentInfo: async (_, { ID, input }, ctx) => {
       try {
-        authorized(ctx);
+        const { employee_id } = authorized(ctx);
         const studentRepo = conn.getRepository(Student);
         const parentGuardianRepo = conn.getRepository(StudentParentGuardian);
         const selectedStudent = await studentRepo.findOne({
@@ -568,6 +671,10 @@ export const studentRersolver: Resolvers = {
             address: true,
           },
         });
+        const savedStudent = await studentRepo.save(selectedStudent);
+        const trailMessage = `Student ${savedStudent.first_name} ${savedStudent.last_name} parent/guardian info has been modified`;
+        recordTrail(employee_id, trailMessage, "MANAGE_STUDENT_INFO");
+
         return reselectStudent;
       } catch (error) {
         throw new GraphQLError(error, {
@@ -579,7 +686,7 @@ export const studentRersolver: Resolvers = {
     },
     updateStudentRequirementInfo: async (_, { ID, input }, ctx) => {
       try {
-        authorized(ctx);
+        const { employee_id } = authorized(ctx);
         const studentRepo = conn.getRepository(Student);
         const selectedStudent = await studentRepo.findOne({
           where: { id: ID },
@@ -630,6 +737,8 @@ export const studentRersolver: Resolvers = {
           selectedStudent.requirements = newRequirements;
         }
         const savedStudent = await studentRepo.save(selectedStudent);
+        const trailMessage = `Student ${savedStudent.first_name} ${savedStudent.last_name} requirement info has been modified`;
+        recordTrail(employee_id, trailMessage, "MANAGE_STUDENT_INFO");
         return savedStudent;
       } catch (error) {
         throw new GraphQLError(error, {
@@ -641,7 +750,7 @@ export const studentRersolver: Resolvers = {
     },
     updateStudentAcademicRecords: async (_, { ID, input }, ctx) => {
       try {
-        authorized(ctx);
+        const { employee_id } = authorized(ctx);
         const studentRepo = conn.getRepository(Student);
         const studentAcademicRecord = conn.getRepository(StudentSchoolRecord);
         const selectedStudent = await studentRepo.findOne({
@@ -702,6 +811,8 @@ export const studentRersolver: Resolvers = {
             address: true,
           },
         });
+        const trailMessage = `Student ${reselectStudent?.first_name} ${reselectStudent?.last_name} academic record has been modified`;
+        recordTrail(employee_id, trailMessage, "MANAGE_STUDENT_INFO");
 
         return reselectStudent;
       } catch (error) {
@@ -714,7 +825,7 @@ export const studentRersolver: Resolvers = {
     },
     dropEnrollmentRecord: async (_, { input }, ctx) => {
       try {
-        authorized(ctx);
+        const { employee_id } = authorized(ctx);
         if (!input || input === null || input.length === 0) {
           throw new GraphQLError("Invalid Student ID", {
             extensions: {
@@ -742,6 +853,8 @@ export const studentRersolver: Resolvers = {
           status: "d",
         }));
         const savedRecords = await enrollmentRecordRepo.save(refactorRecords);
+        const trailMessage = `Set of students has been dropped`;
+        recordTrail(employee_id, trailMessage, "MANAGE_STUDENT_INFO");
         return savedRecords;
       } catch (error) {
         throw new GraphQLError(error, {
@@ -753,7 +866,7 @@ export const studentRersolver: Resolvers = {
     },
     updateStudentEnrollmentInfo: async (_, { EID, input }, ctx) => {
       try {
-        authorized(ctx);
+        const { employee_id } = authorized(ctx);
         const enrollmentRecordRepo = conn.getRepository(EnrolledRecords);
         const enrollmentRecord = await enrollmentRecordRepo.findOne({
           where: {
@@ -781,6 +894,8 @@ export const studentRersolver: Resolvers = {
         enrollmentRecord.section_id = input.section_id;
         enrollmentRecord.status = input.status;
         const savedRecord = await enrollmentRecordRepo.save(enrollmentRecord);
+        const trailMessage = `Student ${savedRecord.student?.first_name} ${savedRecord.student?.last_name} enrollment record has been modified`;
+        recordTrail(employee_id, trailMessage, "MANAGE_STUDENT_INFO");
         return savedRecord;
       } catch (error) {
         throw new GraphQLError(error, {

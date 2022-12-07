@@ -4,20 +4,17 @@ import auditTrailRoutes from "./pages/AuditTrail/routes";
 import dashboardRoutes from "./pages/Dashboard/routes";
 import employeesRoutes from "./pages/Employees/routes";
 import enrolledListRoute from "./pages/EnrolledList/routes";
-import profileRoutes from "./pages/MenuArea/Profile/routes";
 import settingsRoutes from "./pages/Settings/routes";
 import studentsRoutes from "./pages/Students/routes";
 
-const routes: Array<IRoute> = [
+const generateRoutes = (role: string): Array<IRoute> => [
   ...dashboardRoutes,
-  ...enrolledListRoute,
-  ...studentsRoutes,
-  ...archiveRoute,
-  ...employeesRoutes,
-  ...auditTrailRoutes,
+  ...enrolledListRoute(role),
+  ...studentsRoutes(role),
+  ...archiveRoute(role),
+  ...employeesRoutes(role),
+  ...auditTrailRoutes(role),
   ...settingsRoutes,
-  // Top Menu
-  ...profileRoutes,
 ];
 
-export default routes;
+export default generateRoutes;

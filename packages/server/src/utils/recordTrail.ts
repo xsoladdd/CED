@@ -11,37 +11,16 @@ export const recordTrailType = {
   DISABLE_EMPLOYEE_ACCOUNT: "DISABLE_EMPLOYEE_ACCOUNT",
   LOGIN: "LOGIN",
   OTHER: "OTHER",
+  MANAGE_STUDENT_INFO: "MANAGE_STUDENT_INFO",
+  ADDED_STUDENT: "ADDED_STUDENT",
+  ENROLL_STUDENT: "ENROLL_STUDENT",
 };
 
 type TrecordTrail = keyof typeof recordTrailType;
 
-const generateDescription = (
-  type: TrecordTrail,
-  employee: Employee
-): string => {
-  switch (type) {
-    case "ADD_EMPLOYEE":
-      return `${employee?.profile?.first_name} ${employee?.profile?.last_name} added a new user`;
-
-    case "DISABLE_EMPLOYEE_ACCOUNT":
-      return ``;
-
-    case "LOGIN":
-      return `${employee?.profile?.first_name} ${employee?.profile?.last_name} - ${employee.employee_id} logged in to the system`;
-
-    case "EDIT_EMPLOYEE":
-      return ``;
-
-    case "RESET_EMPLOYEE_PASSWORD":
-      return ``;
-
-    default:
-      return `Did something to the system`;
-  }
-};
-
 export const recordTrail = async (
   employee_id: string,
+  message: string,
   type: TrecordTrail = "OTHER"
 ) => {
   try {
@@ -52,11 +31,10 @@ export const recordTrail = async (
       relations: { profile: true },
     });
     if (employee) {
-      const description = generateDescription(type, employee);
       const trail: AuditTrail = {
         action_type: type,
         employee,
-        description,
+        description: message,
         timestamp: new Date().toString(),
       };
       await auditTrailRepo.save(trail);

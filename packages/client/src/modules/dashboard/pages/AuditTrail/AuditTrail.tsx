@@ -1,7 +1,12 @@
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { format } from "date-fns";
 import React, { useRef } from "react";
-import { FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiArrowRight,
+  FiRefreshCcw,
+  FiSearch,
+} from "react-icons/fi";
 import Card, { CardFooter, CardHeader } from "../../../../components/Card";
 import TableLoading from "../../../../components/Table/Loading";
 import {
@@ -42,6 +47,7 @@ const AuditTrail: React.FC = ({}) => {
             : (typeRef.current?.value as string),
       },
     },
+    notifyOnNetworkStatusChange: true,
   });
 
   const [getAuditTrails] = useLazyQuery(GetAuditTrailsDocument, {});
@@ -226,6 +232,30 @@ const AuditTrail: React.FC = ({}) => {
           type="button"
         >
           Export List
+        </button>
+        <button
+          className="btn btn-sm btn-ghost flex gap-2"
+          onClick={() => {
+            refetch({
+              limit: itemsPerPage,
+              offset: pageOffset,
+              search:
+                typeof searchRef.current?.value === "undefined"
+                  ? ""
+                  : searchRef.current?.value,
+              filter: {
+                // type: typeRef.current?.value,
+                type:
+                  typeRef.current?.value === "" ||
+                  typeof typeRef.current?.value === "undefined"
+                    ? ""
+                    : (typeRef.current?.value as string),
+              },
+            });
+          }}
+          type="button"
+        >
+          <FiRefreshCcw /> Refresh
         </button>
       </div>
       <div className="flex gap-3 place-items-center">

@@ -15,6 +15,7 @@ export const useEmployee = () => {
       search: "",
       filter: {},
     },
+    notifyOnNetworkStatusChange: true,
   });
 
   const handleRefetch = (param: { search?: string; status?: number }) => {

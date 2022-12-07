@@ -115,6 +115,7 @@ const AddStudentStepper: React.FC = ({}) => {
               variables: {
                 limit: 10,
                 offset: 0,
+                filter: {},
               },
             },
           ],
