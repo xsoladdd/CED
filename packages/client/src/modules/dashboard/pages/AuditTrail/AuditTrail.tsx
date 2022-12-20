@@ -19,6 +19,7 @@ import { exportExcel } from "../../../../utils/exportToExcel";
 import { formatDateReadable } from "../../../../utils/formatDateReadable";
 import { column } from "./helper";
 import _ from "lodash";
+import Tooltip from "../../../../components/Tooltip";
 
 const AuditTrail: React.FC = ({}) => {
   const searchRef = useRef<HTMLInputElement>(null);
@@ -50,7 +51,10 @@ const AuditTrail: React.FC = ({}) => {
     notifyOnNetworkStatusChange: true,
   });
 
-  const [getAuditTrails] = useLazyQuery(GetAuditTrailsDocument, {});
+  const [getAuditTrails, { loading: exportLoading }] = useLazyQuery(
+    GetAuditTrailsDocument,
+    {}
+  );
 
   const handleExcelExport = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -154,10 +158,18 @@ const AuditTrail: React.FC = ({}) => {
           <CardFooter
             right={
               <div className="flex gap-2">
-                <button className="btn btn-sm btn-link" type={"reset"}>
+                <button
+                  className="btn btn-sm btn-link"
+                  type={"reset"}
+                  disabled={exportLoading}
+                >
                   Reset
                 </button>
-                <button className="btn btn-sm btn-success" type={"submit"}>
+                <button
+                  className="btn btn-sm btn-success"
+                  type={"submit"}
+                  disabled={exportLoading}
+                >
                   Filter
                 </button>
               </div>
@@ -225,40 +237,43 @@ const AuditTrail: React.FC = ({}) => {
 
   const tableActions = (
     <div className="w-full flex justify-between mb-[20px]">
-      <div className="flex gap-2">
+      <div className="flex gap-2"></div>
+      <div className="flex gap-3 place-items-center">
         <button
           className="btn btn-sm btn-success"
           onClick={handleExcelExport}
+          disabled={exportLoading}
           type="button"
         >
           Export List
         </button>
-        <button
-          className="btn btn-sm btn-ghost flex gap-2"
-          onClick={() => {
-            refetch({
-              limit: itemsPerPage,
-              offset: pageOffset,
-              search:
-                typeof searchRef.current?.value === "undefined"
-                  ? ""
-                  : searchRef.current?.value,
-              filter: {
-                // type: typeRef.current?.value,
-                type:
-                  typeRef.current?.value === "" ||
-                  typeof typeRef.current?.value === "undefined"
+        <Tooltip text="Refresh" direction="top">
+          <button
+            className="btn btn-sm btn-ghost flex gap-2"
+            disabled={exportLoading}
+            onClick={() => {
+              refetch({
+                limit: itemsPerPage,
+                offset: pageOffset,
+                search:
+                  typeof searchRef.current?.value === "undefined"
                     ? ""
-                    : (typeRef.current?.value as string),
-              },
-            });
-          }}
-          type="button"
-        >
-          <FiRefreshCcw /> Refresh
-        </button>
-      </div>
-      <div className="flex gap-3 place-items-center">
+                    : searchRef.current?.value,
+                filter: {
+                  // type: typeRef.current?.value,
+                  type:
+                    typeRef.current?.value === "" ||
+                    typeof typeRef.current?.value === "undefined"
+                      ? ""
+                      : (typeRef.current?.value as string),
+                },
+              });
+            }}
+            type="button"
+          >
+            <FiRefreshCcw />
+          </button>
+        </Tooltip>
         <span>
           <FiArrowLeft size="15" onClick={() => handleBack()} />
         </span>

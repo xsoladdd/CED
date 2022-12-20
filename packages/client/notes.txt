@@ -74,3 +74,28 @@ FILTER
      - Section
      - School Year
   -
+
+
+
+
+Enrollment Stepper
+    Step 1:
+        - Search Student info
+            - If student is not found, Ask to redirect to creation of student profile
+            - Else if , Check for existing record for the current year.
+                - If Existing. Prompt (Already Existing)
+                - Else Fillout Enrollment Form
+                - Show previous enrollment record in table format (With school year to avoid confusion)
+                    - FORM:
+                        - Year
+                            - Validate if record is existing or previous year is lessthan year that is inputed.
+                                - If Valid, Fillup more
+                                    - Section
+                                    - Payment Status
+                                - Else
+                                    - Show error that year is existing or not valid.
+
+
+
+Dashboard Cards
+    - Bar graph for number of students (NP,PP,FP,D)

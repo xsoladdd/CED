@@ -91,7 +91,9 @@ const EnrolledList: React.FC = ({}) => {
 
   const sectionArray = year_level.filter(({ value }) => value === selectedYear);
 
-  const [getLazyGetEnrolledList] = useLazyQuery(GetEnrolledListDocument);
+  const [getLazyGetEnrolledList, { loading: exportLoading }] = useLazyQuery(
+    GetEnrolledListDocument
+  );
 
   const handleExcelExport = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -152,6 +154,7 @@ const EnrolledList: React.FC = ({}) => {
               <button
                 className="btn btn-sm btn-link"
                 type={"button"}
+                disabled={exportLoading}
                 onClick={() => {
                   setSelectedSection("");
                   setSelectedYear("");
@@ -172,6 +175,7 @@ const EnrolledList: React.FC = ({}) => {
               <button
                 className="btn btn-sm btn-success"
                 type={"button"}
+                disabled={exportLoading}
                 onClick={() => {
                   if (
                     searchRef.current?.value ||
@@ -208,7 +212,7 @@ const EnrolledList: React.FC = ({}) => {
           <input
             type="search"
             ref={searchRef}
-            placeholder="Search for ID, Name and Email"
+            placeholder="Search Name or Email"
             className="input input-bordered input-sm w-full"
           />
         </label>
@@ -273,6 +277,7 @@ const EnrolledList: React.FC = ({}) => {
       <Tooltip text="Registration card" direction="top">
         <button
           className="btn btn-xs btn-info "
+          disabled={exportLoading}
           onClick={() => {
             setSelectedRecord(id, "reg-card");
             toggleRegFormModalStatus();
@@ -283,6 +288,7 @@ const EnrolledList: React.FC = ({}) => {
       </Tooltip>
       <Tooltip text="View/Edit student" direction="top">
         <button
+          disabled={exportLoading}
           className="btn btn-xs btn-success"
           onClick={() => {
             setSelectedRecord(id, "enrollment-record");
@@ -298,12 +304,12 @@ const EnrolledList: React.FC = ({}) => {
       </Tooltip>
       <Tooltip text="Drop Student" direction="top">
         <button
+          disabled={exportLoading || status === "d"}
           className="btn btn-xs btn-error "
           onClick={() => {
             deletedId.current = id;
             toggle();
           }}
-          disabled={status === "d"}
         >
           <FiTrash size="12" />
         </button>
@@ -462,6 +468,8 @@ const EnrolledList: React.FC = ({}) => {
               >
                 Drop Students
               </button>
+            </div>
+            <div className="flex gap-3 place-items-center">
               <button
                 className="btn btn-sm btn-success"
                 onClick={handleExcelExport}
@@ -469,26 +477,26 @@ const EnrolledList: React.FC = ({}) => {
               >
                 Export List
               </button>
-              <button
-                className="btn btn-sm btn-ghost flex gap-2"
-                onClick={() => {
-                  refetch({
-                    limit: itemsPerPage,
-                    offset: pageOffset,
-                    filter: {
-                      search: searchRef.current?.value,
-                      section: selectedSection ? selectedSection : undefined,
-                      status: statusRef.current?.value,
-                      year_level: selectedYear ? selectedYear : undefined,
-                    },
-                  });
-                }}
-                type="button"
-              >
-                <FiRefreshCcw /> Refresh
-              </button>
-            </div>
-            <div className="flex gap-3 place-items-center">
+              <Tooltip text="Refresh" direction="top">
+                <button
+                  className="btn btn-sm btn-ghost flex gap-2"
+                  onClick={() => {
+                    refetch({
+                      limit: itemsPerPage,
+                      offset: pageOffset,
+                      filter: {
+                        search: searchRef.current?.value,
+                        section: selectedSection ? selectedSection : undefined,
+                        status: statusRef.current?.value,
+                        year_level: selectedYear ? selectedYear : undefined,
+                      },
+                    });
+                  }}
+                  type="button"
+                >
+                  <FiRefreshCcw />
+                </button>
+              </Tooltip>
               <span>
                 <FiArrowLeft size="15" onClick={() => handleBack()} />
               </span>

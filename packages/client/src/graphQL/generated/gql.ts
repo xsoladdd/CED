@@ -10,10 +10,12 @@ const documents = {
     "mutation addEditSection($input: SectionInput!) {\n  addEditSection(input: $input) {\n    year_level\n    name\n    id\n  }\n}": types.AddEditSectionDocument,
     "mutation addEmployee($input: addEmployeeInput!) {\n  addEmployee(input: $input) {\n    ...Employee\n  }\n}": types.AddEmployeeDocument,
     "mutation addStudent($input: StudentInput!) {\n  addStudent(input: $input) {\n    ...Student\n  }\n}": types.AddStudentDocument,
+    "mutation addStudents($input: [StudentInput]!) {\n  addStudents(input: $input) {\n    ...Student\n  }\n}": types.AddStudentsDocument,
     "mutation authMutation($input: AuthInput!) {\n  auth(input: $input) {\n    needNewPassword\n    token\n  }\n}": types.AuthMutationDocument,
     "mutation EnableEmployee($employeeId: String!) {\n  enableEmployee(employee_id: $employeeId) {\n    ...Employee\n  }\n}": types.EnableEmployeeDocument,
     "mutation DropEnrollmentRecord($input: [String]) {\n  dropEnrollmentRecord(input: $input) {\n    ...EnrolledRecord\n  }\n}": types.DropEnrollmentRecordDocument,
     "mutation DisableEmployee($employeeId: String!) {\n  disableEmployee(employee_id: $employeeId) {\n    ...Employee\n  }\n}": types.DisableEmployeeDocument,
+    "mutation enrollStudent($input: enrollStudentInput!) {\n  enrollStudent(input: $input) {\n    ...Student\n  }\n}": types.EnrollStudentDocument,
     "mutation ToggleSectionStatus($deleteSectionId: String!) {\n  toggleSectionStatus(id: $deleteSectionId) {\n    id\n    name\n    year_level\n    status\n  }\n}": types.ToggleSectionStatusDocument,
     "mutation updateStudentAcademicRecords($input: [StudentSchoolRecordInput]!, $id: String!) {\n  updateStudentAcademicRecords(input: $input, ID: $id) {\n    ...Student\n  }\n}": types.UpdateStudentAcademicRecordsDocument,
     "mutation updateStudentAddressInfo($input: StudentAddressInput!, $id: String!) {\n  updateStudentAddressInfo(input: $input, ID: $id) {\n    ...Student\n  }\n}": types.UpdateStudentAddressInfoDocument,
@@ -32,10 +34,12 @@ const documents = {
     "query GetMe {\n  getMe {\n    employee_id\n    id\n    profile {\n      first_name\n      last_name\n      middle_name\n    }\n    role\n  }\n}": types.GetMeDocument,
     "query getSchoolYears {\n  getSchoolYears {\n    name\n    isActive\n  }\n}": types.GetSchoolYearsDocument,
     "query GetStudent($sid: String!) {\n  getStudent(SID: $sid) {\n    ...Student\n  }\n}": types.GetStudentDocument,
+    "query GetStudentToEnrollList($search: String!) {\n  getStudentToEnrollList(search: $search) {\n    ...Student\n  }\n}": types.GetStudentToEnrollListDocument,
     "query GetStudents($filter: filterGetStudents!, $offset: Int, $limit: Int) {\n  getStudents(filter: $filter, offset: $offset, limit: $limit) {\n    length\n    students {\n      ...Student\n    }\n  }\n}": types.GetStudentsDocument,
     "query getYearLevelSections {\n  getYearLevelSections {\n    id\n    name\n    value\n    sections {\n      id\n      name\n      year_level\n      status\n    }\n  }\n}": types.GetYearLevelSectionsDocument,
     "query Ping {\n  meow\n}": types.PingDocument,
     "query Query {\n  test\n}": types.QueryDocument,
+    "query ValidateStudentIDs($lrNs: [String]) {\n  validateStudentIDs(LRNs: $lrNs) {\n    LRNs\n    isValid\n    message\n  }\n}": types.ValidateStudentIDsDocument,
 };
 
 export function graphql(source: "fragment Employee on Employee {\n  employee_id\n  id\n  partial_password\n  role\n  status\n  profile {\n    first_name\n    id\n    middle_name\n    last_name\n  }\n}"): (typeof documents)["fragment Employee on Employee {\n  employee_id\n  id\n  partial_password\n  role\n  status\n  profile {\n    first_name\n    id\n    middle_name\n    last_name\n  }\n}"];
@@ -45,10 +49,12 @@ export function graphql(source: "mutation ActivateSchoolYear($sy: String!) {\n  
 export function graphql(source: "mutation addEditSection($input: SectionInput!) {\n  addEditSection(input: $input) {\n    year_level\n    name\n    id\n  }\n}"): (typeof documents)["mutation addEditSection($input: SectionInput!) {\n  addEditSection(input: $input) {\n    year_level\n    name\n    id\n  }\n}"];
 export function graphql(source: "mutation addEmployee($input: addEmployeeInput!) {\n  addEmployee(input: $input) {\n    ...Employee\n  }\n}"): (typeof documents)["mutation addEmployee($input: addEmployeeInput!) {\n  addEmployee(input: $input) {\n    ...Employee\n  }\n}"];
 export function graphql(source: "mutation addStudent($input: StudentInput!) {\n  addStudent(input: $input) {\n    ...Student\n  }\n}"): (typeof documents)["mutation addStudent($input: StudentInput!) {\n  addStudent(input: $input) {\n    ...Student\n  }\n}"];
+export function graphql(source: "mutation addStudents($input: [StudentInput]!) {\n  addStudents(input: $input) {\n    ...Student\n  }\n}"): (typeof documents)["mutation addStudents($input: [StudentInput]!) {\n  addStudents(input: $input) {\n    ...Student\n  }\n}"];
 export function graphql(source: "mutation authMutation($input: AuthInput!) {\n  auth(input: $input) {\n    needNewPassword\n    token\n  }\n}"): (typeof documents)["mutation authMutation($input: AuthInput!) {\n  auth(input: $input) {\n    needNewPassword\n    token\n  }\n}"];
 export function graphql(source: "mutation EnableEmployee($employeeId: String!) {\n  enableEmployee(employee_id: $employeeId) {\n    ...Employee\n  }\n}"): (typeof documents)["mutation EnableEmployee($employeeId: String!) {\n  enableEmployee(employee_id: $employeeId) {\n    ...Employee\n  }\n}"];
 export function graphql(source: "mutation DropEnrollmentRecord($input: [String]) {\n  dropEnrollmentRecord(input: $input) {\n    ...EnrolledRecord\n  }\n}"): (typeof documents)["mutation DropEnrollmentRecord($input: [String]) {\n  dropEnrollmentRecord(input: $input) {\n    ...EnrolledRecord\n  }\n}"];
 export function graphql(source: "mutation DisableEmployee($employeeId: String!) {\n  disableEmployee(employee_id: $employeeId) {\n    ...Employee\n  }\n}"): (typeof documents)["mutation DisableEmployee($employeeId: String!) {\n  disableEmployee(employee_id: $employeeId) {\n    ...Employee\n  }\n}"];
+export function graphql(source: "mutation enrollStudent($input: enrollStudentInput!) {\n  enrollStudent(input: $input) {\n    ...Student\n  }\n}"): (typeof documents)["mutation enrollStudent($input: enrollStudentInput!) {\n  enrollStudent(input: $input) {\n    ...Student\n  }\n}"];
 export function graphql(source: "mutation ToggleSectionStatus($deleteSectionId: String!) {\n  toggleSectionStatus(id: $deleteSectionId) {\n    id\n    name\n    year_level\n    status\n  }\n}"): (typeof documents)["mutation ToggleSectionStatus($deleteSectionId: String!) {\n  toggleSectionStatus(id: $deleteSectionId) {\n    id\n    name\n    year_level\n    status\n  }\n}"];
 export function graphql(source: "mutation updateStudentAcademicRecords($input: [StudentSchoolRecordInput]!, $id: String!) {\n  updateStudentAcademicRecords(input: $input, ID: $id) {\n    ...Student\n  }\n}"): (typeof documents)["mutation updateStudentAcademicRecords($input: [StudentSchoolRecordInput]!, $id: String!) {\n  updateStudentAcademicRecords(input: $input, ID: $id) {\n    ...Student\n  }\n}"];
 export function graphql(source: "mutation updateStudentAddressInfo($input: StudentAddressInput!, $id: String!) {\n  updateStudentAddressInfo(input: $input, ID: $id) {\n    ...Student\n  }\n}"): (typeof documents)["mutation updateStudentAddressInfo($input: StudentAddressInput!, $id: String!) {\n  updateStudentAddressInfo(input: $input, ID: $id) {\n    ...Student\n  }\n}"];
@@ -67,10 +73,12 @@ export function graphql(source: "query getGlobalVars {\n  getGlobalVars {\n    a
 export function graphql(source: "query GetMe {\n  getMe {\n    employee_id\n    id\n    profile {\n      first_name\n      last_name\n      middle_name\n    }\n    role\n  }\n}"): (typeof documents)["query GetMe {\n  getMe {\n    employee_id\n    id\n    profile {\n      first_name\n      last_name\n      middle_name\n    }\n    role\n  }\n}"];
 export function graphql(source: "query getSchoolYears {\n  getSchoolYears {\n    name\n    isActive\n  }\n}"): (typeof documents)["query getSchoolYears {\n  getSchoolYears {\n    name\n    isActive\n  }\n}"];
 export function graphql(source: "query GetStudent($sid: String!) {\n  getStudent(SID: $sid) {\n    ...Student\n  }\n}"): (typeof documents)["query GetStudent($sid: String!) {\n  getStudent(SID: $sid) {\n    ...Student\n  }\n}"];
+export function graphql(source: "query GetStudentToEnrollList($search: String!) {\n  getStudentToEnrollList(search: $search) {\n    ...Student\n  }\n}"): (typeof documents)["query GetStudentToEnrollList($search: String!) {\n  getStudentToEnrollList(search: $search) {\n    ...Student\n  }\n}"];
 export function graphql(source: "query GetStudents($filter: filterGetStudents!, $offset: Int, $limit: Int) {\n  getStudents(filter: $filter, offset: $offset, limit: $limit) {\n    length\n    students {\n      ...Student\n    }\n  }\n}"): (typeof documents)["query GetStudents($filter: filterGetStudents!, $offset: Int, $limit: Int) {\n  getStudents(filter: $filter, offset: $offset, limit: $limit) {\n    length\n    students {\n      ...Student\n    }\n  }\n}"];
 export function graphql(source: "query getYearLevelSections {\n  getYearLevelSections {\n    id\n    name\n    value\n    sections {\n      id\n      name\n      year_level\n      status\n    }\n  }\n}"): (typeof documents)["query getYearLevelSections {\n  getYearLevelSections {\n    id\n    name\n    value\n    sections {\n      id\n      name\n      year_level\n      status\n    }\n  }\n}"];
 export function graphql(source: "query Ping {\n  meow\n}"): (typeof documents)["query Ping {\n  meow\n}"];
 export function graphql(source: "query Query {\n  test\n}"): (typeof documents)["query Query {\n  test\n}"];
+export function graphql(source: "query ValidateStudentIDs($lrNs: [String]) {\n  validateStudentIDs(LRNs: $lrNs) {\n    LRNs\n    isValid\n    message\n  }\n}"): (typeof documents)["query ValidateStudentIDs($lrNs: [String]) {\n  validateStudentIDs(LRNs: $lrNs) {\n    LRNs\n    isValid\n    message\n  }\n}"];
 
 export function graphql(source: string): unknown;
 export function graphql(source: string) {

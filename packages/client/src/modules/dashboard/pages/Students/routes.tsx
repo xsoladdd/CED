@@ -11,6 +11,9 @@ const AddStudentsStepper = dynamic(
     suspense: true,
   }
 );
+const ImportStudent = dynamic(() => import(`./Components/ImportStudent`), {
+  suspense: true,
+});
 const StudentDetails = dynamic(
   () => import(`../Shared/Components/StudentDetails`),
   {
@@ -29,7 +32,12 @@ const studentsRoute = (role: string): Array<IRoute> =>
           activePath: "students",
           logo: (props) => <FiUser {...props} />,
         },
-
+        {
+          component: ImportStudent,
+          name: `students`,
+          path: `students:import-students`,
+          activePath: "students",
+        },
         {
           component: AddStudentsStepper,
           name: `students`,

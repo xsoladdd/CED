@@ -1,0 +1,5 @@
+query GetStudentToEnrollList($search: String!) {
+  getStudentToEnrollList(search: $search) {
+    ...Student
+  }
+}

@@ -66,15 +66,18 @@ const Students: React.FC = ({}) => {
   );
   const studentData = data?.getStudents?.students as Array<Student>;
 
-  const [getLazyGetStudents] = useLazyQuery(GetStudentsDocument, {
-    variables: {
-      limit: 1000,
-      offset: 0,
-      filter: {
-        search: searchRef.current?.value,
+  const [getLazyGetStudents, { loading: exportLoading }] = useLazyQuery(
+    GetStudentsDocument,
+    {
+      variables: {
+        limit: 1000,
+        offset: 0,
+        filter: {
+          search: searchRef.current?.value,
+        },
       },
-    },
-  });
+    }
+  );
 
   const handleExcelExport = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -117,6 +120,7 @@ const Students: React.FC = ({}) => {
           right={
             <div className="flex gap-2">
               <button
+                disabled={exportLoading}
                 className="btn btn-sm btn-link"
                 type={"button"}
                 onClick={() => {
@@ -137,6 +141,7 @@ const Students: React.FC = ({}) => {
               <button
                 className="btn btn-sm btn-success"
                 type={"button"}
+                disabled={exportLoading}
                 onClick={() => {
                   resetPagination();
                   refetch({
@@ -192,6 +197,7 @@ const Students: React.FC = ({}) => {
             {props?.id && (
               <Tooltip text="View/Edit student" direction="top">
                 <button
+                  disabled={exportLoading}
                   className="btn btn-xs btn-success"
                   onClick={() => {
                     setSelectedRecord(props.id as string, "student-record");
@@ -222,6 +228,7 @@ const Students: React.FC = ({}) => {
           <div className="w-full flex justify-between mb-[20px]">
             <div className="flex gap-2">
               <button
+                disabled={exportLoading}
                 className="btn btn-sm btn-info"
                 onClick={() =>
                   pushRoute({
@@ -233,29 +240,45 @@ const Students: React.FC = ({}) => {
                 Add student
               </button>
               <button
+                className="btn btn-sm btn-primary"
+                disabled={exportLoading}
+                onClick={() =>
+                  pushRoute({
+                    title: "Import students",
+                    route: "students:import-students",
+                  })
+                }
+              >
+                Import students
+              </button>
+            </div>
+            <div className="flex gap-3 place-items-center">
+              <button
+                disabled={exportLoading}
                 className="btn btn-sm btn-success"
                 onClick={handleExcelExport}
                 type="button"
               >
                 Export List
               </button>
-              <button
-                className="btn btn-sm btn-ghost flex gap-2"
-                onClick={() => {
-                  refetch({
-                    limit: itemsPerPage,
-                    offset: pageOffset,
-                    filter: {
-                      search: searchRef.current?.value,
-                    },
-                  });
-                }}
-                type="button"
-              >
-                <FiRefreshCcw /> Refresh
-              </button>
-            </div>
-            <div className="flex gap-3 place-items-center">
+              <Tooltip text="Refresh" direction="top">
+                <button
+                  disabled={exportLoading}
+                  className="btn btn-sm btn-ghost flex gap-2"
+                  onClick={() => {
+                    refetch({
+                      limit: itemsPerPage,
+                      offset: pageOffset,
+                      filter: {
+                        search: searchRef.current?.value,
+                      },
+                    });
+                  }}
+                  type="button"
+                >
+                  <FiRefreshCcw />
+                </button>
+              </Tooltip>
               <span>
                 <FiArrowLeft size="15" onClick={() => handleBack()} />
               </span>
@@ -278,9 +301,9 @@ const Students: React.FC = ({}) => {
               </thead>
               <tbody className="text-center">
                 {loading ? <TableLoading>loading</TableLoading> : tableData}
-                {/* {data?.getEmployees?.length === 0 ? (
-              <TableLoading>No data found</TableLoading>
-            ) : null} */}
+                {data?.getStudents?.length === 0 ? (
+                  <TableLoading>No data found</TableLoading>
+                ) : null}
                 {error && (
                   <TableLoading>
                     Something went wrong fetching the table

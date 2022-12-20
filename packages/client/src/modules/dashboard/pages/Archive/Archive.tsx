@@ -1,5 +1,6 @@
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { format } from "date-fns";
+import _ from "lodash";
 import React, { useEffect, useRef, useState } from "react";
 import {
   FiArrowLeft,
@@ -25,7 +26,6 @@ import { exportExcel } from "../../../../utils/exportToExcel";
 import { generateSectionYear } from "../EnrolledList/helper";
 import LegendCard from "./Components/LegendCard";
 import { column } from "./helper";
-import _ from "lodash";
 
 const Archive: React.FC = ({}) => {
   const { pushRoute } = useDashboardRouter();
@@ -83,7 +83,7 @@ const Archive: React.FC = ({}) => {
 
   const sectionArray = year_level.filter(({ value }) => value === selectedYear);
 
-  const [getLazyEnrolledArchiveList] = useLazyQuery(
+  const [getLazyEnrolledArchiveList, { loading: exportLoading }] = useLazyQuery(
     GetEnrolledArchiveListDocument
   );
 
@@ -91,6 +91,7 @@ const Archive: React.FC = ({}) => {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
+    console.log("exporting");
 
     getLazyEnrolledArchiveList({
       variables: {
@@ -148,6 +149,7 @@ const Archive: React.FC = ({}) => {
               <button
                 className="btn btn-sm btn-link"
                 type={"button"}
+                disabled={exportLoading}
                 onClick={() => {
                   setSelectedSection("");
                   setSelectedYear("");
@@ -179,7 +181,7 @@ const Archive: React.FC = ({}) => {
               <button
                 className="btn btn-sm btn-success"
                 type={"button"}
-                // disabled={!selectedYear}
+                disabled={exportLoading}
                 onClick={() => {
                   if (
                     searchRef.current?.value ||
@@ -218,7 +220,7 @@ const Archive: React.FC = ({}) => {
           <input
             type="search"
             ref={searchRef}
-            placeholder="Search for ID, Name and Email"
+            placeholder="Search Name or Email"
             className="input input-bordered input-sm w-full"
           />
         </label>
@@ -362,35 +364,39 @@ const Archive: React.FC = ({}) => {
 
         <Card className="w-full">
           <div className="w-full flex justify-between mb-[20px]">
-            <div className="flex gap-2">
+            <div className="flex gap-2"></div>
+            <div className="flex gap-3 place-items-center">
+              {" "}
               <button
                 className="btn btn-sm btn-success"
-                onClick={handleExcelExport}
+                onClick={(e) => handleExcelExport(e)}
                 type="button"
+                disabled={exportLoading}
               >
                 Export List
               </button>
-              <button
-                className="btn btn-sm btn-ghost flex gap-2"
-                onClick={() => {
-                  refetch({
-                    limit: itemsPerPage,
-                    offset: pageOffset,
-                    filter: {
-                      search: searchRef.current?.value,
-                      section: selectedSection ? selectedSection : undefined,
-                      status: statusRef.current?.value,
-                      year_level: selectedYear ? selectedYear : undefined,
-                      school_year: schoolYearRef.current?.value,
-                    },
-                  });
-                }}
-                type="button"
-              >
-                <FiRefreshCcw /> Refresh
-              </button>
-            </div>
-            <div className="flex gap-3 place-items-center">
+              <Tooltip text="Refresh" direction="top">
+                <button
+                  className="btn btn-sm btn-ghost flex gap-2"
+                  disabled={exportLoading}
+                  onClick={() => {
+                    refetch({
+                      limit: itemsPerPage,
+                      offset: pageOffset,
+                      filter: {
+                        search: searchRef.current?.value,
+                        section: selectedSection ? selectedSection : undefined,
+                        status: statusRef.current?.value,
+                        year_level: selectedYear ? selectedYear : undefined,
+                        school_year: schoolYearRef.current?.value,
+                      },
+                    });
+                  }}
+                  type="button"
+                >
+                  <FiRefreshCcw />
+                </button>
+              </Tooltip>
               <span>
                 <FiArrowLeft size="15" onClick={() => handleBack()} />
               </span>

@@ -61,7 +61,10 @@ const Employees: React.FC = ({}) => {
     globalVars: { roles },
   } = useStore();
 
-  const [getLazyEmployeesDocument] = useLazyQuery(GetEmployeesDocument, {});
+  const [getLazyEmployeesDocument, { loading: exportLoading }] = useLazyQuery(
+    GetEmployeesDocument,
+    {}
+  );
 
   const handleExcelExport = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -145,10 +148,18 @@ const Employees: React.FC = ({}) => {
           <CardFooter
             right={
               <div className="flex gap-2">
-                <button className="btn btn-sm btn-link" type={"reset"}>
+                <button
+                  className="btn btn-sm btn-link"
+                  type={"reset"}
+                  disabled={exportLoading}
+                >
                   Reset
                 </button>
-                <button className="btn btn-sm btn-success" type={"submit"}>
+                <button
+                  className="btn btn-sm btn-success"
+                  type={"submit"}
+                  disabled={exportLoading}
+                >
                   Filter
                 </button>
               </div>
@@ -206,6 +217,7 @@ const Employees: React.FC = ({}) => {
                 <button
                   className="btn btn-xs btn-success "
                   onClick={() => toggleResetPasswordStatus()}
+                  disabled={exportLoading}
                 >
                   <FaSyncAlt size="12" />
                 </button>
@@ -219,7 +231,11 @@ const Employees: React.FC = ({}) => {
                     "btn btn-xs",
                     props?.status ? `btn-error` : `btn-info`
                   )}
-                  disabled={enableEmployeeLoading || disableEmployeeLoading}
+                  disabled={
+                    enableEmployeeLoading ||
+                    disableEmployeeLoading ||
+                    exportLoading
+                  }
                   onClick={() => {
                     employeeRef.current = {
                       employee_id: props?.employee_id,
@@ -293,29 +309,33 @@ const Employees: React.FC = ({}) => {
               >
                 Add employee
               </button>
+            </div>
+            <div className="flex gap-3 place-items-center">
               <button
                 className="btn btn-sm btn-success"
+                disabled={exportLoading}
                 onClick={handleExcelExport}
                 type="button"
               >
                 Export List
               </button>
-              <button
-                className="btn btn-sm btn-ghost flex gap-2"
-                onClick={() => {
-                  refetch({
-                    limit: itemsPerPage,
-                    offset: pageOffset,
-                    search: "",
-                    filter: {},
-                  });
-                }}
-                type="button"
-              >
-                <FiRefreshCcw /> Refresh
-              </button>
-            </div>
-            <div className="flex gap-3 place-items-center">
+              <Tooltip text="Refresh" direction="top">
+                <button
+                  className="btn btn-sm btn-ghost flex gap-2"
+                  disabled={exportLoading}
+                  onClick={() => {
+                    refetch({
+                      limit: itemsPerPage,
+                      offset: pageOffset,
+                      search: "",
+                      filter: {},
+                    });
+                  }}
+                  type="button"
+                >
+                  <FiRefreshCcw />
+                </button>
+              </Tooltip>
               <span>
                 <FiArrowLeft size="15" onClick={() => handleBack()} />
               </span>

@@ -22,7 +22,7 @@ const LegendCard: React.FC = ({}) => {
 
         <li className="text-xs flex gap-2">
           <Status color="blue" />
-          <span>Alumni</span>
+          <span>Old Student</span>
         </li>
       </ul>
     </Card>

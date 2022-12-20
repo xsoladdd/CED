@@ -1,0 +1,7 @@
+query ValidateStudentIDs($lrNs: [String]) {
+  validateStudentIDs(LRNs: $lrNs) {
+    LRNs
+    isValid
+    message
+  }
+}

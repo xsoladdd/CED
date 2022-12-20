@@ -34,7 +34,7 @@ const LRNInput: React.FC<ILRNInputProps> = ({
   // Effect for API call
   useEffect(
     () => {
-      if (debouncedLRN && LRN.length >= 14) {
+      if (debouncedLRN && LRN.length >= 5) {
         setFetchLoading(true);
         checkLRN({
           variables: {

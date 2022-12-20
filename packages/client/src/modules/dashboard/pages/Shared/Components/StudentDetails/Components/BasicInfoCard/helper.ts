@@ -18,7 +18,7 @@ export const basicInfoSchema = Yup.object().shape({
   birthday: Yup.date().required("Required"),
   gender: Yup.string().oneOf(["M", "F", "m", "f"]).required("Required"),
   LRN: Yup.string()
-    .min(14, "Field Too Short!")
+    .min(5, "Field Too Short!")
     .max(16, "Too Long!")
     .required("Required"),
   contact_number: Yup.string()

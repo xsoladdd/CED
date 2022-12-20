@@ -1,0 +1,5 @@
+mutation enrollStudent($input: enrollStudentInput!) {
+  enrollStudent(input: $input) {
+    ...Student
+  }
+}

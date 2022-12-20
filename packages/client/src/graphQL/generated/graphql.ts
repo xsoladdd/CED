@@ -91,12 +91,14 @@ export type Mutation = {
   addEditSection?: Maybe<Section>;
   addEmployee?: Maybe<Employee>;
   addStudent?: Maybe<Student>;
+  addStudents?: Maybe<Array<Maybe<Student>>>;
   auth?: Maybe<AuthResponse>;
   changeEmployeePassword?: Maybe<Employee>;
   changeMyPassword?: Maybe<Employee>;
   disableEmployee?: Maybe<Employee>;
   dropEnrollmentRecord?: Maybe<Array<Maybe<EnrolledRecord>>>;
   enableEmployee?: Maybe<Employee>;
+  enrollStudent?: Maybe<Student>;
   resetEmployeePassword?: Maybe<Employee>;
   toggleSectionStatus?: Maybe<Array<Maybe<Section>>>;
   updateStudentAcademicRecords?: Maybe<Student>;
@@ -128,6 +130,11 @@ export type MutationAddStudentArgs = {
 };
 
 
+export type MutationAddStudentsArgs = {
+  input: Array<InputMaybe<StudentInput>>;
+};
+
+
 export type MutationAuthArgs = {
   input: AuthInput;
 };
@@ -156,6 +163,11 @@ export type MutationDropEnrollmentRecordArgs = {
 
 export type MutationEnableEmployeeArgs = {
   employee_id: Scalars['String'];
+};
+
+
+export type MutationEnrollStudentArgs = {
+  input: EnrollStudentInput;
 };
 
 
@@ -220,10 +232,12 @@ export type Query = {
   getSchoolYears?: Maybe<Array<Maybe<GetSchoolYearsResponse>>>;
   getSections?: Maybe<Array<Maybe<Section>>>;
   getStudent?: Maybe<Student>;
+  getStudentToEnrollList?: Maybe<Array<Maybe<Student>>>;
   getStudents?: Maybe<GetStudentsResponse>;
   getYearLevelSections?: Maybe<Array<Maybe<YearLevelSection>>>;
   meow?: Maybe<Scalars['String']>;
   test?: Maybe<Scalars['String']>;
+  validateStudentIDs: ValidateStudentIDsResponse;
 };
 
 
@@ -283,10 +297,20 @@ export type QueryGetStudentArgs = {
 };
 
 
+export type QueryGetStudentToEnrollListArgs = {
+  search: Scalars['String'];
+};
+
+
 export type QueryGetStudentsArgs = {
   filter: FilterGetStudents;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryValidateStudentIDsArgs = {
+  LRNs?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type Section = {
@@ -444,6 +468,12 @@ export type EmployeesFilter = {
   status?: InputMaybe<Scalars['Int']>;
 };
 
+export type EnrollStudentInput = {
+  id: Scalars['String'];
+  section: Scalars['String'];
+  year_level: Scalars['String'];
+};
+
 export type FilterGetEnrolledArchiveList = {
   school_year?: InputMaybe<Scalars['String']>;
   search?: InputMaybe<Scalars['String']>;
@@ -534,6 +564,13 @@ export type UpdateStudentParentInfo = {
   mother?: InputMaybe<StudentParentGuardianInput>;
 };
 
+export type ValidateStudentIDsResponse = {
+  __typename?: 'validateStudentIDsResponse';
+  LRNs?: Maybe<Array<Maybe<Scalars['String']>>>;
+  isValid: Scalars['Boolean'];
+  message: Scalars['String'];
+};
+
 export type YearLevelSection = {
   __typename?: 'yearLevelSection';
   id?: Maybe<Scalars['String']>;
@@ -585,6 +622,16 @@ export type AddStudentMutation = { __typename?: 'Mutation', addStudent?: (
     & { ' $fragmentRefs'?: { 'StudentFragment': StudentFragment } }
   ) | null };
 
+export type AddStudentsMutationVariables = Exact<{
+  input: Array<InputMaybe<StudentInput>> | InputMaybe<StudentInput>;
+}>;
+
+
+export type AddStudentsMutation = { __typename?: 'Mutation', addStudents?: Array<(
+    { __typename?: 'Student' }
+    & { ' $fragmentRefs'?: { 'StudentFragment': StudentFragment } }
+  ) | null> | null };
+
 export type AuthMutationMutationVariables = Exact<{
   input: AuthInput;
 }>;
@@ -620,6 +667,16 @@ export type DisableEmployeeMutationVariables = Exact<{
 export type DisableEmployeeMutation = { __typename?: 'Mutation', disableEmployee?: (
     { __typename?: 'Employee' }
     & { ' $fragmentRefs'?: { 'EmployeeFragment': EmployeeFragment } }
+  ) | null };
+
+export type EnrollStudentMutationVariables = Exact<{
+  input: EnrollStudentInput;
+}>;
+
+
+export type EnrollStudentMutation = { __typename?: 'Mutation', enrollStudent?: (
+    { __typename?: 'Student' }
+    & { ' $fragmentRefs'?: { 'StudentFragment': StudentFragment } }
   ) | null };
 
 export type ToggleSectionStatusMutationVariables = Exact<{
@@ -793,6 +850,16 @@ export type GetStudentQuery = { __typename?: 'Query', getStudent?: (
     & { ' $fragmentRefs'?: { 'StudentFragment': StudentFragment } }
   ) | null };
 
+export type GetStudentToEnrollListQueryVariables = Exact<{
+  search: Scalars['String'];
+}>;
+
+
+export type GetStudentToEnrollListQuery = { __typename?: 'Query', getStudentToEnrollList?: Array<(
+    { __typename?: 'Student' }
+    & { ' $fragmentRefs'?: { 'StudentFragment': StudentFragment } }
+  ) | null> | null };
+
 export type GetStudentsQueryVariables = Exact<{
   filter: FilterGetStudents;
   offset?: InputMaybe<Scalars['Int']>;
@@ -820,6 +887,13 @@ export type QueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type QueryQuery = { __typename?: 'Query', test?: string | null };
 
+export type ValidateStudentIDsQueryVariables = Exact<{
+  lrNs?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
+}>;
+
+
+export type ValidateStudentIDsQuery = { __typename?: 'Query', validateStudentIDs: { __typename?: 'validateStudentIDsResponse', LRNs?: Array<string | null> | null, isValid: boolean, message: string } };
+
 export const EmployeeFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Employee"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Employee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"employee_id"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"partial_password"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"middle_name"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}}]}}]}}]} as unknown as DocumentNode<EmployeeFragment, unknown>;
 export const StudentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Student"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Student"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"LRN"}},{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"middle_name"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"birthday"}},{"kind":"Field","name":{"kind":"Name","value":"contact_number"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"enrollment_records"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"SY"}},{"kind":"Field","name":{"kind":"Name","value":"SID"}},{"kind":"Field","name":{"kind":"Name","value":"grade_level_id"}},{"kind":"Field","name":{"kind":"Name","value":"section_id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"Field","name":{"kind":"Name","value":"address"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"no"}},{"kind":"Field","name":{"kind":"Name","value":"street"}},{"kind":"Field","name":{"kind":"Name","value":"subdiv"}},{"kind":"Field","name":{"kind":"Name","value":"barangay"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"province"}},{"kind":"Field","name":{"kind":"Name","value":"region"}},{"kind":"Field","name":{"kind":"Name","value":"zip"}}]}},{"kind":"Field","name":{"kind":"Name","value":"parent_guardians"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"middle_name"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"contact_number"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"Field","name":{"kind":"Name","value":"requirements"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"has_form_137"}},{"kind":"Field","name":{"kind":"Name","value":"has_psa"}},{"kind":"Field","name":{"kind":"Name","value":"has_parent_marriage_contract"}},{"kind":"Field","name":{"kind":"Name","value":"has_report_card"}},{"kind":"Field","name":{"kind":"Name","value":"has_report_of_rating"}},{"kind":"Field","name":{"kind":"Name","value":"has_good_moral"}},{"kind":"Field","name":{"kind":"Name","value":"has_school_government_recognition"}},{"kind":"Field","name":{"kind":"Name","value":"has_baptismal"}}]}},{"kind":"Field","name":{"kind":"Name","value":"school_records"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sy_graduated"}},{"kind":"Field","name":{"kind":"Name","value":"school_name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"Field","name":{"kind":"Name","value":"transfer_records"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sy_entered"}},{"kind":"Field","name":{"kind":"Name","value":"sy_exit"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]} as unknown as DocumentNode<StudentFragment, unknown>;
 export const EnrolledRecordFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EnrolledRecord"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EnrolledRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"SY"}},{"kind":"Field","name":{"kind":"Name","value":"grade_level_id"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"SID"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"section_id"}},{"kind":"Field","name":{"kind":"Name","value":"student"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Student"}}]}}]}},...StudentFragmentDoc.definitions]} as unknown as DocumentNode<EnrolledRecordFragment, unknown>;
@@ -827,10 +901,12 @@ export const ActivateSchoolYearDocument = {"kind":"Document","definitions":[{"ki
 export const AddEditSectionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"addEditSection"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SectionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addEditSection"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"year_level"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<AddEditSectionMutation, AddEditSectionMutationVariables>;
 export const AddEmployeeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"addEmployee"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"addEmployeeInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addEmployee"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Employee"}}]}}]}},...EmployeeFragmentDoc.definitions]} as unknown as DocumentNode<AddEmployeeMutation, AddEmployeeMutationVariables>;
 export const AddStudentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"addStudent"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"StudentInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addStudent"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Student"}}]}}]}},...StudentFragmentDoc.definitions]} as unknown as DocumentNode<AddStudentMutation, AddStudentMutationVariables>;
+export const AddStudentsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"addStudents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NamedType","name":{"kind":"Name","value":"StudentInput"}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addStudents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Student"}}]}}]}},...StudentFragmentDoc.definitions]} as unknown as DocumentNode<AddStudentsMutation, AddStudentsMutationVariables>;
 export const AuthMutationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"authMutation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AuthInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"auth"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"needNewPassword"}},{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]}}]} as unknown as DocumentNode<AuthMutationMutation, AuthMutationMutationVariables>;
 export const EnableEmployeeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"EnableEmployee"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"employeeId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"enableEmployee"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"employee_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"employeeId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Employee"}}]}}]}},...EmployeeFragmentDoc.definitions]} as unknown as DocumentNode<EnableEmployeeMutation, EnableEmployeeMutationVariables>;
 export const DropEnrollmentRecordDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DropEnrollmentRecord"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"ListType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"dropEnrollmentRecord"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"EnrolledRecord"}}]}}]}},...EnrolledRecordFragmentDoc.definitions]} as unknown as DocumentNode<DropEnrollmentRecordMutation, DropEnrollmentRecordMutationVariables>;
 export const DisableEmployeeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DisableEmployee"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"employeeId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"disableEmployee"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"employee_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"employeeId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Employee"}}]}}]}},...EmployeeFragmentDoc.definitions]} as unknown as DocumentNode<DisableEmployeeMutation, DisableEmployeeMutationVariables>;
+export const EnrollStudentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"enrollStudent"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"enrollStudentInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"enrollStudent"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Student"}}]}}]}},...StudentFragmentDoc.definitions]} as unknown as DocumentNode<EnrollStudentMutation, EnrollStudentMutationVariables>;
 export const ToggleSectionStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ToggleSectionStatus"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"deleteSectionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"toggleSectionStatus"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"deleteSectionId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"year_level"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<ToggleSectionStatusMutation, ToggleSectionStatusMutationVariables>;
 export const UpdateStudentAcademicRecordsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateStudentAcademicRecords"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NamedType","name":{"kind":"Name","value":"StudentSchoolRecordInput"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateStudentAcademicRecords"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}},{"kind":"Argument","name":{"kind":"Name","value":"ID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Student"}}]}}]}},...StudentFragmentDoc.definitions]} as unknown as DocumentNode<UpdateStudentAcademicRecordsMutation, UpdateStudentAcademicRecordsMutationVariables>;
 export const UpdateStudentAddressInfoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateStudentAddressInfo"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"StudentAddressInput"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateStudentAddressInfo"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}},{"kind":"Argument","name":{"kind":"Name","value":"ID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Student"}}]}}]}},...StudentFragmentDoc.definitions]} as unknown as DocumentNode<UpdateStudentAddressInfoMutation, UpdateStudentAddressInfoMutationVariables>;
@@ -849,7 +925,9 @@ export const GetGlobalVarsDocument = {"kind":"Document","definitions":[{"kind":"
 export const GetMeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetMe"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getMe"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"employee_id"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"middle_name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]}}]} as unknown as DocumentNode<GetMeQuery, GetMeQueryVariables>;
 export const GetSchoolYearsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getSchoolYears"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getSchoolYears"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}}]}}]} as unknown as DocumentNode<GetSchoolYearsQuery, GetSchoolYearsQueryVariables>;
 export const GetStudentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetStudent"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getStudent"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"SID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sid"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Student"}}]}}]}},...StudentFragmentDoc.definitions]} as unknown as DocumentNode<GetStudentQuery, GetStudentQueryVariables>;
+export const GetStudentToEnrollListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetStudentToEnrollList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"search"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getStudentToEnrollList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"search"},"value":{"kind":"Variable","name":{"kind":"Name","value":"search"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Student"}}]}}]}},...StudentFragmentDoc.definitions]} as unknown as DocumentNode<GetStudentToEnrollListQuery, GetStudentToEnrollListQueryVariables>;
 export const GetStudentsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetStudents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"filterGetStudents"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getStudents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"length"}},{"kind":"Field","name":{"kind":"Name","value":"students"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Student"}}]}}]}}]}},...StudentFragmentDoc.definitions]} as unknown as DocumentNode<GetStudentsQuery, GetStudentsQueryVariables>;
 export const GetYearLevelSectionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getYearLevelSections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getYearLevelSections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"sections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"year_level"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]}}]} as unknown as DocumentNode<GetYearLevelSectionsQuery, GetYearLevelSectionsQueryVariables>;
 export const PingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Ping"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"meow"}}]}}]} as unknown as DocumentNode<PingQuery, PingQueryVariables>;
 export const QueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Query"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"test"}}]}}]} as unknown as DocumentNode<QueryQuery, QueryQueryVariables>;
+export const ValidateStudentIDsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ValidateStudentIDs"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"lrNs"}},"type":{"kind":"ListType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"validateStudentIDs"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"LRNs"},"value":{"kind":"Variable","name":{"kind":"Name","value":"lrNs"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"LRNs"}},{"kind":"Field","name":{"kind":"Name","value":"isValid"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<ValidateStudentIDsQuery, ValidateStudentIDsQueryVariables>;

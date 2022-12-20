@@ -20,6 +20,7 @@ const LoginForm: React.FC = ({}) => {
     validationSchema: loginShema,
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       setSubmitting(true);
+      localStorage.removeItem("token");
       await executeEmployeeAuthMutation({
         variables: { input: values },
         onError: (error) => {
