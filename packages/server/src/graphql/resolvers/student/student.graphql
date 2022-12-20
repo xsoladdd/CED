@@ -45,12 +45,24 @@ input filterGetEnrolledList {
   section: String
 }
 
+input enrollStudentInput {
+  year_level: String!
+  section: String!
+  id: String!
+}
+
 input filterGetEnrolledArchiveList {
   search: String
   status: String
   year_level: String
   section: String
   school_year: String
+}
+
+type validateStudentIDsResponse {
+  message: String!
+  LRNs: [String]
+  isValid: Boolean!
 }
 
 type Query {
@@ -72,6 +84,8 @@ type Query {
     filter: filterGetEnrolledArchiveList!
   ): getEnrolledListResponse
   checkUniqueLRN(LRN: String!, currentLRN: String): Boolean!
+  getStudentToEnrollList(search: String!): [Student]
+  validateStudentIDs(LRNs: [String]): validateStudentIDsResponse!
 }
 
 type Mutation {
@@ -94,5 +108,7 @@ type Mutation {
     ID: String!
   ): Student
   addStudent(input: StudentInput!): Student
+  addStudents(input: [StudentInput]!): [Student]
   dropEnrollmentRecord(input: [String]): [EnrolledRecord]
+  enrollStudent(input: enrollStudentInput!): Student
 }

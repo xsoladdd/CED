@@ -12,7 +12,7 @@ export default class StudentSeeder implements Seeder {
     const repository = dataSource.getRepository(Student);
     // Insert year level
 
-    if (NODE_ENV === "development") {
+    if (NODE_ENV === "green") {
       const generateAddress = () => {
         const address: StudentAddress = {
           barangay: "",
@@ -26,37 +26,6 @@ export default class StudentSeeder implements Seeder {
         };
         return address;
       };
-
-      // const generateParentGuardian = () => {
-      //   const parentGuardian: Array<StudentParentGuardian> = [
-      //     {
-      //       first_name: "Menard",
-      //       middle_name: "Vaneschi",
-      //       last_name: "Boar",
-      //       contact_number: "09294952534",
-      //       type: "M",
-      //       email: "mboar0@phpbb.com",
-      //     },
-      //     {
-      //       first_name: "Bartholomeus",
-      //       middle_name: "Bertolin",
-      //       last_name: "Cowper",
-      //       contact_number: "09991715440",
-      //       type: "G",
-      //       email: "bcowper1@psu.edu",
-      //     },
-      //     {
-      //       first_name: "Andres",
-      //       middle_name: "Gilhouley",
-      //       last_name: "Rickis",
-      //       contact_number: "09987577681",
-      //       type: "F",
-      //       email: "arickis2@dyndns.org",
-      //     },
-      //   ];
-      //   return parentGuardian;
-      // };
-
       const generateRequirements = () => {
         const requirements: StudentRequirements = {
           has_baptismal: true,

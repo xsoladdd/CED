@@ -11,10 +11,11 @@ import { authorized } from "../../../utils/authorized";
 import { errorType } from "../../../utils/errorType";
 import { getSchoolYear } from "../../../utils/getSchoolYear";
 import { recordTrail } from "../../../utils/recordTrail";
-import { Resolvers } from "../../generated";
+import { Resolvers, StudentInput } from "../../generated";
 import {
   addLeadingZeros,
   addStudentValidationSchema,
+  addStudentsValidationSchema,
   mapUndefined,
 } from "./helper";
 
@@ -347,6 +348,78 @@ export const studentRersolver: Resolvers = {
         });
       }
     },
+    getStudentToEnrollList: async (_, { search }, ctx) => {
+      try {
+        authorized(ctx);
+        const studentRepo = conn.getRepository(Student);
+        const searchString = search ? ILike(`%${search}%`) : undefined;
+        const students = await studentRepo.find({
+          relations: {
+            transfer_records: true,
+            enrollment_records: true,
+            address: true,
+            parent_guardians: true,
+            school_records: true,
+          },
+          where: [
+            { first_name: searchString },
+            { middle_name: searchString },
+            { last_name: searchString },
+            { LRN: searchString },
+            { email: searchString },
+          ],
+          skip: 0,
+          take: 12,
+          order: {
+            created_at: "DESC",
+          },
+        });
+
+        return students;
+      } catch (error) {
+        throw new GraphQLError(error, {
+          extensions: {
+            code: errorType.SERVER_ERROR,
+          },
+        });
+      }
+    },
+    validateStudentIDs: async (_, { LRNs }, ctx) => {
+      try {
+        authorized(ctx);
+        const studentRepo = conn.getRepository(Student);
+        if (!LRNs || LRNs.length === 0) {
+          throw new GraphQLError("Query requires 1 or more ID to fetch", {
+            extensions: {
+              code: errorType.VALIDATION_ERROR,
+            },
+          });
+        }
+        // Fetch students with the IDS
+        const students = await studentRepo.find({
+          where: {
+            LRN: In(LRNs),
+          },
+        });
+        if (students.length >= 1) {
+          return {
+            isValid: false,
+            message: `LRNs already exist`,
+            LRNs: students.map(({ LRN }) => LRN),
+          };
+        }
+        return {
+          isValid: true,
+          message: `Valid`,
+        };
+      } catch (error) {
+        throw new GraphQLError(error, {
+          extensions: {
+            code: errorType.SERVER_ERROR,
+          },
+        });
+      }
+    },
   },
   Mutation: {
     updateStudentBasicInfo: async (_, { input, ID }, ctx) => {
@@ -442,6 +515,73 @@ export const studentRersolver: Resolvers = {
 
         const savedStudent = await studentRepo.save(newStudent);
         const trailMessage = `Student ${savedStudent.first_name} ${savedStudent.last_name} has been added to student list`;
+        recordTrail(employee_id, trailMessage, "ADDED_STUDENT");
+        return savedStudent;
+      } catch (error) {
+        throw new GraphQLError(error, {
+          extensions: {
+            code: errorType.SERVER_ERROR,
+          },
+        });
+      }
+    },
+    addStudents: async (_, { input }, ctx) => {
+      try {
+        const { employee_id } = authorized(ctx);
+        const studentRepo = conn.getRepository(Student);
+        await addStudentsValidationSchema.validate(input).catch((err) => {
+          throw new GraphQLError(err.message, {
+            extensions: {
+              code: errorType.VALIDATION_ERROR,
+            },
+          });
+        });
+        if (input.length === 0) {
+          throw new GraphQLError("Must have morethan 1 student to upload", {
+            extensions: {
+              code: errorType.VALIDATION_ERROR,
+            },
+          });
+        }
+
+        const newStudents: Array<Student> = input.map((studentItem) => {
+          const studentData = studentItem as StudentInput;
+          const { LRN, middle_name, birthday, contact_number, email, ...rest } =
+            studentData;
+          return {
+            ...rest,
+            LRN,
+            middle_name: mapUndefined(middle_name),
+            birthday: mapUndefined(birthday),
+            contact_number: mapUndefined(contact_number),
+            email: mapUndefined(email),
+            address: {
+              barangay: "",
+              city: "",
+              province: "",
+              region: "",
+              zip: "",
+              no: "",
+              subdiv: "",
+              street: "",
+            },
+            parent_guardians: [],
+            school_records: [],
+            requirements: {
+              has_baptismal: false,
+              has_form_137: false,
+              has_good_moral: false,
+              has_parent_marriage_contract: false,
+              has_psa: false,
+              has_report_card: false,
+              has_report_of_rating: false,
+              has_school_government_recognition: false,
+            },
+          };
+        });
+
+        const savedStudent = await studentRepo.save(newStudents);
+        const trailMessage = `Employee ${employee_id} has imported students data`;
         recordTrail(employee_id, trailMessage, "ADDED_STUDENT");
         return savedStudent;
       } catch (error) {
@@ -897,6 +1037,68 @@ export const studentRersolver: Resolvers = {
         const trailMessage = `Student ${savedRecord.student?.first_name} ${savedRecord.student?.last_name} enrollment record has been modified`;
         recordTrail(employee_id, trailMessage, "MANAGE_STUDENT_INFO");
         return savedRecord;
+      } catch (error) {
+        throw new GraphQLError(error, {
+          extensions: {
+            code: errorType.SERVER_ERROR,
+          },
+        });
+      }
+    },
+    enrollStudent: async (_, { input }, ctx) => {
+      try {
+        const { employee_id } = authorized(ctx);
+        const enrollmentRecordRepo = conn.getRepository(EnrolledRecords);
+        const studentRepo = conn.getRepository(Student);
+
+        const student = await studentRepo
+          .findOneOrFail({
+            where: {
+              id: input.id,
+            },
+          })
+          .catch(() => {
+            throw new GraphQLError("Invalid Student ID", {
+              extensions: {
+                code: errorType.SERVER_ERROR,
+              },
+            });
+          });
+
+        const SY = await getSchoolYear();
+        console.log(`SY`, SY);
+        await enrollmentRecordRepo.save({
+          section_id: input.section,
+          grade_level_id: input.year_level,
+          student,
+          SY,
+        });
+
+        const reselectStudent = await studentRepo
+          .findOneOrFail({
+            where: {
+              id: input.id,
+            },
+            relations: {
+              enrollment_records: true,
+              parent_guardians: true,
+              transfer_records: true,
+              school_records: true,
+              requirements: true,
+              address: true,
+            },
+          })
+          .catch(() => {
+            throw new GraphQLError("Invalid Student ID", {
+              extensions: {
+                code: errorType.SERVER_ERROR,
+              },
+            });
+          });
+
+        const trailMessage = `Student ${reselectStudent?.first_name} ${reselectStudent?.last_name} enrollment record has been created`;
+        recordTrail(employee_id, trailMessage, "ENROLL_STUDENT");
+        return reselectStudent;
       } catch (error) {
         throw new GraphQLError(error, {
           extensions: {
