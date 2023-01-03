@@ -112,7 +112,9 @@ const AuditTrail: React.FC = ({}) => {
     });
   };
 
-  const pageCount = (data?.getAuditTrails?.length as number) / itemsPerPage;
+  const pageCount = Math.ceil(
+    (data?.getAuditTrails?.length as number) / itemsPerPage
+  );
 
   const handleRefetch = () =>
     refetch({
@@ -275,7 +277,11 @@ const AuditTrail: React.FC = ({}) => {
           </button>
         </Tooltip>
         <span>
-          <FiArrowLeft size="15" onClick={() => handleBack()} />
+          <FiArrowLeft
+            size="15"
+            onClick={() => handleBack()}
+            className="cursor-pointer"
+          />
         </span>
         <span className="text-sm">
           Page {page} out of {pageCount}
@@ -283,7 +289,8 @@ const AuditTrail: React.FC = ({}) => {
         <span>
           <FiArrowRight
             size="15"
-            onClick={() => handleNext(data?.getAuditTrails?.length as number)}
+            onClick={() => handleNext(pageCount)}
+            className="cursor-pointer"
           />
         </span>
       </div>

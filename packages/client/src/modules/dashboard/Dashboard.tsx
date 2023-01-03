@@ -7,6 +7,7 @@ import DashboardLayout from "./Layout";
 import PageLoading from "./Layout/PageLoading";
 import generateRoutes from "./routes";
 import useDashboard from "./useDashboard";
+import AddPasswordModal from "../../components/AddPasswordModal";
 
 interface DashboardProps {
   children: React.ReactNode;
@@ -31,6 +32,7 @@ const Dashboard: NextPage<DashboardProps> = ({}) => {
     </div>
   ) : (
     <DashboardLayout>
+      <AddPasswordModal />
       <Suspense fallback={<PageLoading />}>
         {routes.map(
           ({ component: Component, path }, idx) =>

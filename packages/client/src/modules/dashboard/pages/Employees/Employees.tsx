@@ -337,7 +337,11 @@ const Employees: React.FC = ({}) => {
                 </button>
               </Tooltip>
               <span>
-                <FiArrowLeft size="15" onClick={() => handleBack()} />
+                <FiArrowLeft
+                  size="15"
+                  onClick={() => handleBack()}
+                  className="cursor-pointer"
+                />
               </span>
               <span className="text-sm">
                 Page {page} out of {pageCount}
@@ -345,9 +349,8 @@ const Employees: React.FC = ({}) => {
               <span>
                 <FiArrowRight
                   size="15"
-                  onClick={() =>
-                    handleNext(data?.getEmployees?.length as number)
-                  }
+                  onClick={() => handleNext(pageCount)}
+                  className="cursor-pointer"
                 />
               </span>
             </div>

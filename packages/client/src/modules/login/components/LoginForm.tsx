@@ -6,9 +6,12 @@ import Text from "../../../components/Text";
 import { AuthMutationDocument } from "../../../graphQL/generated/graphql";
 import { loginShema } from "../helper";
 import ErrorBox from "./ErrorBox";
+import useDashboardRouter from "../../../hooks/useDashboardRouter";
 
 const LoginForm: React.FC = ({}) => {
   const { push } = useRouter();
+
+  const { pushRoute } = useDashboardRouter();
 
   const [executeEmployeeAuthMutation] = useMutation(AuthMutationDocument);
 
@@ -31,6 +34,13 @@ const LoginForm: React.FC = ({}) => {
           if (auth?.token) {
             localStorage.setItem("token", auth?.token);
             push("/dashboard");
+            pushRoute(
+              {
+                title: "dashboard",
+                route: "dashboard",
+              },
+              true
+            );
           }
         },
       });
@@ -45,7 +55,7 @@ const LoginForm: React.FC = ({}) => {
         onSubmit={formik.handleSubmit}
       >
         <div className="flex flex-col gap-1">
-          <label htmlFor="employeeId">Emplyee ID</label>
+          <label htmlFor="employeeId">Employee ID</label>
           <input
             name="EID"
             id="EID"

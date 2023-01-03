@@ -17,11 +17,12 @@ const useDashboard = () => {
   const { loading: getMeLoading } = useQuery(GetMeDocument, {
     onCompleted: (data) => {
       if (data.getMe) {
-        const { employee_id, id, role, profile } = data.getMe;
+        const { employee_id, id, role, profile, partial_password } = data.getMe;
         setData({
           employee_id,
           id,
           role,
+          partial_password,
           profile: {
             first_name: profile?.first_name ? profile?.first_name : "",
             middle_name: profile?.middle_name,

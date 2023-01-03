@@ -17,5 +17,17 @@ export const userSlice: StoreSlice<IuserSlice> = (set) => ({
           },
         };
       }),
+    nullifyPartialPassword: () =>
+      set(({ user }: IuserSlice): IuserSlice => {
+        return {
+          user: {
+            ...user,
+            data: {
+              ...user.data,
+              partial_password: null,
+            },
+          },
+        };
+      }),
   },
 });

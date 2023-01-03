@@ -2,6 +2,7 @@ query GetMe {
   getMe {
     employee_id
     id
+    partial_password
     profile {
       first_name
       last_name

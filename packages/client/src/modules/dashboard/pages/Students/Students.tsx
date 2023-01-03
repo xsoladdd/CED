@@ -280,13 +280,21 @@ const Students: React.FC = ({}) => {
                 </button>
               </Tooltip>
               <span>
-                <FiArrowLeft size="15" onClick={() => handleBack()} />
+                <FiArrowLeft
+                  size="15"
+                  onClick={() => handleBack()}
+                  className="cursor-pointer"
+                />
               </span>
               <span className="text-sm">
                 Page {page} out of {pageCount}{" "}
               </span>
               <span>
-                <FiArrowRight size="15" onClick={() => handleNext(pageCount)} />
+                <FiArrowRight
+                  size="15"
+                  onClick={() => handleNext(pageCount)}
+                  className="cursor-pointer"
+                />
               </span>
             </div>
           </div>

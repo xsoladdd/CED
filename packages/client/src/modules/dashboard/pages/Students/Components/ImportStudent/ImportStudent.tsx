@@ -56,6 +56,8 @@ const ImportStudent: React.FC = () => {
         const data = utils.sheet_to_json<StudentFragment>(ws);
         /* Update state */
 
+        console.log(data);
+
         if (data.length >= 150) {
           setError("Row count must be lessthan or equals 150");
           setStatus("error");
@@ -66,8 +68,10 @@ const ImportStudent: React.FC = () => {
               lrNs: lrnArr,
             },
             onCompleted: (value) => {
+              console.log("completed");
               if (value.validateStudentIDs) {
                 if (!value.validateStudentIDs.isValid) {
+                  setStatus("error");
                   setError(
                     `${
                       value.validateStudentIDs.message
@@ -78,6 +82,9 @@ const ImportStudent: React.FC = () => {
                   setStatus("success");
                 }
               }
+            },
+            onError: () => {
+              console.log("error");
             },
           });
         }

@@ -4,5 +4,6 @@ export interface IuserSlice {
   user: {
     data: Employee;
     setData: (userData: Employee) => void;
+    nullifyPartialPassword: () => void;
   };
 }
