@@ -1,4 +1,4 @@
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import { format } from "date-fns";
 import React, { useRef } from "react";
 import { FaSyncAlt, FaUserAlt, FaUserAltSlash } from "react-icons/fa";
@@ -16,6 +16,7 @@ import WarningModal from "../../../../components/WarningModal";
 import {
   Employee,
   GetEmployeesDocument,
+  ResetEmployeePasswordDocument,
 } from "../../../../graphQL/generated/graphql";
 import useDashboardRouter from "../../../../hooks/useDashboardRouter";
 import useToggle from "../../../../hooks/useToggle";
@@ -65,6 +66,21 @@ const Employees: React.FC = ({}) => {
     GetEmployeesDocument,
     {}
   );
+
+  const [resetEmployeePassword] = useMutation(ResetEmployeePasswordDocument);
+
+  const handleResetPassword = () => {
+    console.log(employeeRef.current);
+
+    resetEmployeePassword({
+      variables: {
+        employeeId: employeeRef.current.employee_id as string,
+        password: newPassword,
+      },
+      onCompleted: () => toggleResetPasswordStatus(),
+      onError: (err) => console.error(err),
+    });
+  };
 
   const handleExcelExport = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -216,7 +232,13 @@ const Employees: React.FC = ({}) => {
               <Tooltip text="Reset Password" direction="top">
                 <button
                   className="btn btn-xs btn-success "
-                  onClick={() => toggleResetPasswordStatus()}
+                  onClick={() => {
+                    employeeRef.current = {
+                      employee_id: props?.employee_id,
+                      status: props?.status,
+                    };
+                    toggleResetPasswordStatus();
+                  }}
                   disabled={exportLoading}
                 >
                   <FaSyncAlt size="12" />
@@ -284,7 +306,7 @@ const Employees: React.FC = ({}) => {
         status={resetPasswordStatus}
         handleClose={() => toggleResetPasswordStatus()}
         handleProceed={() => {
-          toggleResetPasswordStatus();
+          handleResetPassword();
         }}
         color="yellow"
       >
