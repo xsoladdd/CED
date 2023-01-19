@@ -1,0 +1,8 @@
+node_modules/
+
+*.spec.tsx
+*.spec.tsx.snap
+src/graphql/generated/
+
+
+# client/src/graphQL/generated

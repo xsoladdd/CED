@@ -5,3 +5,5 @@ node_modules
 notes
 
 **/.vscode
+**/*.code-workspace
+.vscode

@@ -1,0 +1,10 @@
+$ pm2 start yarn --name server -- start
+[PM2] Spawning PM2 daemon with pm2_home=/Users/ericson.funtanar/.pm2
+[PM2] PM2 Successfully daemonized
+[PM2] Starting /var/folders/j3/121q96r14kl655sjz94d9sx00000gq/T/yarn--1674103973140-0.5344856804158002/yarn in fork_mode (1 instance)
+[PM2] Done.
+┌─────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id  │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├─────┼───────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0   │ server    │ default     │ N/A     │ fork    │ 31588    │ 0s     │ 0    │ online    │ 0%       │ 8.7mb    │ ericson… │ disabled │
+└─────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘

@@ -1,0 +1,50 @@
+type AuthResponse {
+  token: String
+}
+
+input employeesFilter {
+  status: Int
+}
+
+input auditTrailFilter {
+  type: String
+}
+
+input addEmployeeInput {
+  employee: EmployeeInput!
+}
+
+type getEmployeesResponse {
+  employees: [Employee]
+  length: Int
+}
+
+type getAuditTrailsResponse {
+  audit_trail: [AuditTrail]
+  length: Int
+}
+
+type Query {
+  getEmployees(
+    limit: Int
+    offset: Int
+    search: String
+    filter: employeesFilter
+  ): getEmployeesResponse!
+  getEmployee(employee_id: String!): Employee
+  getAuditTrails(
+    limit: Int
+    offset: Int
+    search: String
+    filter: auditTrailFilter
+  ): getAuditTrailsResponse!
+}
+
+type Mutation {
+  addEmployee(input: addEmployeeInput!): Employee
+  logout: Boolean
+  disableEmployee(employee_id: String!): Employee
+  enableEmployee(employee_id: String!): Employee
+  resetEmployeePassword(employee_id: String!, password: String!): Employee
+  changeEmployeePassword(employee_id: String!, password: String!): Employee
+}
