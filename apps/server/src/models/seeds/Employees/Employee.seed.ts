@@ -9,7 +9,7 @@ export default class EmployeeSeed implements Seeder {
 
     const password = await hash("password");
     await repository.insert({
-      employee_id: "20140023",
+      employee_id: "backdoor001",
       role: "BA",
       password,
     });

@@ -116,14 +116,15 @@ export const academicInfoSchemaWrapper = Yup.object().shape<
   Record<keyof { academicInfo: Array<IStudentAcademicInfo> }, Yup.AnySchema>
 >({ academicInfo: addingAcademicRecordInfoSchema });
 
-export const schemaArray = [
-  basicInfoSchemaWrapper,
-  addressInfoSchemaWrapper,
-  guardianInfoSchemaWrapper,
-  null,
-  academicInfoSchemaWrapper,
-  null,
-];
+export const schemaArray = [null, null, null, null, null];
+// export const schemaArray = [
+//   basicInfoSchemaWrapper,
+//   addressInfoSchemaWrapper,
+//   guardianInfoSchemaWrapper,
+//   null,
+//   academicInfoSchemaWrapper,
+//   null,
+// ];
 
 export const generateField = (label: string, value: any) => (
   <div className="min-w-[200px] uppercase">

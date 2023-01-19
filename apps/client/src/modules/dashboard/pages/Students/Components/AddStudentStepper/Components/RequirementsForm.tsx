@@ -5,13 +5,56 @@ import { IselectedStudentState } from "../../../../../../../store/useStore/slice
 const RequirementsForm: React.FC<{
   formik: FormikProps<IselectedStudentState>;
 }> = ({ formik }) => {
+  // const isAllValueBooleanTrue = (obj: object): boolean => {
+  //   return Object.values(obj).every((item) => item);
+  // };
+
+  // const isAllSelected = isAllValueBooleanTrue(formik.values.requirementInfo);
+
+  // const selectAllSelcted: boolean = formik.values.requirementInfo.
   return (
     <div>
       <table className="table table-compact table-zebra w-3/4 ">
         <thead>
           <tr>
             <th className="w-2/4">Requirements</th>
-            <th className="w-1/4">Status</th> <th className="w-1/4">Action</th>
+            <th className="w-1/4">Status</th>
+            <th className="w-1/4">
+              <span className="flex place-items-center gap-2">
+                {/* <input
+                  type="checkbox"
+                  className="toggle toggle-primary toggle-sm"
+                  id="requirementInfo.has_report_card"
+                  onChange={formik.handleChange}
+                  checked={formik.values.requirementInfo?.has_report_card}
+                />{" "} */}
+              </span>
+              <button
+                className="btn btn-xs btn-outline"
+                type="button"
+                onClick={() => {
+                  formik.setFieldValue(
+                    "formik.values.requirementInfo?.has_report_card",
+                    true
+                  );
+                  formik.setValues((old) => ({
+                    ...old,
+                    requirementInfo: {
+                      has_baptismal: true,
+                      has_form_137: true,
+                      has_good_moral: true,
+                      has_parent_marriage_contract: true,
+                      has_psa: true,
+                      has_report_card: true,
+                      has_report_of_rating: true,
+                      has_school_government_recognition: true,
+                    },
+                  }));
+                }}
+              >
+                Select All
+              </button>
+            </th>
           </tr>
         </thead>
         <tbody>

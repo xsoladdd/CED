@@ -41,15 +41,10 @@ const main = async () => {
         NODE_ENV === "production"
           ? [
               // main
-              "http://stjeromeemiliani.com/",
-              "https://stjeromeemiliani.com/",
-              // local
-              "http://stjeromeemiliani.com:4050/",
-              "https://stjeromeemiliani.com:4050/",
+              "http://stjeromeemiliani.com",
+              "https://stjeromeemiliani.com",
             ]
           : "*",
-      // : ["http://localhost:4050", "*"],
-      // credentials: true, // <-- REQUIRED backend setting
     }),
     json(),
     expressMiddleware(server, {

@@ -178,7 +178,7 @@ const RegCardPDF: React.FC<{
         }}
       >
         <Text style={{ fontSize: "10px" }}>REGISTRATION FORM</Text>
-        <Text style={{ fontSize: "8px" }}>School Year - 2022-2023</Text>
+        <Text style={{ fontSize: "8px" }}>School Year - {data.SY}</Text>
       </View>
     </>
   );
